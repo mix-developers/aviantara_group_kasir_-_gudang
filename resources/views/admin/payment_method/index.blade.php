@@ -28,14 +28,12 @@
                     </div>
                 </div>
                 <div class="card-datatable table-responsive">
-                    <table id="datatable-customers" class="table table-hover table-bordered display">
+                    <table id="datatable-payment-method" class="table table-hover table-bordered display">
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Nama</th>
-                                <th>No Hp</th>
-                                <th>Alamat Rumah</th>
-                                <th>Alamat Usaha</th>
+                                <th>Metode Pembayaran</th>
+                                <th>Enabled</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -43,10 +41,8 @@
                         <tfoot>
                             <tr>
                                 <th>ID</th>
-                                <th>Nama</th>
-                                <th>No Hp</th>
-                                <th>Alamat Rumah</th>
-                                <th>Alamat Usaha</th>
+                                <th>Metode Pembayaran</th>
+                                <th>Enabled</th>
                                 <th>Action</th>
                             </tr>
                         </tfoot>
@@ -55,6 +51,6 @@
             </div>
         </div>
     </div>
-    @include('admin.customers.components.modal')
+    @include('admin.payment_method.components.modal')
 @endsection
-@include('admin.customers.script')
+@include('admin.payment_method.script')

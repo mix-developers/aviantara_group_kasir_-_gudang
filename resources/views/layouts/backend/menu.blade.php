@@ -47,7 +47,7 @@
                     </g>
                 </svg>
             </span>
-            <span class="app-brand-text demo menu-text fw-bolder ms-2">{{ env('APP_NAME') ?? 'Laravel' }}</span>
+            <span class="app-brand-text demo menu-text fw-bolder ms-2">Admin Panel</span>
         </a>
 
         <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
@@ -62,28 +62,47 @@
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">{{ env('APP_NAME') ?? 'Laravel' }}</span>
         </li>
-        <li class="menu-item {{ request()->is('home*') ? 'active' : '' }}">
-            <a href="{{ url('/home') }}" class="menu-link">
+        <li class="menu-item {{ request()->is('/') ? 'active' : '' }}">
+            <a href="{{ url('/') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                 <div data-i18n="Analytics">Dashboard</div>
             </a>
         </li>
         <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">customers</span>
+            <span class="menu-header-text">Data Master</span>
         </li>
         <li class="menu-item {{ request()->is('customers') ? 'active' : '' }}">
             <a href="{{ url('/customers') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-user"></i>
-                <div data-i18n="Analytics">Customers</div>
+                <div data-i18n="Analytics">Pelanggan</div>
             </a>
         </li>
-        <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">users</span>
+        <li class="menu-item {{ request()->is('paymentMethod') ? 'active' : '' }}">
+            <a href="{{ url('/paymentMethod') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-credit-card"></i>
+                <div data-i18n="Analytics">Metode Pembayaran</div>
+            </a>
         </li>
+
         <li class="menu-item {{ request()->is('users') ? 'active' : '' }}">
             <a href="{{ url('/users') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-user"></i>
-                <div data-i18n="Analytics">Users</div>
+                <div data-i18n="Analytics">Pegawai</div>
+            </a>
+        </li>
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">Gudang & Toko</span>
+        </li>
+        <li class="menu-item {{ request()->is('wirehouses') ? 'active' : '' }}">
+            <a href="{{ url('/wirehouses') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-home"></i>
+                <div data-i18n="Analytics">Gudang</div>
+            </a>
+        </li>
+        <li class="menu-item {{ request()->is('shops') ? 'active' : '' }}">
+            <a href="{{ url('/shops') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-store"></i>
+                <div data-i18n="Analytics">Toko</div>
             </a>
         </li>
         <li class="menu-header small text-uppercase">

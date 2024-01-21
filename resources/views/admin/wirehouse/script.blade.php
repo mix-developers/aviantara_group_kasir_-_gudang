@@ -1,11 +1,11 @@
 @push('js')
     <script>
         $(function() {
-            $('#datatable-customers').DataTable({
+            $('#datatable-wirehouse').DataTable({
                 processing: true,
                 serverSide: true,
                 responsive: true,
-                ajax: '{{ url('customers-datatable') }}',
+                ajax: '{{ url('wirehouses-datatable') }}',
                 columns: [{
                         data: 'id',
                         name: 'id'
@@ -16,18 +16,10 @@
                         name: 'name'
                     },
                     {
-                        data: 'phone',
-                        name: 'phone'
+                        data: 'address',
+                        name: 'address'
                     },
 
-                    {
-                        data: 'address_home',
-                        name: 'address_home'
-                    },
-                    {
-                        data: 'address_company',
-                        name: 'address_company'
-                    },
                     {
                         data: 'action',
                         name: 'action'
@@ -38,32 +30,30 @@
                 $('#create').modal('show');
             });
             $('.refresh').click(function() {
-                $('#datatable-customers').DataTable().ajax.reload();
+                $('#datatable-wirehouse').DataTable().ajax.reload();
             });
-            window.editCustomer = function(id) {
+            window.editWirehouse = function(id) {
                 $.ajax({
                     type: 'GET',
-                    url: '/customers/edit/' + id,
+                    url: '/wirehouses/edit/' + id,
                     success: function(response) {
-                        $('#customersModalLabel').text('Edit Customer');
-                        $('#formCustomerId').val(response.id);
-                        $('#formCustomerName').val(response.name);
-                        $('#formCustomerPhone').val(response.phone);
-                        $('#formCustomerAddressHome').val(response.address_home);
-                        $('#formCustomerAddressCompany').val(response.address_company);
-                        $('#customersModal').modal('show');
+                        $('#wirehouseModalLabel').text('Edit Gudang');
+                        $('#formWirehouseId').val(response.id);
+                        $('#formWirehouseName').val(response.name);
+                        $('#formWirehouseAddress').val(response.address);
+                        $('#wirehousesModal').modal('show');
                     },
                     error: function(xhr) {
                         alert('Terjadi kesalahan: ' + xhr.responseText);
                     }
                 });
             };
-            $('#saveCustomerBtn').click(function() {
-                var formData = $('#userForm').serialize();
+            $('#saveWirehouseBtn').click(function() {
+                var formData = $('#wirehouseForm').serialize();
 
                 $.ajax({
                     type: 'POST',
-                    url: '/customers/store',
+                    url: '/wirehouses/store',
                     data: formData,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -71,29 +61,29 @@
                     success: function(response) {
                         alert(response.message);
                         // Refresh DataTable setelah menyimpan perubahan
-                        $('#datatable-customers').DataTable().ajax.reload();
-                        $('#customersModal').modal('hide');
+                        $('#datatable-wirehouse').DataTable().ajax.reload();
+                        $('#wirehousesModal').modal('hide');
                     },
                     error: function(xhr) {
                         alert('Terjadi kesalahan: ' + xhr.responseText);
                     }
                 });
             });
-            $('#createCustomerBtn').click(function() {
-                var formData = $('#createUserForm').serialize();
+            $('#createWirehouseBtn').click(function() {
+                var formData = $('#createWirehouseForm').serialize();
 
                 $.ajax({
                     type: 'POST',
-                    url: '/customers/store',
+                    url: '/wirehouses/store',
                     data: formData,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
                         alert(response.message);
-                        $('#customersModalLabel').text('Edit Customer');
-                        $('#formCustomerName').val('');
-                        $('#datatable-customers').DataTable().ajax.reload();
+                        $('#wirehouseModalLabel').text('Edit Customer');
+                        $('#formWirehouserName').val('');
+                        $('#datatable-wirehouse').DataTable().ajax.reload();
                         $('#create').modal('hide');
                     },
                     error: function(xhr) {
@@ -101,17 +91,17 @@
                     }
                 });
             });
-            window.deleteCustomers = function(id) {
+            window.deleteWirehouse = function(id) {
                 if (confirm('Apakah Anda yakin ingin menghapus pelanggan ini?')) {
                     $.ajax({
                         type: 'DELETE',
-                        url: '/customers/delete/' + id,
+                        url: '/wirehouses/delete/' + id,
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         success: function(response) {
                             // alert(response.message);
-                            $('#datatable-customers').DataTable().ajax.reload();
+                            $('#datatable-wirehouse').DataTable().ajax.reload();
                         },
                         error: function(xhr) {
                             alert('Terjadi kesalahan: ' + xhr.responseText);

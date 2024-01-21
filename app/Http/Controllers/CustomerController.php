@@ -11,13 +11,13 @@ class CustomerController extends Controller
     public function index()
     {
         $data = [
-            'title' => 'Customers',
+            'title' => 'Pelanggan',
         ];
         return view('admin.customers.index', $data);
     }
     public function getCustomersDataTable()
     {
-        $customers = Customer::select(['id', 'name', 'phone', 'address', 'created_at', 'updated_at'])->orderByDesc('id');
+        $customers = Customer::select(['id', 'name', 'phone', 'address_home', 'address_company', 'created_at', 'updated_at'])->orderByDesc('id');
 
         return Datatables::of($customers)
             ->addColumn('action', function ($customer) {
@@ -34,13 +34,14 @@ class CustomerController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
-            'address' => 'required|string',
+            'address_home' => 'required|string',
         ]);
 
         $customerData = [
             'name' => $request->input('name'),
             'phone' => $request->input('phone'),
-            'address' => $request->input('address'),
+            'address_home' => $request->input('address_home'),
+            'address_company' => $request->input('address_company'),
         ];
 
         if ($request->filled('id')) {

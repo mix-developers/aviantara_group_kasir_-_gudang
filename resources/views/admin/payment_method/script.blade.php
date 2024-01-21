@@ -1,32 +1,23 @@
 @push('js')
     <script>
         $(function() {
-            $('#datatable-customers').DataTable({
+            $('#datatable-payment-method').DataTable({
                 processing: true,
                 serverSide: true,
                 responsive: true,
-                ajax: '{{ url('customers-datatable') }}',
+                ajax: '{{ url('paymentMethod-datatable') }}',
                 columns: [{
                         data: 'id',
                         name: 'id'
                     },
 
                     {
-                        data: 'name',
-                        name: 'name'
+                        data: 'method',
+                        name: 'method'
                     },
                     {
-                        data: 'phone',
-                        name: 'phone'
-                    },
-
-                    {
-                        data: 'address_home',
-                        name: 'address_home'
-                    },
-                    {
-                        data: 'address_company',
-                        name: 'address_company'
+                        data: 'status',
+                        name: 'status'
                     },
                     {
                         data: 'action',
@@ -38,32 +29,29 @@
                 $('#create').modal('show');
             });
             $('.refresh').click(function() {
-                $('#datatable-customers').DataTable().ajax.reload();
+                $('#datatable-payment-method').DataTable().ajax.reload();
             });
-            window.editCustomer = function(id) {
+            window.editPaymentMethod = function(id) {
                 $.ajax({
                     type: 'GET',
-                    url: '/customers/edit/' + id,
+                    url: '/paymentMethod/edit/' + id,
                     success: function(response) {
-                        $('#customersModalLabel').text('Edit Customer');
-                        $('#formCustomerId').val(response.id);
-                        $('#formCustomerName').val(response.name);
-                        $('#formCustomerPhone').val(response.phone);
-                        $('#formCustomerAddressHome').val(response.address_home);
-                        $('#formCustomerAddressCompany').val(response.address_company);
-                        $('#customersModal').modal('show');
+                        $('#paymentMethodModalLabel').text('Edit Customer');
+                        $('#formPaymentMethodId').val(response.id);
+                        $('#formPaymentMethodMethod').val(response.method);
+                        $('#paymentMethodModal').modal('show');
                     },
                     error: function(xhr) {
                         alert('Terjadi kesalahan: ' + xhr.responseText);
                     }
                 });
             };
-            $('#saveCustomerBtn').click(function() {
+            $('#savepaymentMethodBtn').click(function() {
                 var formData = $('#userForm').serialize();
 
                 $.ajax({
                     type: 'POST',
-                    url: '/customers/store',
+                    url: '/paymentMethod/store',
                     data: formData,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -71,29 +59,29 @@
                     success: function(response) {
                         alert(response.message);
                         // Refresh DataTable setelah menyimpan perubahan
-                        $('#datatable-customers').DataTable().ajax.reload();
-                        $('#customersModal').modal('hide');
+                        $('#datatable-payment-method').DataTable().ajax.reload();
+                        $('#paymentMethodModal').modal('hide');
                     },
                     error: function(xhr) {
                         alert('Terjadi kesalahan: ' + xhr.responseText);
                     }
                 });
             });
-            $('#createCustomerBtn').click(function() {
-                var formData = $('#createUserForm').serialize();
+            $('#createPaymentMethodBtn').click(function() {
+                var formData = $('#createPaymentMethodForm').serialize();
 
                 $.ajax({
                     type: 'POST',
-                    url: '/customers/store',
+                    url: '/paymentMethod/store',
                     data: formData,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
                         alert(response.message);
-                        $('#customersModalLabel').text('Edit Customer');
-                        $('#formCustomerName').val('');
-                        $('#datatable-customers').DataTable().ajax.reload();
+                        $('#PaymentMethodsModalLabel').text('Edit PaymentMethod');
+                        $('#formPaymentMethodMethod').val('');
+                        $('#datatable-payment-method').DataTable().ajax.reload();
                         $('#create').modal('hide');
                     },
                     error: function(xhr) {
@@ -101,17 +89,17 @@
                     }
                 });
             });
-            window.deleteCustomers = function(id) {
-                if (confirm('Apakah Anda yakin ingin menghapus pelanggan ini?')) {
+            window.deletePaymentMethod = function(id) {
+                if (confirm('Apakah Anda yakin ingin menghapus metode ini?')) {
                     $.ajax({
                         type: 'DELETE',
-                        url: '/customers/delete/' + id,
+                        url: '/paymentMethod/delete/' + id,
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         success: function(response) {
                             // alert(response.message);
-                            $('#datatable-customers').DataTable().ajax.reload();
+                            $('#datatable-payment-method').DataTable().ajax.reload();
                         },
                         error: function(xhr) {
                             alert('Terjadi kesalahan: ' + xhr.responseText);

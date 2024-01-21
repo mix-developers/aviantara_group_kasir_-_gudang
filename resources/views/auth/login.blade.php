@@ -105,9 +105,9 @@
                 </form>
 
                 <p class="text-center">
-                    <span>Belum memiliki akun ?</span>
-                    <a href="{{ route('register') }}">
-                        <span>Buat Akun</span>
+                    <span>Ingin melakukan cek invoice ?</span>
+                    <a href="{{ route('invoice') }}">
+                        <span>Klik disini</span>
                     </a>
                 </p>
             </form>
