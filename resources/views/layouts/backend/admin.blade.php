@@ -39,6 +39,29 @@
         .btn-group-vertical {
             display: block;
         }
+
+        .layout-navbar .navbar-dropdown.dropdown-notifications .dropdown-notifications-list {
+            max-height: 30rem;
+        }
+
+        .layout-navbar .navbar-dropdown .dropdown-menu {
+            min-width: 22rem;
+            overflow: hidden;
+        }
+
+        /* @media (min-width: 1200px) .navbar-expand-xl .navbar-nav .dropdown-menu {
+            position: absolute;
+        } */
+
+        .ps {
+            position: relative;
+        }
+
+        .ps {
+            overflow-anchor: none;
+            touch-action: auto;
+            overflow: hidden !important;
+        }
     </style>
     <!-- Vendors CSS -->
     <link rel="stylesheet"

@@ -2,24 +2,6 @@
 
 @section('content')
     @include('layouts.backend.alert')
-    <div class="row">
-
-        @foreach ($shops as $item)
-            <div class="col-lg-3 col-md-4 col-6 mb-4">
-                <div class="card border border-warning">
-                    <div class="card-header">
-                        <strong>{{ $item->name }}</strong>
-                    </div>
-                    <div class="card-body">
-                        <span class=" text-danger h2">
-                            0
-                        </span>
-                        Produk
-                    </div>
-                </div>
-            </div>
-        @endforeach
-    </div>
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
@@ -46,12 +28,13 @@
                     </div>
                 </div>
                 <div class="card-datatable table-responsive">
-                    <table id="datatable-shop" class="table table-hover display">
+                    <table id="datatable-product" class="table table-hover table-bordered display">
                         <thead>
                             <tr>
                                 <th>ID</th>
                                 <th>Nama</th>
-                                <th>Alamat Toko</th>
+                                <th>Gudang</th>
+                                <th>Stok</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -60,7 +43,8 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Nama</th>
-                                <th>Alamat Toko</th>
+                                <th>Gudang</th>
+                                <th>Stok</th>
                                 <th>Action</th>
                             </tr>
                         </tfoot>
@@ -69,6 +53,6 @@
             </div>
         </div>
     </div>
-    @include('admin.shop.components.modal')
+    @include('admin.stok.components.product.modal_product')
 @endsection
-@include('admin.shop.script')
+@include('admin.stok.script_product')

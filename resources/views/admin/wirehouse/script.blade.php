@@ -12,8 +12,8 @@
                     },
 
                     {
-                        data: 'name',
-                        name: 'name'
+                        data: 'wirehouse',
+                        name: 'wirehouse'
                     },
                     {
                         data: 'address',

@@ -4,6 +4,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\StokController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WirehouseController;
 use App\Models\PaymentMethod;
@@ -32,8 +33,21 @@ Route::middleware(['auth:web'])->group(function () {
     //akun managemen
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    //stok managemen
+    Route::get('/products', [StokController::class, 'products'])->name('products');
+    Route::get('/products-datatable', [StokController::class, 'getProductsDataTable']);
+    Route::post('/products/store',  [StokController::class, 'store_product'])->name('products.store');
+    Route::get('/products/edit/{id}',  [StokController::class, 'edit_product'])->name('products.edit');
+    Route::delete('/products/delete/{id}',  [StokController::class, 'destroy_product'])->name('products.delete');
+    // -----
+    Route::get('/stoks', [StokController::class, 'stoks'])->name('stoks');
+    Route::get('/stoks-datatable', [StokController::class, 'getStoksDataTable']);
+    Route::post('/stoks/store',  [StokController::class, 'store_stok'])->name('stoks.store');
+    Route::get('/stoks/edit/{id}',  [StokController::class, 'edit_stok'])->name('stoks.edit');
+    Route::delete('/stoks/delete/{id}',  [StokController::class, 'destroy_stok'])->name('stoks.delete');
     //customers managemen
     Route::get('/customers', [CustomerController::class, 'index'])->name('customers');
+    Route::get('/customers/show/{id}', [CustomerController::class, 'show'])->name('customers.show');
     Route::post('/customers/store',  [CustomerController::class, 'store'])->name('customers.store');
     Route::get('/customers/edit/{id}',  [CustomerController::class, 'edit'])->name('customers.edit');
     Route::delete('/customers/delete/{id}',  [CustomerController::class, 'destroy'])->name('customers.delete');

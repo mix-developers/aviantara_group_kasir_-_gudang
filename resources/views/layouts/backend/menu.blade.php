@@ -106,6 +106,22 @@
             </a>
         </li>
         <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">Pengelolaan Stok</span>
+        </li>
+        <li class="menu-item {{ request()->is('products') ? 'active' : '' }}">
+            <a href="{{ url('/products') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-layer"></i>
+                <div data-i18n="Analytics">Produk</div>
+            </a>
+        </li>
+        <li class="menu-item {{ request()->is('stoks') ? 'active' : '' }}">
+            <a href="{{ url('/stoks') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-archive"></i>
+                <div data-i18n="Analytics">Stok</div>
+            </a>
+        </li>
+
+        <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Akun</span>
         </li>
         <li class="menu-item {{ request()->is('profile') ? 'active' : '' }}">

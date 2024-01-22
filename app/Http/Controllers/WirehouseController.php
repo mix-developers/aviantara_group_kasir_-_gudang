@@ -12,6 +12,7 @@ class WirehouseController extends Controller
     {
         $data = [
             'title' => 'Gudang',
+            'wirehouses' => Wirehouse::all()
         ];
         return view('admin.wirehouse.index', $data);
     }
@@ -20,10 +21,14 @@ class WirehouseController extends Controller
         $wirehouse = Wirehouse::select(['id', 'name', 'address', 'created_at', 'updated_at'])->orderByDesc('id');
 
         return Datatables::of($wirehouse)
+
+            ->addColumn('wirehouse', function ($wirehouse) {
+                return view('admin.wirehouse.components.wirehouse', compact('wirehouse'));
+            })
             ->addColumn('action', function ($wirehouse) {
                 return view('admin.wirehouse.components.actions', compact('wirehouse'));
             })
-            ->rawColumns(['action'])
+            ->rawColumns(['action', 'wirehouse'])
             ->make(true);
     }
     public function store(Request $request)

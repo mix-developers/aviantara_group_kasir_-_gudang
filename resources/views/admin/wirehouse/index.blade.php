@@ -2,7 +2,28 @@
 
 @section('content')
     @include('layouts.backend.alert')
+    <div class="row">
+
+        @foreach ($wirehouses as $item)
+            <div class="col-lg-3 col-md-4 col-6 mb-4">
+                <div class="card border border-primary">
+                    <div class="card-header">
+                        <strong>{{ $item->name }}</strong>
+                    </div>
+                    <div class="card-body">
+
+                        <span
+                            class=" {{ App\Models\wirehouse::getProduct($item->id) == 0 ? 'text-danger' : ' text-primary' }} h2">
+                            {{ number_format(App\Models\wirehouse::getProduct($item->id)) }}
+                        </span>
+                        Produk
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
     <div class="row justify-content-center">
+
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header flex-column flex-md-row">
@@ -28,7 +49,7 @@
                     </div>
                 </div>
                 <div class="card-datatable table-responsive">
-                    <table id="datatable-wirehouse" class="table table-hover table-bordered display">
+                    <table id="datatable-wirehouse" class="table table-hover  display">
                         <thead>
                             <tr>
                                 <th>ID</th>

@@ -1,22 +1,26 @@
 @push('js')
     <script>
         $(function() {
-            $('#datatable-shop').DataTable({
+            $('#datatable-product').DataTable({
                 processing: true,
                 serverSide: true,
                 responsive: true,
-                ajax: '{{ url('shops-datatable') }}',
+                ajax: '{{ url('products-datatable') }}',
                 columns: [{
                         data: 'id',
                         name: 'id'
                     },
                     {
-                        data: 'shop',
-                        name: 'shop'
+                        data: 'produk',
+                        name: 'produk'
                     },
                     {
-                        data: 'address',
-                        name: 'address'
+                        data: 'wirehouse',
+                        name: 'wirehouse'
+                    },
+                    {
+                        data: 'stok',
+                        name: 'stok'
                     },
                     {
                         data: 'action',
@@ -28,18 +32,18 @@
                 $('#create').modal('show');
             });
             $('.refresh').click(function() {
-                $('#datatable-shop').DataTable().ajax.reload();
+                $('#datatable-product').DataTable().ajax.reload();
             });
-            window.editShop = function(id) {
+            window.editProduct = function(id) {
                 $.ajax({
                     type: 'GET',
-                    url: '/shops/edit/' + id,
+                    url: '/products/edit/' + id,
                     success: function(response) {
-                        $('#shopsModalLabel').text('Edit Shop');
+                        $('#productsModalLabel').text('Edit Shop');
                         $('#formShopId').val(response.id);
                         $('#formShopName').val(response.name);
                         $('#formShopAddress').val(response.address);
-                        $('#shopsModal').modal('show');
+                        $('#productsModal').modal('show');
                     },
                     error: function(xhr) {
                         alert('Terjadi kesalahan: ' + xhr.responseText);
@@ -50,7 +54,7 @@
                 var formData = $('#shopForm').serialize();
                 $.ajax({
                     type: 'POST',
-                    url: '/shops/store',
+                    url: '/products/store',
                     data: formData,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -58,28 +62,28 @@
                     success: function(response) {
                         alert(response.message);
                         // Refresh DataTable setelah menyimpan perubahan
-                        $('#datatable-shop').DataTable().ajax.reload();
-                        $('#shopsModal').modal('hide');
+                        $('#datatable-product').DataTable().ajax.reload();
+                        $('#productsModal').modal('hide');
                     },
                     error: function(xhr) {
                         alert('Terjadi kesalahan: ' + xhr.responseText);
                     }
                 });
             });
-            $('#createShopBtn').click(function() {
-                var formData = $('#createShopForm').serialize();
+            $('#createProductBtn').click(function() {
+                var formData = $('#createProductForm').serialize();
 
                 $.ajax({
                     type: 'POST',
-                    url: '/shops/store',
+                    url: '/products/store',
                     data: formData,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
                         alert(response.message);
-                        $('#customersModalLabel').text('Edit Shop');
-                        $('#datatable-shop').DataTable().ajax.reload();
+                        $('#productsModalLabel').text('Edit products');
+                        $('#datatable-product').DataTable().ajax.reload();
                         $('#create').modal('hide');
                     },
                     error: function(xhr) {
@@ -87,17 +91,17 @@
                     }
                 });
             });
-            window.deleteShop = function(id) {
+            window.deleteProduct = function(id) {
                 if (confirm('Apakah Anda yakin ingin menghapus pelanggan ini?')) {
                     $.ajax({
                         type: 'DELETE',
-                        url: '/shops/delete/' + id,
+                        url: '/products/delete/' + id,
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         success: function(response) {
                             // alert(response.message);
-                            $('#datatable-shop').DataTable().ajax.reload();
+                            $('#datatable-product').DataTable().ajax.reload();
                         },
                         error: function(xhr) {
                             alert('Terjadi kesalahan: ' + xhr.responseText);

@@ -17,11 +17,12 @@ class CustomerSeeder extends Seeder
     public function run()
     {
         $faker = Faker::create();
-        for ($i = 0; $i < 50000; $i++) {
+        for ($i = 0; $i < 5000000; $i++) {
             DB::table('customers')->insert([
                 'name' => $faker->name,
                 'phone' => $faker->phoneNumber,
-                'address' => $faker->streetAddress,
+                'address_home' => $faker->streetAddress,
+                'address_company' => $faker->streetAddress,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ]);

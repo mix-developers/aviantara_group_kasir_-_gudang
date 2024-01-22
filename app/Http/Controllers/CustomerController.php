@@ -15,6 +15,15 @@ class CustomerController extends Controller
         ];
         return view('admin.customers.index', $data);
     }
+    public function show($id)
+    {
+        $customer = Customer::find($id);
+        $data = [
+            'title' => 'Pelanggan : ' . $customer->name,
+            'customer' => $customer
+        ];
+        return view('admin.customers.show', $data);
+    }
     public function getCustomersDataTable()
     {
         $customers = Customer::select(['id', 'name', 'phone', 'address_home', 'address_company', 'created_at', 'updated_at'])->orderByDesc('id');

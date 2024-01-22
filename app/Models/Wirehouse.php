@@ -13,4 +13,10 @@ class Wirehouse extends Model
         'name',
         'address',
     ];
+
+    static function getProduct($id)
+    {
+        $product = Product::where('id_wirehouse', $id)->count();
+        return $product;
+    }
 }
