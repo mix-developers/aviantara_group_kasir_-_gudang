@@ -2,9 +2,9 @@
     <div class="app-brand demo">
         {{-- logo aplikasi --}}
         <a href="index.html" class="app-brand-link">
-            <span class="app-brand-logo demo">
+            <span class="app-brand-logo demo text-center">
 
-                <svg width="25" viewBox="0 0 25 42" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                {{-- <svg width="25" viewBox="0 0 25 42" version="1.1" xmlns="http://www.w3.org/2000/svg"
                     xmlns:xlink="http://www.w3.org/1999/xlink">
                     <defs>
                         <path
@@ -45,9 +45,10 @@
                             </g>
                         </g>
                     </g>
-                </svg>
+                </svg> --}}
+                <img src="{{ asset('img/') }}/logo.png" alt="logo" style="width: 10%">
             </span>
-            <span class="app-brand-text demo menu-text fw-bolder ms-2">Admin Panel</span>
+            {{-- <span class="app-brand-text demo menu-text fw-bolder ms-2">Admin Panel</span> --}}
         </a>
 
         <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
@@ -117,7 +118,13 @@
         <li class="menu-item {{ request()->is('stoks') ? 'active' : '' }}">
             <a href="{{ url('/stoks') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-archive"></i>
-                <div data-i18n="Analytics">Stok</div>
+                <div data-i18n="Analytics">Input Stok</div>
+            </a>
+        </li>
+        <li class="menu-item {{ request()->is('damageds') ? 'active' : '' }}">
+            <a href="{{ url('/damageds') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-trash"></i>
+                <div data-i18n="Analytics">Stok Rusak</div>
             </a>
         </li>
 

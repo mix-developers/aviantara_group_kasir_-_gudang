@@ -19,6 +19,11 @@ class ShopController extends Controller
         ];
         return view('admin.shop.index', $data);
     }
+    public function getAll()
+    {
+        $shop = Shop::all();
+        return response()->json($shop);
+    }
     public function getShopsDataTable()
     {
         $shop = Shop::select(['id', 'name', 'address', 'created_at', 'updated_at'])->orderByDesc('id');
@@ -48,14 +53,14 @@ class ShopController extends Controller
         if ($request->filled('id')) {
             $Shop = Shop::find($request->input('id'));
             if (!$Shop) {
-                return response()->json(['message' => 'Shop not found'], 404);
+                return response()->json(['message' => 'Data tidak ditemukan'], 404);
             }
 
             $Shop->update($ShopData);
-            $message = 'Shop updated successfully';
+            $message = 'Berhasil mengedit data';
         } else {
             Shop::create($ShopData);
-            $message = 'Shop created successfully';
+            $message = 'Berhasil menambah data';
         }
 
         return response()->json(['message' => $message]);
@@ -65,19 +70,19 @@ class ShopController extends Controller
         $Shop = Shop::find($id);
 
         if (!$Shop) {
-            return response()->json(['message' => 'Shop not found'], 404);
+            return response()->json(['message' => 'Data tidak ditemukan'], 404);
         }
 
         $Shop->delete();
 
-        return response()->json(['message' => 'Shop deleted successfully']);
+        return response()->json(['message' => 'Berhasil menghapus data']);
     }
     public function edit($id)
     {
         $Shop = Shop::find($id);
 
         if (!$Shop) {
-            return response()->json(['message' => 'Shop not found'], 404);
+            return response()->json(['message' => 'Data tidak ditemukan'], 404);
         }
 
         return response()->json($Shop);

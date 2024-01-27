@@ -30,6 +30,7 @@
             });
             $('.refresh').click(function() {
                 $('#datatable-payment-method').DataTable().ajax.reload();
+                getPaymentCard().ajax.reload();
             });
             window.editPaymentMethod = function(id) {
                 $.ajax({
@@ -57,9 +58,9 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
-                        alert(response.message);
-                        // Refresh DataTable setelah menyimpan perubahan
+                        getAlert(response.message);
                         $('#datatable-payment-method').DataTable().ajax.reload();
+                        getPaymentCard().ajax.reload();
                         $('#paymentMethodModal').modal('hide');
                     },
                     error: function(xhr) {
@@ -78,11 +79,12 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
-                        alert(response.message);
+                        getAlert(response.message);
                         $('#PaymentMethodsModalLabel').text('Edit PaymentMethod');
                         $('#formPaymentMethodMethod').val('');
                         $('#datatable-payment-method').DataTable().ajax.reload();
                         $('#create').modal('hide');
+                        getPaymentCard().ajax.reload();
                     },
                     error: function(xhr) {
                         alert('Terjadi kesalahan: ' + xhr.responseText);
@@ -98,8 +100,9 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         success: function(response) {
-                            // alert(response.message);
+                            getAlert(response.message);
                             $('#datatable-payment-method').DataTable().ajax.reload();
+                            getPaymentCard().ajax.reload();
                         },
                         error: function(xhr) {
                             alert('Terjadi kesalahan: ' + xhr.responseText);
@@ -107,6 +110,37 @@
                     });
                 }
             };
+
+            function getPaymentCard() {
+                $.ajax({
+                    url: '/paymentMethod/getall',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#paymentCard').empty();
+
+                        $.each(data, function(index, method) {
+                            $('#paymentCard').append(
+                                '<div class="col-md-3 col-6 mb-4"><div class="card"><div class="card-header">' +
+                                method.method +
+                                '</div><div class="card-body"><span class="h3 text-primary">Rp 0</span></div></div></div>'
+                            );
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Terjadi kesalahan: ' + error);
+                    }
+                });
+            }
+
+            function getAlert(alertValue) {
+                $('#alert').append(
+                    '<div class="alert alert-success alert-dismissible" role="alert">' +
+                    alertValue +
+                    '<button type = "button" class = "btn-close"  data-bs-dismiss="alert" aria - label = "Close" ></button> </div>'
+                )
+            }
+            getPaymentCard();
         });
     </script>
 @endpush

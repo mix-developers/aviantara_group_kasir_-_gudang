@@ -18,16 +18,16 @@ class Product extends Model
         'quantity_unit',
         'photo',
         'id_wirehouse',
+        'sub_unit',
     ];
 
     static function getStok($id)
     {
-        $stok = ProductStok::where('id_product', $id);
-        $stok_masuk = $stok->where('type', 'Masuk')->sum('quantity');
-        $stok_keluar = $stok->where('type', 'Keluar')->sum('quantity');
+        $stok_masuk =  ProductStok::where('id_product', $id)->select('quantity')->where('type', 'Masuk')->sum('quantity');
+        $stok_keluar =  ProductStok::where('id_product', $id)->select('quantity')->where('type', 'Keluar')->sum('quantity');
 
         $total_stok = $stok_masuk - $stok_keluar;
-        return $total_stok >= 0 ? $total_stok : 0;
+        return $total_stok;
     }
 
     public function wirehouse(): BelongsTo

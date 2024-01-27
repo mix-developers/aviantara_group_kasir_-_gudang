@@ -69,7 +69,7 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
-                        alert(response.message);
+                        getAlert(response.message);
                         // Refresh DataTable setelah menyimpan perubahan
                         $('#datatable-customers').DataTable().ajax.reload();
                         $('#customersModal').modal('hide');
@@ -90,7 +90,7 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
-                        alert(response.message);
+                        getAlert(response.message);
                         $('#customersModalLabel').text('Edit Customer');
                         $('#formCustomerName').val('');
                         $('#datatable-customers').DataTable().ajax.reload();
@@ -110,7 +110,7 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         success: function(response) {
-                            // alert(response.message);
+                            getAlert(response.message);
                             $('#datatable-customers').DataTable().ajax.reload();
                         },
                         error: function(xhr) {
@@ -119,6 +119,14 @@
                     });
                 }
             };
+
+            function getAlert(alertValue) {
+                $('#alert').append(
+                    '<div class="alert alert-success alert-dismissible" role="alert">' +
+                    alertValue +
+                    '<button type = "button" class = "btn-close"  data-bs-dismiss="alert" aria - label = "Close" ></button> </div>'
+                )
+            }
         });
     </script>
 @endpush

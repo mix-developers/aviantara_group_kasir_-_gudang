@@ -10,9 +10,10 @@
         <!-- Search -->
         <div class="navbar-nav align-items-center">
             <div class="nav-item d-flex align-items-center">
-                <i class="bx bx-search fs-4 lh-0"></i>
-                <input type="text" class="form-control border-0 shadow-none" placeholder="Search"
-                    aria-label="Search" />
+                <i class="bx bx-home fs-4 lh-0"></i>
+                <span class="fw-bold" style="margin-left:10px;">AVIANTARA GROUP</span>
+                {{-- <input type="text" class="form-control border-0 shadow-none" placeholder="Search"
+                    aria-label="Search" /> --}}
                 {{-- <a href="{{ url('/') }}" class="btn btn-outline-primary">Homepage</a> --}}
             </div>
         </div>
@@ -21,7 +22,7 @@
         <ul class="navbar-nav flex-row align-items-center ms-auto">
             <!-- Place this tag where you want the button to render. -->
             {{-- notifikasi --}}
-            <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-3 me-xl-1">
+            {{-- <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-3 me-xl-1">
                 <a class="nav-link dropdown-toggle hide-arrow " href="javascript:void(0);" data-bs-toggle="dropdown"
                     data-bs-auto-close="outside" aria-expanded="true">
                     <i class="bx bx-bell bx-sm"></i>
@@ -243,7 +244,7 @@
                         <button class="btn btn-primary text-uppercase w-100">view all notifications</button>
                     </li>
                 </ul>
-            </li>
+            </li> --}}
             <!-- User -->
             <li class="nav-item navbar-dropdown dropdown-user dropdown">
                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">

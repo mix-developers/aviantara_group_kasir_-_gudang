@@ -36,6 +36,19 @@
             $('.create-new').click(function() {
                 $('#create').modal('show');
             });
+
+            function getRoleOptions(roleValue) {
+                var staticData = ['Owner', 'Admin', 'Gudang', 'Kasir'];
+
+                $('#formUserRole').empty();
+
+                $.each(staticData, function(index, role) {
+                    var selected = (role === roleValue) ? 'selected' : '';
+                    $('#formUserRole').append('<option value="' + role + '" ' + selected + '>' +
+                        role +
+                        '</option>');
+                });
+            }
             window.editUser = function(id) {
                 $.ajax({
                     type: 'GET',
@@ -45,6 +58,7 @@
                         $('#formUserId').val(response.id);
                         $('#formUserName').val(response.name);
                         $('#formUserEmail').val(response.email);
+                        getRoleOptions(response.role);
                         $('#UsersModal').modal('show');
                     },
                     error: function(xhr) {

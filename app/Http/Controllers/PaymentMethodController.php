@@ -15,6 +15,11 @@ class PaymentMethodController extends Controller
         ];
         return view('admin.payment_method.index', $data);
     }
+    public function getAll()
+    {
+        $PaymentMethod = PaymentMethod::all();
+        return response()->json($PaymentMethod);
+    }
     public function getPaymentMethodDataTable()
     {
         $PaymentMethod = PaymentMethod::select(['id', 'method', 'enabled', 'created_at', 'updated_at'])->orderByDesc('id');
@@ -43,14 +48,14 @@ class PaymentMethodController extends Controller
         if ($request->filled('id')) {
             $PaymentMethod = PaymentMethod::find($request->input('id'));
             if (!$PaymentMethod) {
-                return response()->json(['message' => 'Payment method not found'], 404);
+                return response()->json(['message' => 'Data tidak ditemukan'], 404);
             }
 
             $PaymentMethod->update($paymentMethodData);
-            $message = 'Payment method updated successfully';
+            $message = 'Berhasil Mengedit data';
         } else {
             PaymentMethod::create($paymentMethodData);
-            $message = 'Payment method created successfully';
+            $message = 'Berhasil menambah data';
         }
 
         return response()->json(['message' => $message]);
@@ -60,19 +65,19 @@ class PaymentMethodController extends Controller
         $PaymentMethod = PaymentMethod::find($id);
 
         if (!$PaymentMethod) {
-            return response()->json(['message' => 'Payment method not found'], 404);
+            return response()->json(['message' => 'Data tidak ditemukan'], 404);
         }
 
         $PaymentMethod->delete();
 
-        return response()->json(['message' => 'Payment method deleted successfully']);
+        return response()->json(['message' => 'Berhasil menghapus data']);
     }
     public function edit($id)
     {
         $PaymentMethod = PaymentMethod::find($id);
 
         if (!$PaymentMethod) {
-            return response()->json(['message' => 'Payment method not found'], 404);
+            return response()->json(['message' => 'Data tidak ditemukan'], 404);
         }
 
         return response()->json($PaymentMethod);

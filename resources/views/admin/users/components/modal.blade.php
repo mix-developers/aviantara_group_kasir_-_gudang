@@ -21,9 +21,7 @@
                     <div class="mb-3">
                         <label for="formUserRole" class="form-label">Role</label>
                         <select class="form-control" id="formUserRole" name="role">
-                            <option value="User">User</option>
-                            <option value="Admin">Admin</option>
-                            <option value="Operator">Operator</option>
+
                         </select>
                     </div>
 
@@ -56,10 +54,11 @@
                     </div>
                     <div class="mb-3">
                         <label for="formUserRole" class="form-label">Role</label>
-                        <select class="form-control" id="formUserRole" name="role">
-                            <option value="User">User</option>
+                        <select class="form-select" id="formUserRole" name="role">
+                            <option value="Owner">Owner</option>
                             <option value="Admin">Admin</option>
-                            <option value="Operator">Operator</option>
+                            <option value="Gudang">Gudang</option>
+                            <option value="Kasir">Kasir</option>
                         </select>
                     </div>
                 </form>

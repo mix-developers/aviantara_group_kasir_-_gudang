@@ -15,6 +15,11 @@ class CustomerController extends Controller
         ];
         return view('admin.customers.index', $data);
     }
+    public function getAll()
+    {
+        $customer = customer::all();
+        return response()->json($customer);
+    }
     public function show($id)
     {
         $customer = Customer::find($id);
@@ -56,14 +61,14 @@ class CustomerController extends Controller
         if ($request->filled('id')) {
             $customer = Customer::find($request->input('id'));
             if (!$customer) {
-                return response()->json(['message' => 'customer not found'], 404);
+                return response()->json(['message' => 'Data tidak ditemukan'], 404);
             }
 
             $customer->update($customerData);
-            $message = 'customer updated successfully';
+            $message = 'Berhasil mengedit data';
         } else {
             Customer::create($customerData);
-            $message = 'customer created successfully';
+            $message = 'Berhasil menambah data';
         }
 
         return response()->json(['message' => $message]);
@@ -73,19 +78,19 @@ class CustomerController extends Controller
         $customers = Customer::find($id);
 
         if (!$customers) {
-            return response()->json(['message' => 'Customer not found'], 404);
+            return response()->json(['message' => 'Data tidak ditemukan'], 404);
         }
 
         $customers->delete();
 
-        return response()->json(['message' => 'Customer deleted successfully']);
+        return response()->json(['message' => 'Berhasil menghapus data']);
     }
     public function edit($id)
     {
         $customer = Customer::find($id);
 
         if (!$customer) {
-            return response()->json(['message' => 'customer not found'], 404);
+            return response()->json(['message' => 'data tidak ditemukan'], 404);
         }
 
         return response()->json($customer);

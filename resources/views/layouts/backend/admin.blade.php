@@ -14,19 +14,20 @@
     <meta name="description" content="" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{ asset('backend_theme/') }}/assets/img/favicon/favicon.ico" />
+    {{-- <link rel="icon" type="image/x-icon" href="{{ asset('backend_theme/') }}/assets/img/favicon/favicon.ico" /> --}}
+    <link rel="icon" type="image/x-icon" href="{{ asset('img/') }}/logo.png" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
+    {{-- <link
         href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
-        rel="stylesheet" />
+        rel="stylesheet" /> --}}
 
     <!-- Icons. Uncomment required icon fonts -->
     <link rel="stylesheet" href="{{ asset('backend_theme/') }}/assets/vendor/fonts/boxicons.css" />
-    <link rel="stylesheet" href="assets/vendor/libs/animate-css/animate.css" />
-    <link rel="stylesheet" href="assets/vendor/libs/sweetalert2/sweetalert2.css" />
+    {{-- <link rel="stylesheet" href="assets/vendor/libs/animate-css/animate.css" />
+    <link rel="stylesheet" href="assets/vendor/libs/sweetalert2/sweetalert2.css" /> --}}
     <!-- Core CSS -->
     <link rel="stylesheet" href="{{ asset('backend_theme/') }}/assets/vendor/css/core.css"
         class="template-customizer-core-css" />
@@ -167,7 +168,7 @@
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     </script>
     <!-- Place this tag in your head or just before your close body tag. -->
-    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    {{-- <script async defer src="https://buttons.github.io/buttons.js"></script> --}}
 
     <script>
         $(".delete-button").on('click', function(e) {

@@ -1,0 +1,56 @@
+@push('js')
+    <script>
+        //stok gudang
+        $(function() {
+            $('.refresh-stok').click(function() {
+                getStok().ajax.reload;
+
+            });
+
+            function getStok() {
+                $.ajax({
+                    type: 'GET',
+                    url: '/get-stok-card',
+                    success: function(response) {
+                        $('#stokInput').text(response.stok_input);
+                        $('#stokOut').text(response.stok_out);
+                        $('#stokExpired').text(response.stok_expired);
+                        $('#stokNotExpired').text(response.stok_not_expired);
+                        $('#stokWirehouse').text(response.stok_wirehouse);
+                    }
+                });
+            };
+
+            function expiredAlert() {
+                $.ajax({
+                    type: 'GET',
+                    url: '/expired-alert',
+                    success: function(response) {
+                        var expiredText = '<span class="h4 text-danger">' + response.expired +
+                            ' Barang pada gudang telah kadaluarsa ..</span>';
+                        var remainingText = '<strong>' + response.remaining +
+                            ' Barang pada gudang akan kadaluarsa..</strong><br><small>*Waktu peringatan dihitung 3 bulan sebelum tanggal kadaluarsa tiba.</small>';
+                        if (response.expired != 0) {
+                            getAlert(expiredText, 'danger');
+                        }
+                        if (response.remaining != 0) {
+                            getAlert(remainingText, 'warning');
+
+                        }
+                    }
+                });
+            };
+
+            function getAlert(alertValue, type) {
+                $('#alert').append(
+                    '<div class="alert alert-' + type + ' alert-dismissible" role="alert">' +
+                    alertValue +
+                    '<button type = "button" class = "btn-close"  data-bs-dismiss="alert" aria - label = "Close" ></button> </div>'
+                )
+            }
+            getStok();
+            expiredAlert();
+            //end stok gudang
+        });
+    </script>
+@endpush

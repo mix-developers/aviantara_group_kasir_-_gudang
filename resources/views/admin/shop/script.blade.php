@@ -56,7 +56,7 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
-                        alert(response.message);
+                        getAlert(response.message);
                         // Refresh DataTable setelah menyimpan perubahan
                         $('#datatable-shop').DataTable().ajax.reload();
                         $('#shopsModal').modal('hide');
@@ -77,7 +77,7 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
-                        alert(response.message);
+                        getAlert(response.message);
                         $('#customersModalLabel').text('Edit Shop');
                         $('#datatable-shop').DataTable().ajax.reload();
                         $('#create').modal('hide');
@@ -88,7 +88,7 @@
                 });
             });
             window.deleteShop = function(id) {
-                if (confirm('Apakah Anda yakin ingin menghapus pelanggan ini?')) {
+                if (confirm('Apakah Anda yakin ingin menghapus toko ini?')) {
                     $.ajax({
                         type: 'DELETE',
                         url: '/shops/delete/' + id,
@@ -96,7 +96,7 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         success: function(response) {
-                            // alert(response.message);
+                            getAlert(response.message);
                             $('#datatable-shop').DataTable().ajax.reload();
                         },
                         error: function(xhr) {
@@ -105,6 +105,14 @@
                     });
                 }
             };
+
+            function getAlert(alertValue) {
+                $('#alert').append(
+                    '<div class="alert alert-success alert-dismissible" role="alert">' +
+                    alertValue +
+                    '<button type = "button" class = "btn-close"  data-bs-dismiss="alert" aria - label = "Close" ></button> </div>'
+                )
+            }
         });
     </script>
 @endpush

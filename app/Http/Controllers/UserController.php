@@ -104,4 +104,9 @@ class UserController extends Controller
 
         return response()->json(['message' => 'User deleted successfully']);
     }
+    public function getAll()
+    {
+        $user = User::all();
+        return response()->json($user);
+    }
 }

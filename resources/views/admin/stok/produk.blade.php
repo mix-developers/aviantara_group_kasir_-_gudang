@@ -2,6 +2,7 @@
 
 @section('content')
     @include('layouts.backend.alert')
+    <div class="" id="alert"></div>
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
@@ -27,6 +28,23 @@
                         </div>
                     </div>
                 </div>
+                <hr>
+                <div style="margin-left:24px; margin-right: 24px;">
+                    <strong>Filter Data</strong>
+                    <div class="d-flex justify-content-center align-items-center row gap-3 gap-md-0">
+                        <div class="col-md-3 col-12">
+                            <select id="selectStok" class="form-select text-capitalize">
+
+                            </select>
+                        </div>
+                        <div class="col-md-3 col-12">
+                            <select id="selectWirehouse" class="form-select text-capitalize">
+
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <hr>
                 <div class="card-datatable table-responsive">
                     <table id="datatable-product" class="table table-hover table-bordered display">
                         <thead>
@@ -35,6 +53,7 @@
                                 <th>Nama</th>
                                 <th>Gudang</th>
                                 <th>Stok</th>
+                                <th>Kadaluarsa</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -45,6 +64,7 @@
                                 <th>Nama</th>
                                 <th>Gudang</th>
                                 <th>Stok</th>
+                                <th>Kadaluarsa</th>
                                 <th>Action</th>
                             </tr>
                         </tfoot>

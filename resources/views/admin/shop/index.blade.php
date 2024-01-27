@@ -2,6 +2,7 @@
 
 @section('content')
     @include('layouts.backend.alert')
+    <div class="" id="alert"></div>
     <div class="row">
 
         @foreach ($shops as $item)
@@ -11,7 +12,7 @@
                         <strong>{{ $item->name }}</strong>
                     </div>
                     <div class="card-body">
-                        <span class=" text-danger h2">
+                        <span class=" text-danger h2" id="totalProduk">
                             0
                         </span>
                         Produk
