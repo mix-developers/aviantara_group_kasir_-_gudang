@@ -47,7 +47,14 @@
                     Stok Masuk
                 </div>
                 <div class="card-body" style="padding: 10px;">
-                    <span class="h3 text-white" id="stokInput">0</span> Stok
+                    <div class="row">
+                        <div class="col">
+                            <span class="h3 text-white" id="stokInput">0</span> Stok
+                        </div>
+                        <div class="col">
+                            Rp <span class="h5 text-white" id="priceStokInput">0</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

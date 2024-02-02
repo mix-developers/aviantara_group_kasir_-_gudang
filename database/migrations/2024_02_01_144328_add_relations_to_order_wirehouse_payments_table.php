@@ -13,15 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('product_prices', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('id_product');
-            $table->foreignId('id_user');
-            $table->integer('price_origin');
-            $table->integer('price_sale');
-            $table->timestamps();
+        Schema::table('order_wirehouse_payments', function (Blueprint $table) {
 
-            $table->foreign('id_product')->references('id')->on('products');
+            $table->foreign('id_order_wirehouse')->references('id')->on('order_wirehouses');
+            $table->foreign('id_payment_method')->references('id')->on('payment_methods');
             $table->foreign('id_user')->references('id')->on('users');
         });
     }
@@ -33,6 +28,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('product_prices');
+        Schema::table('order_wirehouse_payments', function (Blueprint $table) {
+            //
+        });
     }
 };

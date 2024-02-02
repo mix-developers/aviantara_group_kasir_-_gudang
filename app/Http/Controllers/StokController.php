@@ -178,7 +178,7 @@ class StokController extends Controller
             })
             ->addColumn('total', function ($stok) {
                 $typeClass = ($stok->type == "Masuk") ? "primary" : "danger";
-                return "<strong class='h4 text-$typeClass'>$stok->quantity</strong><br><span class='badge bg-label-$typeClass'>Stok $stok->type</span>";
+                return "<strong class='h4 text-$typeClass'>$stok->quantity</strong><small> " . $stok->product->unit . "</small><br><span class='badge bg-label-$typeClass'>Stok $stok->type</span>";
             })
             ->addColumn('user', function ($stok) {
                 $typeClass = ($stok->type == "Masuk") ? "primary" : "danger";
@@ -213,6 +213,12 @@ class StokController extends Controller
             })
             ->rawColumns(['produk', 'total', 'user', 'warning'])
             ->make(true);
+    }
+    public function stokExpiredDate($id)
+    {
+        $product = ProductStok::select(['id', 'expired_date'])->where('id_product', $id)->get();
+
+        return response()->json($product);
     }
     public function store_product(Request $request)
     {
@@ -262,6 +268,7 @@ class StokController extends Controller
             'quantity' => $request->input('quantity'),
             'expired_date' => $request->input('expired_date'),
             'description' => $request->input('description'),
+            'price_origin' => $request->input('price_origin'),
             'id_user' => Auth::user()->id
         ];
 

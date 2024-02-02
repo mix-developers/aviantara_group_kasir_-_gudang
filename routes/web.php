@@ -2,13 +2,17 @@
 
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OrderPaymentController;
+use App\Http\Controllers\OrderWirehouseController;
 use App\Http\Controllers\PaymentMethodController;
+use App\Http\Controllers\PriceController;
 use App\Http\Controllers\ProductDamagedController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\StokController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WirehouseController;
+use App\Models\OrderWirehouse;
 use App\Models\PaymentMethod;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +31,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/invoice', function () {
     return view('pages/cek_invoice', ['title' => 'Cek Invoice']);
 })->name('invoice');
+Route::get('/get-invoice/{invoice}', [OrderWirehouseController::class, 'getInvoice']);
 
 Auth::routes();
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
@@ -48,6 +53,7 @@ Route::middleware(['auth:web'])->group(function () {
     Route::get('/products/edit/{id}',  [StokController::class, 'edit_product'])->name('products.edit');
     Route::delete('/products/delete/{id}',  [StokController::class, 'destroy_product'])->name('products.delete');
     // -----
+    Route::get('/stoks-expired-date/{id}', [StokController::class, 'stokExpiredDate']);
     Route::get('/stoks', [StokController::class, 'stoks'])->name('stoks');
     Route::get('/stoks-datatable', [StokController::class, 'getStoksDataTable']);
     Route::post('/stoks/store',  [StokController::class, 'store_stok'])->name('stoks.store');
@@ -61,6 +67,7 @@ Route::middleware(['auth:web'])->group(function () {
     Route::get('/customers/edit/{id}',  [CustomerController::class, 'edit'])->name('customers.edit');
     Route::delete('/customers/delete/{id}',  [CustomerController::class, 'destroy'])->name('customers.delete');
     Route::get('/customers-datatable', [CustomerController::class, 'getCustomersDataTable']);
+    Route::get('/customers-datatable-detail/{id}', [CustomerController::class, 'getCustomersDataTableDetail']);
     //product damaged managemen
     Route::get('/damageds', [ProductDamagedController::class, 'index'])->name('damageds');
     Route::get('/damageds/getall', [ProductDamagedController::class, 'getAll'])->name('damageds.getall');
@@ -83,8 +90,20 @@ Route::middleware(['auth:web', 'role:Admin'])->group(function () {
     Route::get('/paymentMethod/getall', [PaymentMethodController::class, 'getAll'])->name('paymentMethod.getall');
     Route::post('/paymentMethod/store',  [PaymentMethodController::class, 'store'])->name('paymentMethod.store');
     Route::get('/paymentMethod/edit/{id}',  [PaymentMethodController::class, 'edit'])->name('paymentMethod.edit');
+    Route::get('/paymentMethod/show/{id}',  [PaymentMethodController::class, 'show'])->name('paymentMethod.show');
     Route::delete('/paymentMethod/delete/{id}',  [PaymentMethodController::class, 'destroy'])->name('paymentMethod.delete');
     Route::get('/paymentMethod-datatable', [PaymentMethodController::class, 'getPaymentMethodDataTable']);
+    Route::get('/paymentMethod-datatable-detail/{id}', [PaymentMethodController::class, 'getPaymentMethodDetailDataTable']);
+    Route::get('/get_total_payment_method/{id}', [PaymentMethodController::class, 'getTotalPaymentMethod']);
+    //product price managemen
+    Route::get('/prices', [PriceController::class, 'index'])->name('prices');
+    Route::get('/prices/getall', [PriceController::class, 'getAll'])->name('prices.getall');
+    Route::post('/prices/store',  [PriceController::class, 'store'])->name('prices.store');
+    Route::get('/prices/show/{id}',  [PriceController::class, 'show'])->name('prices.show');
+    Route::get('/prices/edit/{id}',  [PriceController::class, 'edit'])->name('prices.edit');
+    Route::delete('/prices/delete/{id}',  [PriceController::class, 'destroy'])->name('prices.delete');
+    Route::get('/prices-datatable', [PriceController::class, 'getPricesDataTable']);
+    Route::get('/price-detail-datatable/{id}', [PriceController::class, 'getPriceDetailDataTable']);
     //wirehouse managemen
     Route::get('/wirehouses', [WirehouseController::class, 'index'])->name('wirehouses');
     Route::get('/wirehouses/show/{id}', [WirehouseController::class, 'show'])->name('wirehouses.show');
@@ -102,4 +121,20 @@ Route::middleware(['auth:web', 'role:Admin'])->group(function () {
     Route::get('/shops/edit/{id}',  [ShopController::class, 'edit'])->name('shops.edit');
     Route::delete('/shops/delete/{id}',  [ShopController::class, 'destroy'])->name('shops.delete');
     Route::get('/shops-datatable', [ShopController::class, 'getShopsDataTable']);
+    //order wirehouses managemen
+    Route::get('/order_wirehouses', [OrderWirehouseController::class, 'index'])->name('order_wirehouses');
+    Route::get('/order_wirehouses/getall', [OrderWirehouseController::class, 'getAll'])->name('order_wirehouses.getall');
+    Route::post('/order_wirehouses/store',  [OrderWirehouseController::class, 'store'])->name('order_wirehouses.store');
+    Route::get('/order_wirehouses/edit/{id}',  [OrderWirehouseController::class, 'edit'])->name('order_wirehouses.edit');
+    Route::delete('/order_wirehouses/delete/{id}',  [OrderWirehouseController::class, 'destroy'])->name('order_wirehouses.delete');
+    Route::get('/order-wirehouses-datatable', [OrderWirehouseController::class, 'getOrderWirehousesDataTable']);
+    //order wirehouses payment managemen
+    Route::get('/payments', [OrderPaymentController::class, 'index'])->name('payments');
+    Route::get('/payments/getall', [OrderPaymentController::class, 'getAll'])->name('payments.getall');
+    Route::post('/payments/store',  [OrderPaymentController::class, 'store'])->name('payments.store');
+    Route::get('/payments/invoice/{invoice}',  [OrderPaymentController::class, 'invoice'])->name('payments.invoice');
+    Route::get('/payments/edit/{id}',  [OrderPaymentController::class, 'edit'])->name('payments.edit');
+    Route::delete('/payments/delete/{id}',  [OrderPaymentController::class, 'destroy'])->name('payments.delete');
+    Route::get('/payment-detail-datatable/{id}', [OrderPaymentController::class, 'getPaymentDetailDataTable']);
+    Route::post('/send_bill/{id}', [OrderPaymentController::class, 'send_bill'])->name('send_bill');
 });

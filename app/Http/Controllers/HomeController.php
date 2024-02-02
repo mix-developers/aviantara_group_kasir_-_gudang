@@ -83,6 +83,11 @@ class HomeController extends Controller
         $stok = $stok_masuk - $stok_keluar;
         return $stok;
     }
+    public function getPriceStokInput()
+    {
+        $stok = ProductStok::where('type', 'Masuk')->sum('price_origin');
+        return $stok;
+    }
     public function getStokCard()
     {
 
@@ -92,6 +97,7 @@ class HomeController extends Controller
             'stok_expired' => $this->getStokExpired(),
             'stok_not_expired' => $this->getStokNotExpired(),
             'stok_wirehouse' => $this->getStokWirehouse(),
+            'price_stok_input' => $this->getPriceStokInput(),
         ];
         return response()->json($data);
     }

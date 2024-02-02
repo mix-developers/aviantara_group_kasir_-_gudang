@@ -6,15 +6,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ProductStok extends Model
+class paymentMethodItem extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'id_product', 'id_user', 'type', 'price_origin', 'quantity', 'expired_date', 'description'
+        'id_payment_method',
+        'id_user',
+        'description',
+        'paid',
     ];
-    public function product(): BelongsTo
+    public function payment_method(): BelongsTo
     {
-        return $this->belongsTo(Product::class, 'id_product');
+        return $this->belongsTo(PaymentMethod::class, 'id_payment_method');
     }
     public function user(): BelongsTo
     {

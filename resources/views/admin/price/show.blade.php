@@ -3,6 +3,7 @@
 @section('content')
     @include('layouts.backend.alert')
     <div class="row justify-content-center">
+
         <div class="col-12">
             <div class="card">
                 <div class="card-header flex-column flex-md-row">
@@ -14,82 +15,79 @@
                             <button class="btn btn-secondary refresh btn-default" type="button">
                                 <span>
                                     <i class="bx bx-sync me-sm-1"> </i>
-                                    <span class="d-none d-sm-inline-block">Refresh </span>
+                                    <span class="d-none d-sm-inline-block"></span>
                                 </span>
                             </button>
                         </div>
                     </div>
                 </div>
                 <div class="card-datatable table-responsive">
-                    <table id="datatable-detail-customer" class="table table-hover table-bordered display">
+                    <table id="datatable-detail-price" class="table table-hover table-bordered display">
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>No. Invoice</th>
-                                <th>Harga Total</th>
-                                <th>Pengantaran</th>
-                                <th>Keterangan</th>
-                                <th>Action</th>
+                                <th>produk</th>
+                                <th>tanggal</th>
+                                <th>Harga Grosir</th>
+                                <th>Pegawai</th>
                             </tr>
                         </thead>
 
                         <tfoot>
                             <tr>
                                 <th>ID</th>
-                                <th>No. Invoice</th>
-                                <th> Harga Total</th>
-                                <th>Pengantaran</th>
-                                <th>Keterangan</th>
-                                <th>Action</th>
+                                <th>produk</th>
+                                <th>tanggal</th>
+                                <th>Harga Grosir</th>
+                                <th>Pegawai</th>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
             </div>
         </div>
+
     </div>
 @endsection
 @push('js')
     <script>
         $(function() {
-            $('#datatable-detail-customer').DataTable({
+            $('#datatable-detail-price').DataTable({
                 processing: true,
                 serverSide: true,
                 responsive: true,
-                ajax: '{{ url('customers-datatable-detail', $customer->id) }}',
+                ajax: '{{ url('price-detail-datatable', $product->id) }}',
                 columns: [{
                         data: 'id',
                         name: 'id'
                     },
-
                     {
-                        data: 'no_invoice',
-                        name: 'no_invoice'
+                        data: 'product.name',
+                        name: 'product.name'
                     },
                     {
-                        data: 'total_fee_text',
-                        name: 'total_fee_text'
+                        data: 'date',
+                        name: 'date'
                     },
-
                     {
-                        data: 'delivery_text',
-                        name: 'delivery_text'
+                        data: 'grosir',
+                        name: 'grosir'
                     },
 
                     {
-                        data: 'description',
-                        name: 'description'
+                        data: 'user.name',
+                        name: 'user.name'
                     },
-                    {
-                        data: 'action',
-                        name: 'action'
-                    }
+                ],
+                dom: 'Bfrtip',
+                buttons: [
+                    'csv', 'excel', 'pdf', 'print'
                 ]
             });
-            $('.refresh').click(function() {
-                $('#datatable-detail-customer').DataTable().ajax.reload();
-            });
 
+            $('.refresh').click(function() {
+                $('#datatable-detail-price').DataTable().ajax.reload();
+            });
 
         });
     </script>

@@ -17,6 +17,7 @@
                         $('#stokExpired').text(response.stok_expired);
                         $('#stokNotExpired').text(response.stok_not_expired);
                         $('#stokWirehouse').text(response.stok_wirehouse);
+                        $('#priceStokInput').text(formatNumberWithDot(response.price_stok_input));
                     }
                 });
             };
@@ -47,6 +48,10 @@
                     alertValue +
                     '<button type = "button" class = "btn-close"  data-bs-dismiss="alert" aria - label = "Close" ></button> </div>'
                 )
+            }
+
+            function formatNumberWithDot(number) {
+                return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
             }
             getStok();
             expiredAlert();

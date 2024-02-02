@@ -30,7 +30,7 @@
             });
             $('.refresh').click(function() {
                 $('#datatable-payment-method').DataTable().ajax.reload();
-                getPaymentCard().ajax.reload();
+                getPaymentCard();
             });
             window.editPaymentMethod = function(id) {
                 $.ajax({
@@ -102,7 +102,7 @@
                         success: function(response) {
                             getAlert(response.message);
                             $('#datatable-payment-method').DataTable().ajax.reload();
-                            getPaymentCard().ajax.reload();
+                            getPaymentCard();
                         },
                         error: function(xhr) {
                             alert('Terjadi kesalahan: ' + xhr.responseText);
@@ -120,11 +120,17 @@
                         $('#paymentCard').empty();
 
                         $.each(data, function(index, method) {
-                            $('#paymentCard').append(
-                                '<div class="col-md-3 col-6 mb-4"><div class="card"><div class="card-header">' +
-                                method.method +
-                                '</div><div class="card-body"><span class="h3 text-primary">Rp 0</span></div></div></div>'
-                            );
+                            $.getJSON("get_total_payment_method/" + method.id, function(
+                                respons) {
+                                // console.log(respons.total);
+                                $('#paymentCard').append(
+                                    '<div class="col-md-3 col-6 mb-4"><div class="card"><div class="card-header">' +
+                                    method.method +
+                                    '</div><div class="card-body"><span class="h3 text-primary">Rp ' +
+                                    formatNumberWithDot(respons.total) +
+                                    '</span></div></div></div>'
+                                );
+                            });
                         });
                     },
                     error: function(xhr, status, error) {
@@ -139,6 +145,10 @@
                     alertValue +
                     '<button type = "button" class = "btn-close"  data-bs-dismiss="alert" aria - label = "Close" ></button> </div>'
                 )
+            }
+
+            function formatNumberWithDot(number) {
+                return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
             }
             getPaymentCard();
         });

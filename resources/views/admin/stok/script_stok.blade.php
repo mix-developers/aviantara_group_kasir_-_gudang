@@ -186,8 +186,10 @@
                         $('#formStoktId').val(response.id);
                         $('#formProductId').val(response.id_product);
                         $('#formStokQuantity').val(response.quantity);
+                        $('#formStokPrice').val(response.price_origin);
                         $('#formStokExpiredDate').val(response.expired_date);
-                        $('#formStokUnit').text('/' + response.product.unit);
+                        $('#formStokUnit').text(response.product.unit);
+                        $('#formStokUnit2').text('/' + response.product.unit);
 
                         $('#descriptionStok').empty();
 
@@ -279,16 +281,20 @@
                     type: 'GET',
                     url: '/get-stok-card',
                     success: function(response) {
+
                         $('#stokInput').text(response.stok_input);
                         $('#stokOut').text(response.stok_out);
                         $('#stokExpired').text(response.stok_expired);
                         $('#stokNotExpired').text(response.stok_not_expired);
                         $('#stokWirehouse').text(response.stok_wirehouse);
+                        $('#priceStokInput').text(formatNumberWithDot(response.price_stok_input));
                     }
                 });
             };
 
-
+            function formatNumberWithDot(number) {
+                return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            }
             getStok();
             getUserOptions();
             getTypeStokOptions();
@@ -340,7 +346,8 @@
                 $('.selectProduct').click(function() {
                     $('#formCreateProductId').val(id);
                     $('#formCreateStokName').val(name);
-                    $('#formCreateStokUnit').text('/' + unit);
+                    $('#formCreateStokUnit').text(unit);
+                    $('#formCreateStokUnit2').text('/' + unit);
 
                     $('#productSelectionModal').modal('hide');
                     $('#descriptionCreateStok').empty();

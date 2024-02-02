@@ -109,12 +109,14 @@
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Pengelolaan Stok</span>
         </li>
+
         <li class="menu-item {{ request()->is('products') ? 'active' : '' }}">
             <a href="{{ url('/products') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-layer"></i>
                 <div data-i18n="Analytics">Produk</div>
             </a>
         </li>
+
         <li class="menu-item {{ request()->is('stoks') ? 'active' : '' }}">
             <a href="{{ url('/stoks') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-archive"></i>
@@ -125,6 +127,30 @@
             <a href="{{ url('/damageds') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-trash"></i>
                 <div data-i18n="Analytics">Stok Rusak</div>
+            </a>
+        </li>
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">Pengelolaan Harga</span>
+        </li>
+        <li class="menu-item {{ request()->is('prices') ? 'active' : '' }}">
+            <a href="{{ url('/prices') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-money"></i>
+                <div data-i18n="Analytics">Harga Grosir</div>
+            </a>
+        </li>
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">Transaksi Gudang</span>
+        </li>
+        <li class="menu-item {{ request()->is('order_wirehouses') ? 'active' : '' }}">
+            <a href="{{ url('/order_wirehouses') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-layer"></i>
+                <div data-i18n="Analytics">Input Pesanan</div>
+            </a>
+        </li>
+        <li class="menu-item {{ request()->is('payments') ? 'active' : '' }}">
+            <a href="{{ url('/payments') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-money"></i>
+                <div data-i18n="Analytics">Pembayaran Tagihan</div>
             </a>
         </li>
 

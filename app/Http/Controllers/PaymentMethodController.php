@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\OrderWirehousePayment;
 use App\Models\PaymentMethod;
+use App\Models\paymentMethodItem;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -15,6 +17,15 @@ class PaymentMethodController extends Controller
         ];
         return view('admin.payment_method.index', $data);
     }
+    public function show($id)
+    {
+        $paymentMethod = PaymentMethod::find($id);
+        $data = [
+            'title' => 'Data pembayaran dengan metode : ' . $paymentMethod->method,
+            'paymentMethod' => $paymentMethod
+        ];
+        return view('admin.payment_method.show', $data);
+    }
     public function getAll()
     {
         $PaymentMethod = PaymentMethod::all();
@@ -22,7 +33,7 @@ class PaymentMethodController extends Controller
     }
     public function getPaymentMethodDataTable()
     {
-        $PaymentMethod = PaymentMethod::select(['id', 'method', 'enabled', 'created_at', 'updated_at'])->orderByDesc('id');
+        $PaymentMethod = PaymentMethod::select(['id', 'method', 'enabled', 'created_at', 'updated_at'])->orderByDesc('id')->get();
 
         return Datatables::of($PaymentMethod)
             ->addColumn('action', function ($PaymentMethod) {
@@ -32,6 +43,21 @@ class PaymentMethodController extends Controller
                 return view('admin.payment_method.components.enabled', compact('PaymentMethod'));
             })
             ->rawColumns(['action', 'status'])
+            ->make(true);
+    }
+    public function getPaymentMethodDetailDataTable($id)
+    {
+        $paymentMethodItem = paymentMethodItem::select(['id', 'id_user', 'id_payment_method', 'paid', 'description', 'created_at', 'updated_at'])
+            ->orderByDesc('id')
+            ->where('id_payment_method', $id)
+            ->with(['payment_method', 'user'])
+            ->get();
+
+        return Datatables::of($paymentMethodItem)
+            ->addColumn('date', function ($paymentMethodItem) {
+                return $paymentMethodItem->created_at->format('d F Y');
+            })
+            ->rawColumns(['date'])
             ->make(true);
     }
     public function store(Request $request)
@@ -81,5 +107,10 @@ class PaymentMethodController extends Controller
         }
 
         return response()->json($PaymentMethod);
+    }
+    public function getTotalPaymentMethod($id)
+    {
+        $data = paymentMethodItem::where('id_payment_method', $id)->sum('paid');
+        return response()->json(['total' => $data]);
     }
 }

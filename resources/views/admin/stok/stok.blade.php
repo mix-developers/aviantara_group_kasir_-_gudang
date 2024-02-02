@@ -9,7 +9,14 @@
                     Stok Masuk
                 </div>
                 <div class="card-body" style="padding: 10px;">
-                    <span class="h3 text-white" id="stokInput">0</span> Stok
+                    <div class="row">
+                        <div class="col">
+                            <span class="h3 text-white" id="stokInput">0</span> Stok
+                        </div>
+                        <div class="col">
+                            Rp <span class="h5 text-white" id="priceStokInput">0</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -84,10 +91,10 @@
                         <div class="col-lg-4 col-md-6 col-12 mb-3">
                             <div class="input-group">
                                 <span class="input-group-text">Tanggal input</span>
-                                <input type="date" class="form-control" id="fromDate" value="{{ date('Y-m-d') }}">
+                                <input type="date" class="form-control" id="fromDate"
+                                    value="{{ date('Y-m-d', strtotime('-1 month')) }}">
                                 <span class="input-group-text"> - </span>
-                                <input type="date" class="form-control" id="toDate"
-                                    value="{{ date('Y-m-d', strtotime('+1 month')) }}">
+                                <input type="date" class="form-control" id="toDate" value="{{ date('Y-m-d') }}">
                             </div>
                         </div>
                         <div class="col-lg-2 col-md-4  col-12 mb-3">

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\OrderWirehouse;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Str;
 
 class CustomerController extends Controller
 {
@@ -40,7 +42,13 @@ class CustomerController extends Controller
             ->addColumn('phone', function ($customer) {
                 return '<a href="https://wa.me/' . $customer->phone . '" target="__blank">' . $customer->phone . '</a>';
             })
-            ->rawColumns(['action', 'phone'])
+            ->addColumn('home', function ($customer) {
+                return Str::limit($customer->address_home, 10);
+            })
+            ->addColumn('company', function ($customer) {
+                return Str::limit($customer->address_company, 10);
+            })
+            ->rawColumns(['action', 'phone', 'home', 'company'])
             ->make(true);
     }
     public function store(Request $request)
@@ -94,5 +102,42 @@ class CustomerController extends Controller
         }
 
         return response()->json($customer);
+    }
+    public function getCustomersDataTableDetail($id)
+    {
+        $OrderWirehouse = OrderWirehouse::select([
+            'id',
+            'id_customer',
+            'id_user',
+            'id_wirehouse',
+            'total_fee',
+            'additional_fee',
+            'delivery',
+            'address_delivery',
+            'description',
+            'created_at',
+            'updated_at',
+            'no_invoice'
+        ])->orderByDesc('id')->with(['customer', 'product', 'wirehouse'])->where('id_customer', $id)->get();
+
+        return DataTables::of($OrderWirehouse)
+            ->addColumn('action', function ($OrderWirehouse) {
+                return view('admin.customers.components.actions_detail', compact('OrderWirehouse'));
+            })
+            ->addColumn('total_fee_text', function ($OrderWirehouse) {
+                return 'Rp ' . number_format($OrderWirehouse->total_fee);
+            })
+            ->addColumn('additional_fee_text', function ($OrderWirehouse) {
+                return 'Rp ' . number_format($OrderWirehouse->additional_fee);
+            })
+            ->addColumn('delivery_text', function ($OrderWirehouse) {
+                $badge =  ($OrderWirehouse->delivery == 1 ? 'bg-label-success' : 'bg-label-danger');
+                return '<span class="badge ' . $badge . '">' . ($OrderWirehouse->delivery == 1 ? 'Ya' : 'Tidak') . '</span>';
+            })
+            ->addColumn('wirehouse', function ($OrderWirehouse) {
+                return '<strong>' . $OrderWirehouse->wirehouse->name . '</strong><br><span class="text-muted">' . $OrderWirehouse->wirehouse->address . '</span>';
+            })
+            ->rawColumns(['action', 'total_fee_text', 'additional_fee_text', 'delivery_text', 'wirehouse'])
+            ->make(true);
     }
 }

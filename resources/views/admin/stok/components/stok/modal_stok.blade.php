@@ -25,6 +25,13 @@ i<!-- Modal for Create and Edit -->
                         </div>
                     </div>
                     <div class="mb-3">
+                        <label for="formStokPrice" class="form-label">Harga <spam id="formStokUnit2"
+                                class="text-primary">
+                            </spam>
+                            <span>*</span></label>
+                        <input type="number" class="form-control" id="formStokPrice" name="price_origin">
+                    </div>
+                    <div class="mb-3">
                         <label for="formStokExpiredDate" class="form-label">Tanggal Kadaluarsa
                             <span>*</span></label>
                         <input type="date" class="form-control" id="formStokExpiredDate" name="expired_date">
@@ -57,7 +64,9 @@ i<!-- Modal for Create and Edit -->
                         Produk</button>
                     <input type="hidden" id="formCreateProductId" name="id_product">
                     <div class="my-3" id="descriptionCreateStok">
-
+                        <div class="alert alert-danger alert-dismissible my-4" role="alert">
+                            <span>*Silahkan pilih produk terlebih dahulu</span>
+                        </div>
                     </div>
                     <div class="mb-3">
                         {{-- <label for="formCreateStokName" class="form-label">Nama Produk<span>*</span></label> --}}
@@ -70,6 +79,13 @@ i<!-- Modal for Create and Edit -->
                             <input type="number" class="form-control" id="formCreateStokQuantity" name="quantity">
                             <span class="input-group-text" id="formCreateStokUnit">Satuan</span>
                         </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formCreateStokPrice" class="form-label">Harga <spam id="formCreateStokUnit2"
+                                class="text-primary">
+                            </spam>
+                            <span>*</span></label>
+                        <input type="number" class="form-control" id="formCreateStokPrice" name="price_origin">
                     </div>
                     <div class="mb-3">
                         <label for="formCreateStokExpiredDate" class="form-label">Tanggal Kadaluarsa
@@ -97,7 +113,7 @@ i<!-- Modal for Create and Edit -->
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" style="padding-left:5px; padding-right:5px;">
-                <table id="productSelectionTable" class="table table-hover display">
+                <table id="productSelectionTable" class="table table-hover display table-sm">
                     <thead>
                         <tr>
                             <th style="width: 5px;">ID</th>
