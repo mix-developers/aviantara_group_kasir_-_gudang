@@ -14,7 +14,6 @@
                         <label for="formPaymentMethodMethod" class="form-label">metode Pembayaran</label>
                         <input type="text" class="form-control" id="formPaymentMethodMethod" name="method" required>
                     </div>
-
                 </form>
             </div>
             <div class="modal-footer">
@@ -48,12 +47,10 @@
                             <div class="mb-3" id="descriptionCreateOrder">
                                 <div class="alert alert-danger alert-dismissible my-4" role="alert">
                                     <span>*Silahkan pilih pelanggan terlebih dahulu</span>
-
                                 </div>
                             </div>
                             <input type="hidden" name="id_customer" id="formCreateCustomerId" name="id_customer">
                             <div class="mb-3">
-
                                 <div class="form-check form-switch  ">
                                     <input class="form-check-input" type="checkbox" id="formCreateDelivery"
                                         name="delivery">
@@ -90,7 +87,6 @@
                         {{-- order items --}}
                         <div class="col-lg-8">
                             <div class="p-3 border" style="border-radius: 10px;">
-
                                 <div class="mb-3">
                                     <h4>Data Pembelian</h4>
                                 </div>
@@ -106,6 +102,13 @@
                                     </p>
                                 </div>
                                 <div class="my-2">
+                                    <small class="text-danger"><i class="bx bx-sm bx-info-circle"> </i> Mohon
+                                        perhatikan
+                                        stok
+                                        yang
+                                        tersedia</small>
+                                </div>
+                                <div class="my-2">
                                     <table class="table table-hover table-sm">
                                         <thead>
                                             <tr>
@@ -117,7 +120,6 @@
                                             </tr>
                                         </thead>
                                         <tbody id="tableProductList">
-
                                         </tbody>
                                     </table>
                                 </div>
@@ -220,7 +222,8 @@
                             <th style="width: 5px;">ID</th>
                             <th>Nama Produk</th>
                             <th>Barcode</th>
-                            <th>Satuan</th>
+                            <th>Harga</th>
+                            <th>Stok</th>
                         </tr>
                     </thead>
                 </table>

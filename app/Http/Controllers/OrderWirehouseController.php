@@ -21,9 +21,12 @@ class OrderWirehouseController extends Controller
     }
     public function getInvoice($invoice)
     {
-        $OrderWirehouse = OrderWirehouse::where('no_invoice', $invoice)->first();
-
-        return response()->json($OrderWirehouse);
+        $OrderWirehouse = OrderWirehouse::where('no_invoice', $invoice)->with(['customer', 'wirehouse', 'user'])->first();
+        if ($OrderWirehouse != null) {
+            return response()->json($OrderWirehouse);
+        } else {
+            return response()->json(['message' => 'Data tidak ditemukan']);
+        }
     }
     public function getOrderWirehousesDataTable(Request $request)
     {
@@ -171,5 +174,17 @@ class OrderWirehouseController extends Controller
 
 
         return response()->json(['message' => $message]);
+    }
+    public function getOrderWIrehouseItems($id_order_wirehouse)
+    {
+        $items = OrderWirehouseItem::where('id_order_wirehouse', $id_order_wirehouse)->with(['product'])->get();
+        $total = OrderWirehouseItem::where('id_order_wirehouse', $id_order_wirehouse)->sum('subtotal');
+        $payment = OrderWirehousePayment::where('id_order_wirehouse', $id_order_wirehouse)->sum('paid');
+        $data = [
+            'items' => $items,
+            'total' => $total,
+            'payment' => $payment
+        ];
+        return response()->json($data);
     }
 }

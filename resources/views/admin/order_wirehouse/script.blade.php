@@ -389,6 +389,10 @@
                         data: 'price_grosir',
                         name: 'price_grosir'
                     },
+                    {
+                        data: 'stok',
+                        name: 'stok'
+                    },
                 ],
                 select: {
                     blurable: true
@@ -402,6 +406,7 @@
                 let name = $(this).closest('tr').find('td:eq(1)').text();
                 let barcode = $(this).closest('tr').find('td:eq(2)').text();
                 let price = $(this).closest('tr').find('td:eq(3)').text();
+                let stok = $(this).closest('tr').find('td:eq(4)').text();
 
                 if (id == null) {
                     $('#createOrderBtn').prop('disabled', true);
@@ -409,42 +414,45 @@
                     $('#createOrderBtn').prop('disabled', false);
                 }
 
-                $('.selectProduct').off('click').click(function() {
-                    $('#productSelectionModal').modal('hide');
-                    $('#tableProductList').find('tbody').empty();
+                if (stok != 0) {
+                    $('.selectProduct').off('click').click(function() {
+                        $('#productSelectionModal').modal('hide');
+                        $('#tableProductList').find('tbody').empty();
 
-                    getExpiredOptions(id, function(options) {
-                        $('#tableProductList').append(
-                            '<tr><td>' +
-                            name +
-                            '<br><span class="price text-warning fw-bold">Rp ' +
-                            price +
-                            '</span>' +
-                            '<input type="hidden" name="id_product[]" value="' + id +
-                            '">' +
-                            '<input type="hidden" class="total-val" name="subtotal[]" value="">' +
-                            '</td><td><input type="number" class="form-control form-control-sm quantity" name="quantity[]" value="0"></td><td>' +
-                            '<select name="expired_date[]" class="form-select form-select-sm text-capitalize" id="selectExpired">' +
-                            options +
-                            '</select>' +
-                            '</td><td class="total text-danger">0</td><td><button class="btn text-danger deleteProduct"><i class="text-danger bx bx-trash"></i></button></td></tr>'
-                        );
+                        getExpiredOptions(id, function(options) {
+                            $('#tableProductList').append(
+                                '<tr><td>' +
+                                name +
+                                '<br><span class="price text-warning fw-bold">Rp ' +
+                                price +
+                                '</span>' +
+                                '<input type="hidden" name="id_product[]" value="' +
+                                id +
+                                '">' +
+                                '<input type="hidden" class="total-val" name="subtotal[]" value="">' +
+                                '</td><td><input type="number" class="form-control form-control-sm quantity" name="quantity[]" value="0"></td><td>' +
+                                '<select name="expired_date[]" class="form-select form-select-sm text-capitalize" id="selectExpired">' +
+                                options +
+                                '</select>' +
+                                '</td><td class="total text-danger">0</td><td><button class="btn text-danger deleteProduct"><i class="text-danger bx bx-trash"></i></button></td></tr>'
+                            );
 
-                        $('.deleteProduct').click(function() {
-                            event.preventDefault();
-                            if (confirm(
-                                    'Apakah Anda ingin menghapus produk ini?'
-                                )) {
-                                $(this).closest('tr').remove();
+                            $('.deleteProduct').click(function() {
+                                event.preventDefault();
+                                if (confirm(
+                                        'Apakah Anda ingin menghapus produk ini?'
+                                    )) {
+                                    $(this).closest('tr').remove();
+                                    updateTotal();
+                                }
+                            });
+                            $('.quantity').on('input', function() {
                                 updateTotal();
-                            }
-                        });
-                        $('.quantity').on('input', function() {
-                            updateTotal();
-                        });
+                            });
 
+                        });
                     });
-                });
+                }
             });
 
             function updateTotal() {

@@ -128,6 +128,7 @@ Route::middleware(['auth:web', 'role:Admin'])->group(function () {
     Route::get('/order_wirehouses/edit/{id}',  [OrderWirehouseController::class, 'edit'])->name('order_wirehouses.edit');
     Route::delete('/order_wirehouses/delete/{id}',  [OrderWirehouseController::class, 'destroy'])->name('order_wirehouses.delete');
     Route::get('/order-wirehouses-datatable', [OrderWirehouseController::class, 'getOrderWirehousesDataTable']);
+    Route::get('/get-order-wirehouse-items/{id}', [OrderWirehouseController::class, 'getOrderWIrehouseItems']);
     //order wirehouses payment managemen
     Route::get('/payments', [OrderPaymentController::class, 'index'])->name('payments');
     Route::get('/payments/getall', [OrderPaymentController::class, 'getAll'])->name('payments.getall');

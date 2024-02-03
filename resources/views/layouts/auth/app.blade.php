@@ -52,8 +52,8 @@
     <!-- Content -->
 
     <div class="container-xxl">
-        <div class="authentication-wrapper authentication-basic container-p-y">
-            <div class="authentication-inner">
+        <div class="authentication-wrapper authentication-basic container-p-y" style="overflow: visible;">
+            <div class="authentication-inner" id="layout-auth">
                 <!-- form -->
                 @yield('content')
                 <!-- /form -->
@@ -80,9 +80,7 @@
     <script src="{{ asset('backend_theme/') }}/assets/js/main.js"></script>
 
     <!-- Page JS -->
-
-    <!-- Place this tag in your head or just before your close body tag. -->
-    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    @stack('js')
 
 </body>
 

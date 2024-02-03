@@ -25,6 +25,10 @@ class OrderWirehouse extends Model
     {
         return $this->belongsTo(Wirehouse::class, 'id_wirehouse');
     }
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'id_user');
+    }
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class, 'id_customer');

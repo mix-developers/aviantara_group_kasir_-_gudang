@@ -80,10 +80,16 @@ class PriceController extends Controller
             ->addColumn('wirehouse', function ($product) {
                 return '<strong>' . $product->wirehouse->name . '</strong><br><span class="text-muted">' . $product->wirehouse->address . '</span>';
             })
+            ->addColumn('stok', function ($product) {
+                $stok = Product::getStok($product->id);
+
+                return $stok;
+            })
             ->addColumn('action', function ($product) {
                 return view('admin.price.components.actions', compact('product'));
             })
-            ->rawColumns(['action', 'grosir', 'wirehouse', 'percentese_fee'])
+
+            ->rawColumns(['action', 'grosir', 'wirehouse', 'percentese_fee', 'stok'])
             ->make(true);
     }
     public function store(Request $request)
