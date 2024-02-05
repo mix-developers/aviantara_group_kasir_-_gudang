@@ -445,4 +445,5 @@
 
         });
     </script>
+    @include('admin.script.barcode_scanner')
 @endpush

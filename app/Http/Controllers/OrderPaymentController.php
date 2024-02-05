@@ -92,4 +92,8 @@ class OrderPaymentController extends Controller
 
         return response()->json(['message' => $message]);
     }
+    public function getDataTagihan(request $request)
+    {
+        $OrderWirehouse = OrderWirehouse::with(['customer', 'user'])->get();
+    }
 }

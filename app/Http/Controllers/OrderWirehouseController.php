@@ -59,7 +59,7 @@ class OrderWirehouseController extends Controller
             }
         }
 
-        $OrderWirehouse = $query->get();
+        $OrderWirehouse = $query;
         return DataTables::of($OrderWirehouse)
             ->addColumn('action', function ($OrderWirehouse) {
                 return view('admin.order_wirehouse.components.actions', compact('OrderWirehouse'));

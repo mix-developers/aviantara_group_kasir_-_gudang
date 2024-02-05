@@ -26,7 +26,7 @@ class ShopController extends Controller
     }
     public function getShopsDataTable()
     {
-        $shop = Shop::select(['id', 'name', 'address', 'created_at', 'updated_at'])->orderByDesc('id');
+        $shop = Shop::select(['id', 'name', 'address', 'created_at', 'updated_at'])->orderByDesc('id')->get();
 
         return Datatables::of($shop)
             ->addColumn('shop', function ($shop) {

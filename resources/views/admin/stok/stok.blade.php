@@ -113,7 +113,7 @@
                 </div>
                 <hr>
                 <div class="card-datatable table-responsive">
-                    <table id="datatable-stok" class="table table-hover table-bordered display">
+                    <table id="datatable-stok" class="table table-hover table-bordered display table-sm">
                         <thead>
                             <tr>
                                 <th>ID</th>

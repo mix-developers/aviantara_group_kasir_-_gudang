@@ -38,7 +38,7 @@ class WirehouseController extends Controller
     }
     public function getWirehouseDetailDataTable($id)
     {
-        $products = Product::select(['id', 'name', 'unit', 'barcode', 'quantity_unit', 'photo', 'id_wirehouse', 'created_at', 'updated_at'])->orderByDesc('id')->where('id_wirehouse', $id)->with(['wirehouse']);
+        $products = Product::select(['id', 'name', 'unit', 'barcode', 'quantity_unit', 'photo', 'id_wirehouse', 'created_at', 'updated_at'])->orderByDesc('id')->where('id_wirehouse', $id)->with(['wirehouse'])->get();
 
         return Datatables::of($products)
             ->addColumn('produk', function ($product) {
@@ -55,7 +55,7 @@ class WirehouseController extends Controller
     }
     public function getWirehousesDataTable()
     {
-        $wirehouse = Wirehouse::select(['id', 'name', 'address', 'created_at', 'updated_at'])->orderByDesc('id');
+        $wirehouse = Wirehouse::select(['id', 'name', 'address', 'created_at', 'updated_at'])->orderByDesc('id')->get();
 
         return Datatables::of($wirehouse)
 

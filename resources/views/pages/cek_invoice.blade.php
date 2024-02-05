@@ -108,7 +108,7 @@
                 url: '/get-invoice/' + no,
                 success: function(data) {
 
-                    console.log(data);
+                    // console.log(data);
                     if (data.message) {
                         alert(data.message);
                     } else {
@@ -228,7 +228,7 @@
                                         val
                                         .quantity + " " +
                                         val
-                                        .product.sub_unit +
+                                        .product.unit +
                                         "</td><td> Rp " +
                                         formatNumberWithDot(val
                                             .subtotal) +

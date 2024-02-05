@@ -74,7 +74,7 @@ class StokController extends Controller
             }
         }
 
-        $products = $query->get();
+        $products = $query;
 
         return Datatables::of($products)
             ->addColumn('produk', function ($product) {
@@ -102,16 +102,17 @@ class StokController extends Controller
                                 ->where('expired_date', $itemStok->expired_date)
                                 ->sum('quantity');
 
-                            if ($itemStok->quantity - $stok_keluar != 0) {
-                                if ($itemStok->expired_date <= date('Y-m-d')) {
-                                    $expiredHtml .= '<li class="text-danger"><b>' . ($itemStok->quantity - $stok_keluar) . '</b> ' . $product->unit . ' Kadaluarsa</li>';
-                                } elseif ($itemStok->expired_date <= date('Y-m-d', strtotime('+3 months'))) {
-                                    $expiredHtml .= '<li class="text-warning"><b>' . ($itemStok->quantity - $stok_keluar) . '</b> ' . $product->unit . ' Akan Kadaluarsa</li>';
-                                } else {
-                                    $expiredHtml .= '<li class="text-success"><b>' . ($itemStok->quantity - $stok_keluar) . '</b> ' . $product->unit . ' Aman</li>';
+                            if ($stok_keluar >= 0) {
+                                $total_stok = $itemStok->quantity - $stok_keluar;
+                                if ($total_stok > 0) {
+                                    if ($itemStok->expired_date <= date('Y-m-d')) {
+                                        $expiredHtml .= '<li class="text-danger"><b>' . ($total_stok) . '</b> ' . $product->unit . ' Kadaluarsa</li>';
+                                    } elseif ($itemStok->expired_date <= date('Y-m-d', strtotime('+3 months'))) {
+                                        $expiredHtml .= '<li class="text-warning"><b>' . ($total_stok) . '</b> ' . $product->unit . ' Akan Kadaluarsa</li>';
+                                    } else {
+                                        $expiredHtml .= '<li class="text-success"><b>' . ($total_stok) . '</b> ' . $product->unit . ' Aman</li>';
+                                    }
                                 }
-                            } else {
-                                $expiredHtml .= '<span class="text-muted">Stok Kosong</span>';
                             }
                         }
                     }
@@ -169,7 +170,7 @@ class StokController extends Controller
                 $query->where('created_at', '>=', $fromDate)->where('created_at', '<=', $toDate);
             }
         }
-        $stoks = $query->get();
+        $stoks = $query;
 
         return Datatables::of($stoks)
             ->addColumn('produk', function ($stok) {

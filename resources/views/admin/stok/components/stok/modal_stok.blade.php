@@ -140,6 +140,22 @@ i<!-- Modal for Create and Edit -->
             <div class="modal-body">
                 <!-- Form for Create and Edit -->
                 <form id="createProductForm">
+                    {{-- barcode scanner --}}
+                    <div class="mb-3" id="scanner" style="display:none;">
+                        <center>
+                            <video id="barcode-scanner" playsinline style="width: 100%; max-width: 400px; "></video>
+                        </center>
+                        <hr>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check form-switch  ">
+                            <input class="form-check-input" type="checkbox" id="enabledScanner">
+                            <label class="form-check-label" for="enabledScanner">Barcode Scanner
+                            </label>
+                        </div>
+                        <small class="text-muted">*Aktifkan jika ingin menggunakan fitur barcode scanner</small>
+                    </div>
+                    {{-- end barcode scanner --}}
                     <div class="mb-3">
                         <label for="formProductName" class="form-label">Nama <span
                                 class="text-danger">*</span></label>
@@ -148,7 +164,7 @@ i<!-- Modal for Create and Edit -->
                     <div class="mb-3">
                         <label for="formProductBarcode" class="form-label">Barcode <span
                                 class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="formProductBarcode" name="barcode" required>
+                        <input type="number" class="form-control" id="formProductBarcode" name="barcode" required>
                     </div>
                     <div class="mb-3">
                         <label for="formProductUnit" class="form-label">Satuan Produk <span

@@ -41,7 +41,7 @@ class PriceController extends Controller
                 $query->where('id_wirehouse', $wirehouseId);
             }
         }
-        $product = $query->get();
+        $product = $query;
         return Datatables::of($product)
             ->addColumn('quantity', function ($product) {
                 return $product->quantity_unit . ' ' . $product->sub_unit . ' /' . $product->unit;
@@ -124,7 +124,7 @@ class PriceController extends Controller
     }
     public function getPriceDetailDataTable($id)
     {
-        $price = ProductPrice::select(['id', 'id_product', 'price_grosir', 'id_user', 'created_at', 'updated_at'])->orderByDesc('id')->where('id_product', $id)->with(['product', 'user'])->get();
+        $price = ProductPrice::select(['id', 'id_product', 'price_grosir', 'id_user', 'created_at', 'updated_at'])->orderByDesc('id')->where('id_product', $id)->with(['product', 'user']);
 
         return Datatables::of($price)
             ->addColumn('date', function ($price) {

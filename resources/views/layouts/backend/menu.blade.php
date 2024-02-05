@@ -150,7 +150,7 @@
         <li class="menu-item {{ request()->is('payments') ? 'active' : '' }}">
             <a href="{{ url('/payments') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-money"></i>
-                <div data-i18n="Analytics">Pembayaran Tagihan</div>
+                <div data-i18n="Analytics">Pembayaran & Tagihan</div>
             </a>
         </li>
 

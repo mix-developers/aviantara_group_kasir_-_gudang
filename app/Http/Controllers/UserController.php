@@ -24,7 +24,7 @@ class UserController extends Controller
     }
     public function getUsersDataTable()
     {
-        $users = User::select(['id', 'name', 'email', 'created_at', 'updated_at', 'role', 'avatar'])->orderByDesc('id');
+        $users = User::select(['id', 'name', 'email', 'created_at', 'updated_at', 'role', 'avatar'])->orderByDesc('id')->get();
 
         return Datatables::of($users)
             ->addColumn('avatar', function ($user) {

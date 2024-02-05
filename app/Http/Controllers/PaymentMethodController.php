@@ -50,8 +50,7 @@ class PaymentMethodController extends Controller
         $paymentMethodItem = paymentMethodItem::select(['id', 'id_user', 'id_payment_method', 'paid', 'description', 'created_at', 'updated_at'])
             ->orderByDesc('id')
             ->where('id_payment_method', $id)
-            ->with(['payment_method', 'user'])
-            ->get();
+            ->with(['payment_method', 'user']);
 
         return Datatables::of($paymentMethodItem)
             ->addColumn('date', function ($paymentMethodItem) {

@@ -33,7 +33,8 @@ class CustomerController extends Controller
     }
     public function getCustomersDataTable()
     {
-        $customers = Customer::select(['id', 'name', 'phone', 'address_home', 'address_company', 'created_at', 'updated_at'])->orderByDesc('id');
+        $customers = Customer::select(['id', 'name', 'phone', 'address_home', 'address_company', 'created_at', 'updated_at'])
+            ->orderByDesc('id');
 
         return Datatables::of($customers)
             ->addColumn('action', function ($customer) {
@@ -50,6 +51,22 @@ class CustomerController extends Controller
             })
             ->rawColumns(['action', 'phone', 'home', 'company'])
             ->make(true);
+        // return Datatables::of(Customer::select(['id', 'name', 'phone', 'address_home', 'address_company', 'created_at', 'updated_at'])
+        //     ->orderByDesc('id'))
+        //     ->addColumn('action', function ($customer) {
+        //         return view('admin.customers.components.actions', compact('customer'));
+        //     })
+        //     ->addColumn('phone', function ($customer) {
+        //         return '<a href="https://wa.me/' . $customer->phone . '" target="__blank">' . $customer->phone . '</a>';
+        //     })
+        //     ->addColumn('home', function ($customer) {
+        //         return Str::limit($customer->address_home, 10);
+        //     })
+        //     ->addColumn('company', function ($customer) {
+        //         return Str::limit($customer->address_company, 10);
+        //     })
+        //     ->rawColumns(['action', 'phone', 'home', 'company'])
+        //     ->make(true);
     }
     public function store(Request $request)
     {

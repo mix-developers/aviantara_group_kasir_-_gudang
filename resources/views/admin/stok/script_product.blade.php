@@ -58,6 +58,9 @@
                 getWirehouseOptions();
                 $('#create').modal('show');
             });
+
+
+
             $('.refresh').click(function() {
                 $('#datatable-product').DataTable().ajax.reload();
             });
@@ -241,6 +244,9 @@
             }
             selectStok();
             getWirehouseOptions();
+
         });
     </script>
+
+    @include('admin.script.barcode_scanner')
 @endpush

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dff78c54a1bb9cb6d07431ef9c4a0cea",
+    "content-hash": "682e413210ce8b13253722382515b13f",
     "packages": [
         {
             "name": "brick/math",
@@ -543,6 +543,43 @@
                 }
             ],
             "time": "2023-08-10T19:36:49+00:00"
+        },
+        {
+            "name": "dsiddharth2/php-zxing",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dsiddharth2/php-zxing.git",
+                "reference": "013985abc02437e0e891d39ec6284091add9c004"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dsiddharth2/php-zxing/zipball/013985abc02437e0e891d39ec6284091add9c004",
+                "reference": "013985abc02437e0e891d39ec6284091add9c004",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Siddharth",
+                    "email": "dsiddharth2@gmail.com"
+                }
+            ],
+            "description": "Wrapper for zxing using php",
+            "support": {
+                "issues": "https://github.com/dsiddharth2/php-zxing/issues",
+                "source": "https://github.com/dsiddharth2/php-zxing/tree/1.0.3"
+            },
+            "time": "2019-08-30T13:45:34+00:00"
         },
         {
             "name": "egulias/email-validator",

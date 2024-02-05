@@ -13,4 +13,8 @@
         href="{{ route('payments.invoice', $OrderWirehouse->no_invoice) }}">
         <span class="tf-icons bx bx-file"></span>
     </a>
+    <a type="button" class="btn rounded-pill btn-icon btn-secondary "
+        href="{{ route('payments.invoice', $OrderWirehouse->no_invoice) }}">
+        <span class="tf-icons bx bx-printer"></span>
+    </a>
 </div>
