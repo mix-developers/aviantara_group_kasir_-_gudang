@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('nama_produk');
             $table->string('harga');
             $table->string('qty');
-            $table->integer('sub-total');
+            $table->integer('total');
         });
     }
 
