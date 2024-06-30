@@ -44,10 +44,10 @@ class CustomerController extends Controller
                 return '<a href="https://wa.me/' . $customer->phone . '" target="__blank">' . $customer->phone . '</a>';
             })
             ->addColumn('home', function ($customer) {
-                return Str::limit($customer->address_home, 10);
+                return $customer->address_home;
             })
             ->addColumn('company', function ($customer) {
-                return Str::limit($customer->address_company, 10);
+                return $customer->address_company;
             })
             ->rawColumns(['action', 'phone', 'home', 'company'])
             ->make(true);

@@ -55,6 +55,9 @@
         </div>
     </div>
 </div>
+
+
+
 <div class="modal fade" id="create" tabindex="-1" aria-labelledby="productsModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

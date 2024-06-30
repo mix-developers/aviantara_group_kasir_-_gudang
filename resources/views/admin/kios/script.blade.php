@@ -6,9 +6,12 @@
                 serverSide: true,
                 responsive: true,
                 ajax: '{{ url('customers-datatable') }}',
-                columns: [{
+                columns: [
+
+                    {
                         data: 'id',
                         name: 'id',
+
                     },
 
                     {
@@ -22,11 +25,21 @@
 
                     {
                         data: 'address_home',
-                        name: 'address_home'
+                        name: 'address_home',
+                        render: function(data) {
+                            return data.length > 10 ?
+                                data.substr(0, 10) + '...' :
+                                data;
+                        }
                     },
                     {
                         data: 'address_company',
-                        name: 'address_company'
+                        name: 'address_company',
+                        render: function(data) {
+                            return data.length > 10 ?
+                                data.substr(0, 10) + '...' :
+                                data;
+                        }
                     },
                     {
                         data: 'action',
@@ -34,6 +47,7 @@
                     }
                 ]
             });
+
             $('.create-new').click(function() {
                 $('#create').modal('show');
             });

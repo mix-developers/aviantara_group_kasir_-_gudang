@@ -8,7 +8,13 @@
                 ajax: '{{ url('shops-datatable') }}',
                 columns: [{
                         data: 'id',
-                        name: 'id'
+                        name: 'id',
+                        title: 'No.',
+                        render: function(data, type, row, meta) {
+                            console.log(meta)
+                            return meta.row + 1; // Mengembalikan nomor urut baris
+                            
+                        }
                     },
                     {
                         data: 'shop',

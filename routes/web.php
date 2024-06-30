@@ -1,21 +1,24 @@
 <?php
 
-use App\Http\Controllers\CustomerController;
+use App\Models\PaymentMethod;
+use App\Models\OrderWirehouse;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\OrderPaymentController;
-use App\Http\Controllers\OrderWirehouseController;
-use App\Http\Controllers\PaymentMethodController;
-use App\Http\Controllers\PriceController;
-use App\Http\Controllers\ProductDamagedController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\KiosController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\StokController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PriceController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\StokKiosController;
+use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\WirehouseController;
-use App\Models\OrderWirehouse;
-use App\Models\PaymentMethod;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\OrderPaymentController;
+use App\Http\Controllers\PaymentMethodController;
+use App\Http\Controllers\OrderWirehouseController;
+use App\Http\Controllers\ProductDamagedController;
 
 /*
 |--------------------------------------------------------------------------
@@ -138,4 +141,23 @@ Route::middleware(['auth:web', 'role:Admin'])->group(function () {
     Route::delete('/payments/delete/{id}',  [OrderPaymentController::class, 'destroy'])->name('payments.delete');
     Route::get('/payment-detail-datatable/{id}', [OrderPaymentController::class, 'getPaymentDetailDataTable']);
     Route::post('/send_bill/{id}', [OrderPaymentController::class, 'send_bill'])->name('send_bill');
+
+    //Kios
+    Route::get('/kios', [KiosController::class, 'index'])->name('kios');
+
+    //Kios Stok
+    Route::get('/kios_stok', [StokKiosController::class, 'index'])->name('kios_stok');
+    Route::get('/kios-stok-datatable', [StokKiosController::class, 'getStokKiosDataTable'])->name('kios-stok-datatable');
+    Route::get('/kios_stok/getall', [StokKiosController::class, 'getAll'])->name('kios_stok.getall');
+    Route::get('/kios_stok/edit/{id}', [StokKiosController::class, 'edit'])->name('kios_stok.edit');
+    Route::post('/kios_stok/store',  [StokKiosController::class, 'store'])->name('kios_stok.store');
+    Route::post('/kios_stok/update',  [StokKiosController::class, 'update'])->name('kios_stok.update');
+    Route::get('/kios_stok/search',  [StokKiosController::class, 'search'])->name('kios_stok.search');
+
+    Route::get('/transaksi-kios', [TransaksiController::class, 'index'])->name('transkasi-kios');
+    Route::get('/transaksi/getall', [TransaksiController::class, 'getAll'])->name('transkasi.getall');
+    Route::get('/transaksi/scan', [TransaksiController::class, 'scanBarcode'])->name('transkasi.scan');
+    Route::post('/transaksi/store', [TransaksiController::class, 'store'])->name('transkasi.store');
+
+
 });
