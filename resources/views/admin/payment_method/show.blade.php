@@ -3,7 +3,6 @@
 @section('content')
     @include('layouts.backend.alert')
     <div class="row justify-content-center">
-
         <div class="col-12">
             <div class="card">
                 <div class="card-header flex-column flex-md-row">
@@ -22,7 +21,7 @@
                     </div>
                 </div>
                 <div class="card-datatable table-responsive">
-                    <table id="datatable-detail-payment-method" class="table table-hover table-bordered display">
+                    <table id="datatable-detail-payment-method" class="table table-hover table-bordered display table-sm">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -56,7 +55,7 @@
         $(function() {
             $('#datatable-detail-payment-method').DataTable({
                 processing: true,
-                serverSide: true,
+                serverSide: false,
                 responsive: true,
                 ajax: '{{ url('paymentMethod-datatable-detail', $paymentMethod->id) }}',
                 columns: [{
@@ -83,10 +82,6 @@
                         data: 'user.name',
                         name: 'user.name'
                     },
-                ],
-                dom: 'Bfrtip',
-                buttons: [
-                    'csv', 'excel', 'pdf', 'print'
                 ]
             });
 

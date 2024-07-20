@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('stok_kios', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('id_kios');
-            $table->bigInteger('id_product');
-            $table->bigInteger('id_user');
+            $table->foreignId('id_kios');
+            $table->foreignId('id_product');
+            $table->foreignId('id_user');
             $table->enum('type', ['Masuk', 'Keluar']);
             $table->integer('qty');
             $table->integer('price');
@@ -28,7 +28,6 @@ return new class extends Migration
             $table->foreign('id_kios')->references('id')->on('shops');
             $table->foreign('id_product')->references('id')->on('products');
             $table->foreign('id_user')->references('id')->on('users');
-
         });
     }
 

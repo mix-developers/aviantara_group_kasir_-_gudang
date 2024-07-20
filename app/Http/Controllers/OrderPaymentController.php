@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\OrderWirehouse;
 use App\Models\OrderWirehousePayment;
 use App\Models\paymentMethodItem;
+use App\Models\Wirehouse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
@@ -13,8 +14,13 @@ class OrderPaymentController extends Controller
 {
     public function index()
     {
+        $user = Auth::user();
+        if ($user->role == 'Gudang') {
+            $wirehouse = Wirehouse::find($user->id_wirehouse);
+            $add = ' : ' . $wirehouse->name;
+        }
         $data = [
-            'title' => 'Pembayaran tagihan'
+            'title' => 'Pembayaran tagihan ' . $add ?? '',
         ];
         return view('admin.payment.index', $data);
     }

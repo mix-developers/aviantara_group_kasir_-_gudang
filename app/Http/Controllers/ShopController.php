@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Shop;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -18,6 +19,17 @@ class ShopController extends Controller
             'shops' => $shop
         ];
         return view('admin.shop.index', $data);
+    }
+    public function show($id)
+    {
+        $shop = Shop::find($id);
+        $staff = User::where('role', 'Kasir')->where('id_shop', $shop->id)->get();
+        $data = [
+            'title' => 'Toko/Kios : ' . $shop->name,
+            'shops' => $shop,
+            'staff' => $staff,
+        ];
+        return view('admin.shop.show', $data);
     }
     public function getAll()
     {

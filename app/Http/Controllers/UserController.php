@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Shop;
 use App\Models\User;
+use App\Models\Wirehouse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Yajra\DataTables\Facades\DataTables;
@@ -24,9 +26,13 @@ class UserController extends Controller
     }
     public function getUsersDataTable()
     {
-        $users = User::select(['id', 'name', 'email', 'created_at', 'updated_at', 'role', 'avatar'])->orderByDesc('id')->get();
+        $users = User::with(['shop', 'wirehouse'])->orderByDesc('id')->get();
 
         return Datatables::of($users)
+            ->addColumn('name', function ($user) {
+                $disabled = $user->is_disabled == 1 ? '<span class="badge bg-danger">Disabled</span>' : '<span class="badge bg-success">Enable</span>';
+                return '<strong>' . $user->name . '</strong><br>' . $disabled;
+            })
             ->addColumn('avatar', function ($user) {
                 return view('admin.users.components.avatar', compact('user'));
             })
@@ -34,10 +40,19 @@ class UserController extends Controller
                 return view('admin.users.components.actions', compact('user'));
             })
             ->addColumn('role', function ($user) {
-                return '<span class="badge bg-label-primary">' . $user->role . '</span>';
+                $penempatan = '';
+
+                if ($user->role == 'Gudang' && $user->wirehouse) {
+                    $penempatan = '<br>Penempatan : <strong>' . $user->wirehouse->name . '</strong>';
+                } elseif ($user->role == 'Kasir' && $user->shop) {
+                    $penempatan = '<br>Penempatan : <strong>' . $user->shop->name . '</strong>';
+                }
+
+                return '<span class="badge bg-label-primary">' . $user->role . '</span> ' . $penempatan;
             })
 
-            ->rawColumns(['action', 'role', 'avatar'])
+
+            ->rawColumns(['action', 'role', 'avatar', 'name'])
             ->make(true);
     }
     public function store(Request $request)
@@ -60,12 +75,19 @@ class UserController extends Controller
                 'name' => $request->input('name'),
                 'email' => $request->input('email'),
                 'role' => $request->input('role'),
+                'is_disabled' => $request->input('is_disabled'),
+                'id_shop' => $request->input('id_shop'),
+                'id_wirehouse' => $request->input('id_wirehouse'),
             ];
             $user = User::find($request->input('id'));
             if (!$user) {
                 return response()->json(['message' => 'user not found'], 404);
             }
-
+            if ($request->input('role') == 'Gudang') {
+                $usersData['id_shop'] == null;
+            } elseif ($request->input('role') == 'Kasir') {
+                $usersData['id_wirehouse'] == null;
+            }
             $user->update($usersData);
             $message = 'user updated successfully';
         } else {
@@ -74,8 +96,15 @@ class UserController extends Controller
                 'email' => $request->input('email'),
                 'role' => $request->input('role'),
                 'password' => Hash::make('password'),
+                'id_shop' => $request->input('id_shop'),
+                'id_wirehouse' => $request->input('id_wirehouse'),
             ];
 
+            if ($request->input('role') == 'Gudang') {
+                $usersData['id_shop'] == null;
+            } elseif ($request->input('role') == 'Kasir') {
+                $usersData['id_wirehouse'] == null;
+            }
             User::create($usersData);
             $message = 'user created successfully';
         }
@@ -94,15 +123,16 @@ class UserController extends Controller
     }
     public function destroy($id)
     {
-        $user = User::find($id);
-
-        if (!$user) {
-            return response()->json(['message' => 'User not found'], 404);
+        try {
+            $user = User::findOrFail($id);
+            $user->delete();
+            return response()->json(['message' => 'User deleted successfully']);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response()->json(['message' => 'Gagal menghapus karena user telah memiliki riwayat, disable akun jika akan menonaktifkan'], 500);
+        } catch (\Exception $e) {
+            // Jika terjadi kesalahan lainnya
+            return response()->json(['message' => $e->getMessage()], 500);
         }
-
-        $user->delete();
-
-        return response()->json(['message' => 'User deleted successfully']);
     }
     public function getAll()
     {

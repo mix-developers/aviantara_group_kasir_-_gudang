@@ -63,7 +63,7 @@
             <div class="card">
                 <div class="card-header flex-column flex-md-row">
                     <div class="head-label ">
-                        <h5 class="card-title mb-0">{{ $title ?? 'Title' }}</h5>
+                        <h5 class="card-title mb-0">{{ $title ?? 'Title' }} </h5>
                     </div>
                     <div class="dt-action-buttons text-end pt-3 pt-md-0">
                         <div class=" btn-group " role="group">
@@ -105,10 +105,12 @@
                             <select id="selectTypeStok" class="form-select text-capitalize">
                             </select>
                         </div>
-                        <div class="col-lg-2 col-md-4 col-12 mb-3">
-                            <select id="selectUser" class="form-select text-capitalize">
-                            </select>
-                        </div>
+                        @if (Auth::user()->role != 'Gudang')
+                            <div class="col-lg-2 col-md-4 col-12 mb-3">
+                                <select id="selectUser" class="form-select text-capitalize">
+                                </select>
+                            </div>
+                        @endif
                     </div>
                 </div>
                 <hr>
@@ -122,7 +124,7 @@
                                 <th>Produk</th>
                                 <th>Jumlah</th>
                                 <th>Kadaluarsa</th>
-                                @if (Auth::user()->role != 'Operator')
+                                @if (Auth::user()->role != 'Gudang')
                                     <th>Pegawai</th>
                                 @endif
                                 <th>Keterangan</th>
@@ -137,7 +139,7 @@
                                 <th>Produk</th>
                                 <th>Jumlah</th>
                                 <th>Kadaluarsa</th>
-                                @if (Auth::user()->role != 'Operator')
+                                @if (Auth::user()->role != 'Gudang')
                                     <th>Pegawai</th>
                                 @endif
                                 <th>Keterangan</th>

@@ -41,6 +41,9 @@ class PriceController extends Controller
                 $query->where('id_wirehouse', $wirehouseId);
             }
         }
+        if (Auth::user()->role == 'Gudang') {
+            $query->where('id_wirehouse', Auth::user()->id_wirehouse);
+        }
         $product = $query;
         return Datatables::of($product)
             ->addColumn('quantity', function ($product) {

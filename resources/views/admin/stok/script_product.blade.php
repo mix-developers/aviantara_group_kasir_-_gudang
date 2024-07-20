@@ -208,6 +208,10 @@
                     success: function(response) {
                         getAlert(response.message);
                         $('#datatable-product').DataTable().ajax.reload();
+                        $('#formCreateProductName').val('');
+                        $('#formCreateProductBarcode').val('');
+                        $('#formCreateProductQUantityUnit').val('');
+                        $('#formProductIdWirehouseCreate').val('');
                         $('#create').modal('hide');
                     },
                     error: function(xhr) {

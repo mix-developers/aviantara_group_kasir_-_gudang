@@ -35,16 +35,36 @@
             });
             $('.create-new').click(function() {
                 $('#create').modal('show');
+
+                // Inisialisasi untuk menyembunyikan form create-kasir dan create-gudang
+                $('#create-kasir').hide();
+                $('#create-gudang').hide();
+
+                // Event listener untuk perubahan pada formUserRole
+                $('#formCreateUserRole').change(function() {
+                    var selectedRole = $(this).val();
+
+                    if (selectedRole === 'Kasir') {
+                        $('#create-kasir').show();
+                        $('#create-gudang').hide();
+                    } else if (selectedRole === 'Gudang') {
+                        $('#create-kasir').hide();
+                        $('#create-gudang').show();
+                    } else {
+                        $('#create-kasir').hide();
+                        $('#create-gudang').hide();
+                    }
+                });
             });
 
             function getRoleOptions(roleValue) {
                 var staticData = ['Owner', 'Admin', 'Gudang', 'Kasir'];
 
-                $('#formUserRole').empty();
+                $('#formUpdateUserRole').empty();
 
                 $.each(staticData, function(index, role) {
                     var selected = (role === roleValue) ? 'selected' : '';
-                    $('#formUserRole').append('<option value="' + role + '" ' + selected + '>' +
+                    $('#formUpdateUserRole').append('<option value="' + role + '" ' + selected + '>' +
                         role +
                         '</option>');
                 });
@@ -58,8 +78,37 @@
                         $('#formUserId').val(response.id);
                         $('#formUserName').val(response.name);
                         $('#formUserEmail').val(response.email);
+                        $('#formEditUserDisabled').val(response.is_disabled);
+                        $('#formEditUserIdShop').val(response.id_shop);
+                        $('#formEditUserIdWirehouse').val(response.id_wirehouse);
                         getRoleOptions(response.role);
                         $('#UsersModal').modal('show');
+                        // Inisialisasi untuk menyembunyikan form create-kasir dan create-gudang
+                        $('#update-kasir').hide();
+                        $('#update-gudang').hide();
+                        if (response.role === 'Kasir') {
+                            $('#update-kasir').show();
+                            $('#update-gudang').hide();
+                        } else if (response.role === 'Gudang') {
+                            $('#update-kasir').hide();
+                            $('#update-gudang').show();
+                        }
+
+                        // Event listener untuk perubahan pada formUserRole
+                        $('#formUpdateUserRole').change(function() {
+                            var selectedRole = $(this).val();
+
+                            if (selectedRole === 'Kasir') {
+                                $('#update-kasir').show();
+                                $('#update-gudang').hide();
+                            } else if (selectedRole === 'Gudang') {
+                                $('#update-kasir').hide();
+                                $('#update-gudang').show();
+                            } else {
+                                $('#update-kasir').hide();
+                                $('#update-gudang').hide();
+                            }
+                        });
                     },
                     error: function(xhr) {
                         alert('Terjadi kesalahan: ' + xhr.responseText);
@@ -80,7 +129,7 @@
                         alert(response.message);
                         // Refresh DataTable setelah menyimpan perubahan
                         $('#datatable-users').DataTable().ajax.reload();
-                        $('#usersModal').modal('hide');
+                        $('#UsersModal').modal('hide');
                     },
                     error: function(xhr) {
                         alert('Terjadi kesalahan: ' + xhr.responseText);
@@ -100,7 +149,8 @@
                     success: function(response) {
                         alert(response.message);
                         $('#userssModalLabel').text('Edit User');
-                        $('#formUserName').val('');
+                        $('#formCreateUserName').val('');
+                        $('#formCreateUserEmail').val('');
                         $('#datatable-users').DataTable().ajax.reload();
                         $('#create').modal('hide');
                     },

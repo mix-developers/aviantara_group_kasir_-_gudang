@@ -25,22 +25,24 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
+                                <th>Tanggal</th>
                                 <th>No. Invoice</th>
                                 <th>Harga Total</th>
                                 <th>Pengantaran</th>
                                 <th>Keterangan</th>
-                                <th>Action</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
 
                         <tfoot>
                             <tr>
                                 <th>ID</th>
+                                <th>Tanggal</th>
                                 <th>No. Invoice</th>
                                 <th> Harga Total</th>
                                 <th>Pengantaran</th>
                                 <th>Keterangan</th>
-                                <th>Action</th>
+                                <th>Status</th>
                             </tr>
                         </tfoot>
                     </table>
@@ -54,36 +56,38 @@
         $(function() {
             $('#datatable-detail-customer').DataTable({
                 processing: true,
-                serverSide: true,
+                serverSide: false,
                 responsive: true,
                 ajax: '{{ url('customers-datatable-detail', $customer->id) }}',
                 columns: [{
                         data: 'id',
                         name: 'id'
                     },
-
+                    {
+                        data: 'date',
+                        name: 'date'
+                    },
                     {
                         data: 'no_invoice',
                         name: 'no_invoice'
                     },
                     {
-                        data: 'total_fee_text',
-                        name: 'total_fee_text'
+                        data: 'tagihan',
+                        name: 'tagihan'
                     },
-
                     {
                         data: 'delivery_text',
                         name: 'delivery_text'
                     },
-
                     {
                         data: 'description',
                         name: 'description'
                     },
                     {
-                        data: 'action',
-                        name: 'action'
-                    }
+                        data: 'payment',
+                        name: 'payment'
+                    },
+
                 ]
             });
             $('.refresh').click(function() {

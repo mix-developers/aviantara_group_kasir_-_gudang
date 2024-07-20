@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\User;
 use App\Models\Wirehouse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
 class WirehouseController extends Controller
@@ -25,15 +27,21 @@ class WirehouseController extends Controller
     public function show($id)
     {
         $wirehouse = Wirehouse::find($id);
+        $staff = User::where('role', 'Gudang')->where('id_wirehouse', $wirehouse->id)->get();
         $data = [
             'title' => 'Data ' . $wirehouse->name,
-            'wirehouse' => $wirehouse
+            'wirehouse' => $wirehouse,
+            'staff' => $staff,
         ];
         return view('admin.wirehouse.show', $data);
     }
     public function getAll()
     {
-        $wirehouse = Wirehouse::all();
+        if (Auth::user()->role == 'Admin') {
+            $wirehouse = Wirehouse::all();
+        } elseif (Auth::user()->role == 'Gudang') {
+            $wirehouse = Wirehouse::where('id', Auth::user()->id_wirehouse)->get();
+        }
         return response()->json($wirehouse);
     }
     public function getWirehouseDetailDataTable($id)

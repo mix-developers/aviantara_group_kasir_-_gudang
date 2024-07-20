@@ -3,7 +3,7 @@
         $(function() {
             $('#datatable-payment').DataTable({
                 processing: true,
-                serverSide: true,
+                serverSide: false,
                 responsive: true,
                 ajax: '{{ url('order-wirehouses-datatable') }}',
                 columns: [{

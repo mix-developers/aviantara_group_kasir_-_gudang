@@ -21,6 +21,11 @@ class StokKiosController extends Controller
         return view('admin.kios_stok.index', ['title' => 'Stok Kios']);
     }
 
+    public function getShop($id_shop)
+    {
+        $stok_kios = StokKios::with('shop', 'product', 'user')->where('id_kios', $id_shop)->orderBy('created_at', 'desc')->get();
+        return response()->json(['data' => $stok_kios]);
+    }
     public function getAll()
     {
         $stok_kios = StokKios::with('shop', 'product', 'user')->orderBy('created_at', 'desc')->get();
@@ -72,7 +77,7 @@ class StokKiosController extends Controller
 
 
         $stokData = [
-            'id_kios' => 2,//ID KIOS NANTI ATUR SECARA OTOMATIS
+            'id_kios' => 2, //ID KIOS NANTI ATUR SECARA OTOMATIS
             'id_user' => Auth::id(),
             'id_product' => $request->input('id_product_add'),
             'type' => $request->input('type'),
@@ -147,7 +152,7 @@ class StokKiosController extends Controller
 
 
         $stokData = [
-            'id_kios' => 2,//ID KIOS NANTI ATUR SECARA OTOMATIS
+            'id_kios' => 2, //ID KIOS NANTI ATUR SECARA OTOMATIS
             'id_user' => Auth::id(),
             'id_product' => $request->input('id_product'),
             'type' => $request->input('type'),
@@ -168,7 +173,6 @@ class StokKiosController extends Controller
         $message = 'Berhasil mengedit data test';
 
         return response()->json(['message' => $message]);
-
     }
 
     /**

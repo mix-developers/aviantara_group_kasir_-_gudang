@@ -73,25 +73,47 @@
                     }
                 });
             });
-            $('#createDamagedBtn').click(function() {
-                var formData = $('#createUserForm').serialize();
+            $('#createDamagedBtn').click(function(e) {
+                e.preventDefault();
 
+                // Mengambil data dari form
+                var formData = new FormData();
+                formData.append('id_product', $('#formIdProduct').val());
+                formData.append('photo', $('#formPhoto')[0].files[0]);
+                formData.append('type', $('#formType').val());
+                formData.append('total', $('#formTotal').val());
+                formData.append('satuan', $('#formSatuan').val());
+                formData.append('expired_date', $('#formExpiredDate').val());
+                formData.append('description', $('#formDescription').val());
+
+                // Mengirimkan permintaan AJAX
                 $.ajax({
-                    type: 'POST',
-                    url: '/damageds/store',
+                    url: '{{ route('damageds.store') }}', // Sesuaikan dengan route yang sesuai
+                    method: 'POST',
                     data: formData,
+                    processData: false,
+                    contentType: false,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
-                        getAlert(response.message);
-                        $('#customersModalLabel').text('Edit Customer');
-                        $('#formCustomerName').val('');
+                        console.log(response);
+                        $('#formIdProduct').val('');
+                        $('#formPhoto').val('');
+                        $('#formType').val('');
+                        $('#formTotal').val('');
+                        $('#formSatuan').val('');
+                        $('#formExpiredDate').val('');
+                        $('#formDescription').val('');
+                        // Tambahkan logika lain sesuai kebutuhan, misalnya menampilkan pesan sukses
+                        alert('Data berhasil disimpan!');
+                        $('#create').modal('hide'); // Menutup modal setelah berhasil disimpan
                         $('#datatable-damageds').DataTable().ajax.reload();
-                        $('#create').modal('hide');
                     },
-                    error: function(xhr) {
-                        alert('Terjadi kesalahan: ' + xhr.responseText);
+                    error: function(xhr, status, error) {
+                        // console.error(xhr.responseText);
+                        // Tambahkan logika untuk menampilkan pesan error, jika diperlukan
+                        alert('Terjadi kesalahan saat menyimpan data. : ' + xhr.responseText);
                     }
                 });
             });

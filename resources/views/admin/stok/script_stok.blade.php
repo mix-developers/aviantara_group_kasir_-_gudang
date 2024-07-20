@@ -21,7 +21,7 @@
                     data: 'expired_date',
                     name: 'expired_date'
                 },
-                @if (Auth::user()->role != 'Operator')
+                @if (Auth::user()->role != 'Gudang')
                     {
                         data: 'user',
                         name: 'user'

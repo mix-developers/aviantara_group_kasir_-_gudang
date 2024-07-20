@@ -1,24 +1,81 @@
-<!-- Modal for Create and Edit -->
-<div class="modal fade" id="paymentMethodModal" tabindex="-1" aria-labelledby="paymentMethodModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="PaymentMethodsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="userModalLabel">User Form</h5>
+                <h5 class="modal-title" id="PaymentMethodsModalLabel">Update Pesanan : <span id="EditInvoice"></span></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <!-- Form for Create and Edit -->
-                <form id="userForm">
-                    <input type="hidden" id="formPaymentMethodId" name="id">
-                    <div class="mb-3">
-                        <label for="formPaymentMethodMethod" class="form-label">metode Pembayaran</label>
-                        <input type="text" class="form-control" id="formPaymentMethodMethod" name="method" required>
+                <form id="editOrderForm">
+
+                    <div class="row">
+                        {{-- order identity --}}
+                        <div class="col-12">
+                            <div class="list-group mb-3"><a href="javascript:void(0);"
+                                    class="list-group-item list-group-item-action">
+                                    <strong>Nama : </strong><span id="namaEditCustomer"></span>
+                                </a>
+                                <a href="javascript:void(0);" class="list-group-item list-group-item-action ">
+                                    <strong>No. HP : </strong> <span id="namaEditNoHp"></span>
+                                </a>
+                                <a href="javascript:void(0);" class="list-group-item list-group-item-action ">
+                                    <strong>Alamat Rumah : </strong> <span id="namaEditAddress"></span>
+
+                                </a>
+                                <a href="javascript:void(0);" class="list-group-item list-group-item-action ">
+                                    <strong>Alamat Usaha : </strong> <span id="namaEditAddressCompany"></span>
+                                </a>
+                            </div>
+                            <input type="hidden" name="id" id="formEditId">
+                            <input type="hidden" name="id_customer" id="formEditCustomerId">
+                            <div class="mb-3">
+                                <div class="form-check form-switch  ">
+                                    <input class="form-check-input" type="checkbox" id="formEditDelivery"
+                                        name="delivery">
+                                    <label class="form-check-label" for="formEditDelivery">Pengantaran
+                                    </label>
+                                </div>
+                                <small class="text-muted">*Aktifkan jika barang akan diantar ke pelanggan</small>
+                            </div>
+                            <div class="mb-3">
+                                <label>Diskon</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" name="discount" id="formEditDiscount">
+                                    <span class="input-group-text">%</span>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="formProductIdWirehouse" class="form-label">Pilih Gudang <span
+                                        class="text-danger">*</span></label>
+                                <select class="form-select" id="formProductIdWirehouse" name="id_wirehouse" required>
+                                </select>
+                            </div>
+                            <div class="mb-3" style="display: none;" id="hidden1">
+                                <label for="formPaymentMethodMethod" class="form-label">Biaya Tambahan <span
+                                        class="text-muted">(jika
+                                        ada)</span></label>
+                                <input type="number" class="form-control" id="formEditAdditionalFee"
+                                    name="additional_fee" value="0">
+                            </div>
+                            <div class="mb-3" style="display: none;" id="hidden2">
+                                <label for="formPaymentMethodMethod" class="form-label">Alamat Pengantaran </label>
+                                <textarea class="form-control" id="formEditAddressDelivery" name="address_delivery">-</textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="formPaymentMethodMethod" class="form-label">Keterangan <span
+                                        class="text-muted">(jika
+                                        ada)</span></label>
+                                <textarea class="form-control" id="formEditDescription" name="description">-</textarea>
+                            </div>
+                        </div>
+
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="savepaymentMethodBtn">Save</button>
+                <button type="button" class="btn btn-primary" id="saveOrderBtn">Save</button>
             </div>
         </div>
     </div>
@@ -58,6 +115,14 @@
                                     </label>
                                 </div>
                                 <small class="text-muted">*Aktifkan jika barang akan diantar ke pelanggan</small>
+                            </div>
+                            <div class="mb-3">
+                                <label>Diskon</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" value="0" name="discount"
+                                        id="formCreateDiscount">
+                                    <span class="input-group-text">%</span>
+                                </div>
                             </div>
                             <div class="mb-3">
                                 <label for="formProductIdWirehouse" class="form-label">Pilih Gudang <span

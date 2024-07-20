@@ -27,9 +27,11 @@
                     type: 'GET',
                     url: '/expired-alert',
                     success: function(response) {
-                        var expiredText = '<span class="h4 text-danger">' + response.expired +
+                        var expiredText = '<span class="h4 text-danger"><i class="bx bx-error"></i> ' +
+                            response.expired +
                             ' Barang pada gudang telah kadaluarsa ..</span>';
-                        var remainingText = '<strong>' + response.remaining +
+                        var remainingText = '<strong><i class="bx bx-error-circle"></i> ' + response
+                            .remaining +
                             ' Barang pada gudang akan kadaluarsa..</strong><br><small>*Waktu peringatan dihitung 3 bulan sebelum tanggal kadaluarsa tiba.</small>';
                         if (response.expired != 0) {
                             getAlert(expiredText, 'danger');

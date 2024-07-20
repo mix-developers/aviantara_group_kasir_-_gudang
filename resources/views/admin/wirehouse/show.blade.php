@@ -4,24 +4,44 @@
     @include('layouts.backend.alert')
     <div class="row justify-content-center">
         <div class="col-md-4 mb-4">
-            <div class="card">
+            <div class="card mb-3">
                 <div class="card-header">
                     Informasi Gudang
                 </div>
-                <div class="card-body">
-                    <table class="table table-hover">
-                        <tr>
-                            <td class="fw-bold">Nama Gudang</td>
-                            <td>:</td>
-                            <td class="text-primary">{{ $wirehouse->name }}</td>
-                        </tr>
-                        <tr>
-                            <td class="fw-bold">Alamat Gudang</td>
-                            <td>:</td>
-                            <td>{{ $wirehouse->address }}</td>
-                        </tr>
-                    </table>
+                <table class="table table-hover">
+                    <tr>
+                        <td class="fw-bold">Nama Gudang</td>
+                        <td>:</td>
+                        <td class="text-primary">{{ $wirehouse->name }}</td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold">Alamat Gudang</td>
+                        <td>:</td>
+                        <td>{{ $wirehouse->address }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="card mb-3">
+                <div class="card-header">
+                    Pegawai Gudang
                 </div>
+                <table class="table table-hover table-sm">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nama</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($staff as $itemStaff)
+                            <tr>
+                                <td>{{ $itemStaff->id }}</td>
+                                <td><strong>{{ $itemStaff->name }}</strong><br><small
+                                        class="text-mutted">{{ $itemStaff->email }}</small></td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
         <div class="col-md-8">
@@ -42,7 +62,7 @@
                     </div>
                 </div>
                 <div class="card-datatable table-responsive">
-                    <table id="datatable-product" class="table table-hover table-bordered display">
+                    <table id="datatable-product" class="table table-hover table-bordered display table-sm">
                         <thead>
                             <tr>
                                 <th>ID</th>

@@ -4,16 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\ProductStok;
+use App\Models\User;
+use App\Models\Wirehouse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
 class StokController extends Controller
 {
     public function stoks()
     {
+        $wirehouse = '';
+        if (Auth::user()->role == 'Gudang') {
+            $wirehouse = Wirehouse::find(Auth::user()->id_wirehouse)->first()->name;
+        }
         $data = [
-            'title' => 'Pengelolaan Stok',
+            'title' => 'Pengelolaan Stok ' . (Auth::user()->role == 'Gudang' ? ' : ' . $wirehouse : ''),
         ];
         return view('admin.stok.stok', $data);
     }
@@ -65,6 +72,10 @@ class StokController extends Controller
                     });
                 }
             }
+        }
+        $user = User::with(['wirehouse'])->where('id', Auth::id())->first();
+        if (Auth::user()->role == 'Gudang' && $user->wirehouse) {
+            $query->where('id_wirehouse', $user->id_wirehouse);
         }
 
         if ($request->has('wirehouse')) {
@@ -169,6 +180,12 @@ class StokController extends Controller
             if ($fromDate != '' && $toDate != '') {
                 $query->where('created_at', '>=', $fromDate)->where('created_at', '<=', $toDate);
             }
+        }
+        if (Auth::user()->role == 'Gudang') {
+            $user = Auth::user();
+            $query->whereHas('product', function ($query) use ($user) {
+                $query->where('id_wirehouse', $user->id_wirehouse);
+            });
         }
         $stoks = $query;
 

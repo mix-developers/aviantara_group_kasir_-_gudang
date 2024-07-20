@@ -92,7 +92,10 @@
                     success: function(response) {
                         getAlert(response.message);
                         $('#customersModalLabel').text('Edit Customer');
-                        $('#formCustomerName').val('');
+                        $('#formCreateCustomerName').val('');
+                        $('#formCreateCustomerPhone').val('+62');
+                        $('#formCreateCustomerAddressHome').val('');
+                        $('#formCreateCustomerAddressCompany').val('');
                         $('#datatable-customers').DataTable().ajax.reload();
                         $('#create').modal('hide');
                     },

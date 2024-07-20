@@ -185,10 +185,47 @@
                     type: 'GET',
                     url: '/order_wirehouses/edit/' + id,
                     success: function(response) {
+                        console.log(response.discount);
                         $('#paymentMethodModalLabel').text('Edit Customer');
-                        $('#formPaymentMethodId').val(response.id);
-                        $('#formPaymentMethodMethod').val(response.method);
-                        $('#paymentMethodModal').modal('show');
+                        $('#formEditId').val(response.id);
+                        $('#EditInvoice').text(response.no_invoice);
+                        $('#formEditCustomerId').val(response.id_customer);
+                        $('#formEditDelivery').val(response.delivery);
+                        $('#formEditDiscount').val(response.discount);
+                        $('#formEditAdditionalFee').val(response.additional_fee);
+                        // $('#formEditAddressDelivery').val(response.address_delivery);
+                        if (response.delivery === 1) {
+                            $('#formEditDelivery').prop('checked', true);
+                        } else {
+                            $('#formEditDelivery').prop('checked', false);
+                        }
+                        $('#formEditDescription').val(response.description);
+                        //tampilkan identitas customer
+                        $.getJSON("customers/getCustomer/" + response.id_customer, function(
+                            response) {
+                            $('#namaEditCustomer').text(response.name);
+                            $('#namaEditNoHp').text(response.phone);
+                            $('#namaEditAddress').text(response.address_home);
+                            $('#namaEditAddressCompany').text(response.address_company);
+                        });
+                        $('#formEditDelivery').change(function() {
+                            if ($(this).is(':checked')) {
+                                $(this).val(
+                                '1'); // Mengatur nilai 1 jika checkbox dicentang
+                            } else {
+                                $(this).val(
+                                '0'); // Mengatur nilai 0 jika checkbox tidak dicentang
+                            }
+                        });
+                        $('#formEditDelivery').change(function() {
+                            if (response.delivery === 1 || this.checked) {
+                                $('#hidden1, #hidden2').show();
+                            } else {
+                                $('#hidden1, #hidden2').hide();
+                            }
+                        });
+
+                        $('#editModal').modal('show');
                     },
                     error: function(xhr) {
                         alert('Terjadi kesalahan: ' + xhr.responseText);
@@ -197,19 +234,21 @@
             };
             $('#saveOrderBtn').click(function() {
 
-                var formData = $('#userForm').serialize();
+                var formData = $('#editOrderForm').serialize();
 
                 $.ajax({
                     type: 'POST',
-                    url: '/order_wirehouses/store',
+                    url: '/order_wirehouses/update',
                     data: formData,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
-                        getAlert(response.message);
-                        $('#datatable-payment-method').DataTable().ajax.reload();
-                        $('#paymentMethodModal').modal('hide');
+                        console.log(response.message);
+                        // getAlert(response.message);
+
+                        $('#datatable-order-wirehouse').DataTable().ajax.reload();
+                        $('#editModal').modal('hide');
                     },
                     error: function(xhr) {
                         alert('Terjadi kesalahan: ' + xhr.responseText);
@@ -508,6 +547,7 @@
                     $('#hidden1, #hidden2').hide();
                 }
             });
+
         });
 
         function formatNumberWithDot(number) {

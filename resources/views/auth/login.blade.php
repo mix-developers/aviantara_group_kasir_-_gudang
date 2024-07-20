@@ -20,7 +20,13 @@
                 <!-- /Logo -->
                 <h4 class="mb-2">Welcome 👋</h4>
                 <p class="mb-4">Silahkan login terlebih dahulu</p>
-
+                @if (Session::has('danger'))
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        {{ Session::get('danger') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                        </button>
+                    </div>
+                @endif
                 <form id="formAuthentication" class="mb-3" action="index.html" method="POST">
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>

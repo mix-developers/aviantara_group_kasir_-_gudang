@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -20,7 +21,11 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'role',
         'password',
+        'is_disabled',
+        'id_shop',
+        'id_wirehouse',
     ];
 
     /**
@@ -41,4 +46,13 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function wirehouse(): BelongsTo
+    {
+        return $this->belongsTo(Wirehouse::class, 'id_wirehouse');
+    }
+    public function shop(): BelongsTo
+    {
+        return $this->belongsTo(Shop::class, 'id_shop');
+    }
 }

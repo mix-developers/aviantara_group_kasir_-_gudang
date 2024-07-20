@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\OrderWirehousePayment;
 use App\Models\PaymentMethod;
 use App\Models\paymentMethodItem;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -21,7 +22,7 @@ class PaymentMethodController extends Controller
     {
         $paymentMethod = PaymentMethod::find($id);
         $data = [
-            'title' => 'Data pembayaran dengan metode : ' . $paymentMethod->method,
+            'title' => 'Riwayat data pembayaran dengan metode : ' . $paymentMethod->method,
             'paymentMethod' => $paymentMethod
         ];
         return view('admin.payment_method.show', $data);
@@ -33,7 +34,7 @@ class PaymentMethodController extends Controller
     }
     public function getPaymentMethodDataTable()
     {
-        $PaymentMethod = PaymentMethod::select(['id', 'method', 'enabled', 'created_at', 'updated_at'])->orderByDesc('id')->get();
+        $PaymentMethod = PaymentMethod::select(['id', 'method', 'enabled', 'created_at', 'updated_at'])->orderByDesc('id');
 
         return Datatables::of($PaymentMethod)
             ->addColumn('action', function ($PaymentMethod) {
@@ -52,6 +53,36 @@ class PaymentMethodController extends Controller
             ->where('id_payment_method', $id)
             ->with(['payment_method', 'user']);
 
+        return Datatables::of($paymentMethodItem)
+            ->addColumn('date', function ($paymentMethodItem) {
+                return $paymentMethodItem->created_at->format('d F Y');
+            })
+            ->rawColumns(['date'])
+            ->make(true);
+    }
+    public function getReportPaymentsDataTable(Request $request)
+    {
+        $paymentMethodItem = paymentMethodItem::orderByDesc('id')
+            ->with(['payment_method', 'user']);
+
+        if ($request->has('from-date') && $request->has('to-date')) {
+            $fromDate = $request->input('from-date');
+            $toDate = $request->input('to-date');
+            if ($fromDate != '' && $toDate != '') {
+                // $paymentMethodItem->where('created_at', '>=', $fromDate)->where('created_at', '<=', $toDate);
+                if ($fromDate && $toDate) {
+                    // Konversi tanggal ke format timestamp
+                    $fromDate = Carbon::parse($fromDate)->startOfDay()->toDateTimeString();
+                    $toDate = Carbon::parse($toDate)->endOfDay()->toDateTimeString();
+
+                    // Lakukan pencarian berdasarkan rentang waktu
+                    $paymentMethodItem->whereBetween('created_at', [$fromDate, $toDate]);
+                }
+            }
+        }
+        if ($request->has('method')  && $request->input('method') !== 'all') {
+            $paymentMethodItem->where('id_payment_method', $request->input('method'));
+        }
         return Datatables::of($paymentMethodItem)
             ->addColumn('date', function ($paymentMethodItem) {
                 return $paymentMethodItem->created_at->format('d F Y');

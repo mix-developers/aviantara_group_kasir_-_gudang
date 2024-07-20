@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use App\Models\OrderWirehouse;
+use App\Models\OrderWirehousePayment;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Str;
@@ -20,6 +21,11 @@ class CustomerController extends Controller
     public function getAll()
     {
         $customer = customer::all();
+        return response()->json($customer);
+    }
+    public function getCustomer($id)
+    {
+        $customer = customer::find($id);
         return response()->json($customer);
     }
     public function show($id)
@@ -122,24 +128,14 @@ class CustomerController extends Controller
     }
     public function getCustomersDataTableDetail($id)
     {
-        $OrderWirehouse = OrderWirehouse::select([
-            'id',
-            'id_customer',
-            'id_user',
-            'id_wirehouse',
-            'total_fee',
-            'additional_fee',
-            'delivery',
-            'address_delivery',
-            'description',
-            'created_at',
-            'updated_at',
-            'no_invoice'
-        ])->orderByDesc('id')->with(['customer', 'product', 'wirehouse'])->where('id_customer', $id)->get();
+        $OrderWirehouse = OrderWirehouse::orderByDesc('id')->with(['customer', 'product', 'wirehouse'])->where('id_customer', $id)->get();
 
         return DataTables::of($OrderWirehouse)
             ->addColumn('action', function ($OrderWirehouse) {
                 return view('admin.customers.components.actions_detail', compact('OrderWirehouse'));
+            })
+            ->addColumn('date', function ($OrderWirehouse) {
+                return $OrderWirehouse->created_at->format('d F Y');
             })
             ->addColumn('total_fee_text', function ($OrderWirehouse) {
                 return 'Rp ' . number_format($OrderWirehouse->total_fee);
@@ -154,7 +150,33 @@ class CustomerController extends Controller
             ->addColumn('wirehouse', function ($OrderWirehouse) {
                 return '<strong>' . $OrderWirehouse->wirehouse->name . '</strong><br><span class="text-muted">' . $OrderWirehouse->wirehouse->address . '</span>';
             })
-            ->rawColumns(['action', 'total_fee_text', 'additional_fee_text', 'delivery_text', 'wirehouse'])
+            ->addColumn('tagihan', function ($OrderWirehouse) {
+                $check_payment = OrderWirehousePayment::where('id_order_wirehouse', $OrderWirehouse->id)->sum('paid');
+                if ($check_payment < $OrderWirehouse->total_fee) {
+                    $total = $OrderWirehouse->total_fee - $check_payment;
+                    $terbayar = '<br><small class="text-primary">Terbayar : Rp ' . number_format($check_payment) . '</small>';
+                    $sisa = '<br><small class="text-danger">Sisa : Rp ' . number_format($total) . '</small>';
+                } else {
+                    $terbayar = '';
+                    $sisa = '';
+                }
+                return 'Rp ' . number_format($OrderWirehouse->total_fee) . $terbayar . $sisa;
+            })
+            ->addColumn('payment', function ($OrderWirehouse) {
+                $check_payment = OrderWirehousePayment::where('id_order_wirehouse', $OrderWirehouse->id)->sum('paid');
+                if ($check_payment <= 0) {
+                    $payment = 'Menunggu Pembayaran';
+                    $color = 'text-danger';
+                } elseif ($check_payment < $OrderWirehouse->total_fee) {
+                    $payment = 'Proses Pencicilan';
+                    $color = 'text-warning';
+                } else {
+                    $payment = 'Lunas';
+                    $color = 'text-primary';
+                }
+                return '<strong class="' . $color . '">' . $payment . '</strong>';
+            })
+            ->rawColumns(['action', 'total_fee_text', 'additional_fee_text', 'delivery_text', 'wirehouse', 'tagihan', 'payment', 'date'])
             ->make(true);
     }
 }

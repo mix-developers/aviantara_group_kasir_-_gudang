@@ -87,7 +87,8 @@
                     <div class="mb-3">
                         <label for="formProductName" class="form-label">Nama <span
                                 class="text-danger">*</span></label>
-                        <input type="text" class="form-control " id="formProductName" name="name" required>
+                        <input type="text" class="form-control " id="formCreateProductName" name="name"
+                            required>
                     </div>
                     <div class="mb-3">
                         <label for="formProductBarcode" class="form-label">Barcode <span
@@ -110,7 +111,7 @@
                         <label for="formProductQUantityUnit" class="form-label">Jumlah isi per-satuan
                             <span class="text-danger">*</span></label>
                         <div class="input-group">
-                            <input type="number" class="form-control" id="formProductQUantityUnit"
+                            <input type="number" class="form-control" id="formCreateProductQUantityUnit"
                                 name="quantity_unit" required>
                             <select class="form-select" id="formProductSubUnit" name="sub_unit" required>
                                 <option value="Pcs">Pcs</option>

@@ -329,7 +329,7 @@
                             $('#barcodeInput').val('');
                         },
                         error: function() {
-                            alert('Product not found');
+                            // alert('Product not found');
                             $('#barcodeInput').val('');
                         }
                     });

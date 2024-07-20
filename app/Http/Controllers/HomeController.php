@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use App\Models\Product;
+use App\Models\ProductDamaged;
 use App\Models\ProductStok;
+use App\Models\Shop;
 use App\Models\User;
+use App\Models\Wirehouse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -32,22 +36,62 @@ class HomeController extends Controller
             'users' => User::where('role', '!=', 'admin')->where('role', '!=', 'owner')->count(),
             'customers' => Customer::count(),
             'product' => Product::count(),
+            'shops' => Shop::count(),
+            'wirehouses' => Wirehouse::count(),
         ];
         return view('admin.dashboard', $data);
     }
     public function getStokExpired()
     {
-        $stok_masuk = ProductStok::where('expired_date', '<=', date('Y-m-d'))->where('type', 'Masuk')->sum('quantity');
-        $stok_keluar = ProductStok::where('expired_date', '<=', date('Y-m-d'))->where('type', 'Keluar')->sum('quantity');
-        $stok = $stok_masuk - $stok_keluar;
+        $stok_masuk = ProductStok::where('expired_date', '<=', date('Y-m-d'))->where('type', 'Masuk');
+        $stok_keluar = ProductStok::where('expired_date', '<=', date('Y-m-d'))->where('type', 'Keluar');
+        //tambahkan produk rusak
+        $rusak = ProductDamaged::where('expired_date', '<=', date('Y-m-d'));
+        if (Auth::user()->role == 'Gudang') {
+            $user = Auth::user();
+            $stok_masuk->whereHas('product', function ($stok_masuk) use ($user) {
+                $stok_masuk->where('id_wirehouse', $user->id_wirehouse);
+            });
+            $stok_keluar->whereHas('product', function ($stok_keluar) use ($user) {
+                $stok_keluar->where('id_wirehouse', $user->id_wirehouse);
+            });
+            //rusak
+            $rusak->whereHas('product', function ($rusak) use ($user) {
+                $rusak->where('id_wirehouse', $user->id_wirehouse);
+            });
+        }
+        $stok_keluar = $stok_keluar->sum('quantity');
+        $stok_masuk = $stok_masuk->sum('quantity');
+        //rusak
+        $rusak = $stok_masuk->sum('total');
+        $stok = $stok_masuk - $stok_keluar - $rusak;
         $stok < 0 ? 0 : $stok;
         return $stok;
     }
     public function getStokRemainingExpired()
     {
-        $stok_masuk = ProductStok::where('expired_date', '<=', date('Y-m-d', strtotime('+3 month')))->where('expired_date', '>', date('Y-m-d'))->where('type', 'Masuk')->sum('quantity');
-        $stok_keluar = ProductStok::where('expired_date', '<=', date('Y-m-d', strtotime('+3 month')))->where('expired_date', '>', date('Y-m-d'))->where('type', 'Keluar')->sum('quantity');
-        $stok = $stok_masuk - $stok_keluar;
+        $stok_masuk = ProductStok::where('expired_date', '<=', date('Y-m-d', strtotime('+3 month')))->where('expired_date', '>', date('Y-m-d'))->where('type', 'Masuk');
+        $stok_keluar = ProductStok::where('expired_date', '<=', date('Y-m-d', strtotime('+3 month')))->where('expired_date', '>', date('Y-m-d'))->where('type', 'Keluar');
+        //rusak
+        $rusak = ProductDamaged::where('expired_date', '<=', date('Y-m-d', strtotime('+3 month')))->where('expired_date', '>', date('Y-m-d'));
+        if (Auth::user()->role == 'Gudang') {
+            $user = Auth::user();
+            $stok_masuk->whereHas('product', function ($stok_masuk) use ($user) {
+                $stok_masuk->where('id_wirehouse', $user->id_wirehouse);
+            });
+            $stok_keluar->whereHas('product', function ($stok_keluar) use ($user) {
+                $stok_keluar->where('id_wirehouse', $user->id_wirehouse);
+            });
+            //rusak
+            $rusak->whereHas('product', function ($rusak) use ($user) {
+                $rusak->where('id_wirehouse', $user->id_wirehouse);
+            });
+        }
+        $stok_keluar = $stok_keluar->sum('quantity');
+        $stok_masuk = $stok_masuk->sum('quantity');
+        //rusak
+        $rusak = $rusak->sum('total');
+        $stok = $stok_masuk - $stok_keluar - $rusak;
         return $stok;
     }
     public function expiredAlert()
@@ -60,32 +104,91 @@ class HomeController extends Controller
     }
     public function getStokInput()
     {
-        $stok = ProductStok::where('type', 'Masuk')->sum('quantity');
+        $stok = ProductStok::where('type', 'Masuk');
+        if (Auth::user()->role == 'Gudang') {
+            $user = Auth::user();
+            $stok->whereHas('product', function ($stok) use ($user) {
+                $stok->where('id_wirehouse', $user->id_wirehouse);
+            });
+        }
+        $stok = $stok->sum('quantity');
         return $stok;
     }
     public function getStokOut()
     {
-        $stok = ProductStok::where('type', 'Keluar')->sum('quantity');
+        $stok = ProductStok::where('type', 'Keluar');
+        if (Auth::user()->role == 'Gudang') {
+            $user = Auth::user();
+            $stok->whereHas('product', function ($stok) use ($user) {
+                $stok->where('id_wirehouse', $user->id_wirehouse);
+            });
+        }
+        $stok = $stok->sum('quantity');
         return $stok;
     }
 
     public function getStokNotExpired()
     {
-        $stok_masuk = ProductStok::where('expired_date', '>', date('Y-m-d'))->where('type', 'Masuk')->sum('quantity');
-        $stok_keluar = ProductStok::where('expired_date', '>', date('Y-m-d'))->where('type', 'Keluar')->sum('quantity');
+        $stok_masuk = ProductStok::where('expired_date', '>', date('Y-m-d'))->where('type', 'Masuk');
+        $stok_keluar = ProductStok::where('expired_date', '>', date('Y-m-d'))->where('type', 'Keluar');
+        //rusak
+        $rusak = ProductDamaged::where('expired_date', '>', date('Y-m-d'));
+        if (Auth::user()->role == 'Gudang') {
+            $user = Auth::user();
+            $stok_masuk->whereHas('product', function ($stok_masuk) use ($user) {
+                $stok_masuk->where('id_wirehouse', $user->id_wirehouse);
+            });
+            $stok_keluar->whereHas('product', function ($stok_keluar) use ($user) {
+                $stok_keluar->where('id_wirehouse', $user->id_wirehouse);
+            });
+            //rusak
+            $rusak->whereHas('product', function ($rusak) use ($user) {
+                $rusak->where('id_wirehouse', $user->id_wirehouse);
+            });
+        }
+        $stok_keluar = $stok_keluar->sum('quantity');
+        $stok_masuk = $stok_masuk->sum('quantity');
+        //rusak
+        $rusak = $rusak->sum('total');
         $stok = $stok_masuk - $stok_keluar;
         return $stok;
     }
     public function getStokWirehouse()
     {
-        $stok_masuk = ProductStok::where('type', 'Masuk')->sum('quantity');
-        $stok_keluar = ProductStok::where('type', 'Keluar')->sum('quantity');
-        $stok = $stok_masuk - $stok_keluar;
+        $stok_masuk = ProductStok::where('type', 'Masuk');
+        $stok_keluar = ProductStok::where('type', 'Keluar');
+        //rusak
+        $rusak = ProductDamaged::query();
+        if (Auth::user()->role == 'Gudang') {
+            $user = Auth::user();
+            $stok_masuk->whereHas('product', function ($stok_masuk) use ($user) {
+                $stok_masuk->where('id_wirehouse', $user->id_wirehouse);
+            });
+            $stok_keluar->whereHas('product', function ($stok_keluar) use ($user) {
+                $stok_keluar->where('id_wirehouse', $user->id_wirehouse);
+            });
+            //rusak
+            $rusak->whereHas('product', function ($rusak) use ($user) {
+                $rusak->where('id_wirehouse', $user->id_wirehouse);
+            });
+        }
+        $stok_keluar = $stok_keluar->sum('quantity');
+        $stok_masuk = $stok_masuk->sum('quantity');
+        //rusak
+        $rusak = $rusak->sum('total');
+        $stok = $stok_masuk - $stok_keluar - $rusak;
         return $stok;
     }
     public function getPriceStokInput()
     {
-        $stok = ProductStok::where('type', 'Masuk')->sum('price_origin');
+        $stok = ProductStok::where('type', 'Masuk');
+        if (Auth::user()->role == 'Gudang') {
+            $user = Auth::user();
+            $stok->whereHas('product', function ($stok) use ($user) {
+                $stok->where('id_wirehouse', $user->id_wirehouse);
+            });
+        }
+        $stok = $stok->sum('price_origin');
         return $stok;
     }
     public function getStokCard()

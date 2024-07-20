@@ -1,6 +1,4 @@
 <div class="btn-group">
-    <a href="" class="btn btn-sm btn-primary"><span>
-            <i class="bx bx-car "> </i></a>
     <button class="btn btn-sm btn-warning" onclick="editOrder({{ $OrderWirehouse->id }})"><span>
             <i class="bx bx-edit "> </i></button>
     <a type="button" class="btn btn-sm btn-secondary "

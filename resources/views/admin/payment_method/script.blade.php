@@ -3,8 +3,8 @@
         $(function() {
             $('#datatable-payment-method').DataTable({
                 processing: true,
-                serverSide: true,
-                responsive: true,
+                serverSide: false,
+                responsive: false,
                 ajax: '{{ url('paymentMethod-datatable') }}',
                 columns: [{
                         data: 'id',

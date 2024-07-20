@@ -5,9 +5,8 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpFoundation\Response;
 
-class CekUserLogin
+class CheckDisabled
 {
     /**
      * Handle an incoming request.
@@ -16,7 +15,7 @@ class CekUserLogin
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle(Request $request, Closure $next, ...$role): Response
+    public function handle(Request $request, Closure $next, ...$role)
     {
         $user = $request->user();
 
@@ -26,11 +25,7 @@ class CekUserLogin
             return redirect()->route('login')->with('danger', 'Akun Anda telah dinonaktifkan.');
         }
 
-        // Check role permission
-        if ($user && in_array($user->role, $role)) {
-            return $next($request);
-        }
-
-        return redirect()->back()->with('danger', 'Anda tidak memiliki akses pada halaman ini');
+        // Lanjutkan dengan middleware atau proses berikutnya
+        return $next($request);
     }
 }

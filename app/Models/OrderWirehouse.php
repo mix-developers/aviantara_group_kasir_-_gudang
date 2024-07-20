@@ -19,7 +19,8 @@ class OrderWirehouse extends Model
         'address_delivery',
         'description',
         'send_bill',
-        'no_invoice'
+        'no_invoice',
+        'discount'
     ];
     public function wirehouse(): BelongsTo
     {

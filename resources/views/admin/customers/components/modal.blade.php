@@ -16,7 +16,8 @@
                     </div>
                     <div class="mb-3">
                         <label for="formCustomerPhone" class="form-label">No Hp</label>
-                        <input type="number" class="form-control" id="formCustomerPhone" name="phone" required>
+                        <input type="text" class="form-control" id="formCustomerPhone" name="phone" value="+62"
+                            required>
                     </div>
                     <div class="mb-3">
                         <label for="formCustomerAddressHome" class="form-label">Alamat Rumah</label>
@@ -50,20 +51,21 @@
                 <form id="createUserForm">
                     <div class="mb-3">
                         <label for="formCustomerName" class="form-label">Nama</label>
-                        <input type="text" class="form-control" id="formCustomerName" name="name" required>
+                        <input type="text" class="form-control" id="formCreateCustomerName" name="name" required>
                     </div>
                     <div class="mb-3">
                         <label for="formCustomerPhone" class="form-label">No Hp</label>
-                        <input type="number" class="form-control" id="formCustomerPhone" name="phone" required>
+                        <input type="text" class="form-control" id="formCreateCustomerPhone" name="phone"
+                            value="+62" required>
                     </div>
                     <div class="mb-3">
                         <label for="formCustomerAddressHome" class="form-label">Alamat Rumah</label>
-                        <input type="text" class="form-control" id="formCustomerAddressHome" name="address_home"
-                            required>
+                        <input type="text" class="form-control" id="formCreateCustomerAddressHome"
+                            name="address_home" required>
                     </div>
                     <div class="mb-3">
                         <label for="formCustomerAddressCompany" class="form-label">Alamat Usaha</label>
-                        <input type="text" class="form-control" id="formCustomerAddressCompany"
+                        <input type="text" class="form-control" id="formCreateCustomerAddressCompany"
                             name="address_company" required>
                     </div>
                 </form>

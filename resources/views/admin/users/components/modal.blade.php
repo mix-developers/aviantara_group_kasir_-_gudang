@@ -20,8 +20,33 @@
                     </div>
                     <div class="mb-3">
                         <label for="formUserRole" class="form-label">Role</label>
-                        <select class="form-control" id="formUserRole" name="role">
+                        <select class="form-control" id="formUpdateUserRole" name="role">
 
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formUserRole" class="form-label">Enable or disabled</label>
+                        <select class="form-select" id="formEditUserDisabled" name="is_disabled">
+                            <option value="0">Enable Account</option>
+                            <option value="1">Disable Account</option>
+                        </select>
+                    </div>
+                    <div class="mb-3" id="update-kasir">
+                        <label for="formUserIdShop" class="form-label">Pilih Toko/Kios</label>
+                        <select class="form-select" id="formEditUserIdShop" name="id_shop">
+                            <option value="">Pilih Toko/Kios</option>
+                            @foreach (App\Models\Shop::all() as $item)
+                                <option value="{{ $item->id }}">{{ $item->name }} - {{ $item->address }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3" id="update-gudang">
+                        <label for="formUserIdShop" class="form-label">Pilih Gudang</label>
+                        <select class="form-select" id="formEditUserIdWirehouse" name="id_wirehouse">
+                            <option value="">Pilih Gudang</option>
+                            @foreach (App\Models\wirehouse::all() as $item)
+                                <option value="{{ $item->id }}">{{ $item->name }} - {{ $item->address }}</option>
+                            @endforeach
                         </select>
                     </div>
 
@@ -46,19 +71,45 @@
                 <form id="createUserForm">
                     <div class="mb-3">
                         <label for="formUserName" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="formUserName" name="name" required>
+                        <input type="text" class="form-control" id="formCreateUserName" name="name" required>
                     </div>
                     <div class="mb-3">
                         <label for="formUserEmail" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="formUserEmail" name="email" required>
+                        <input type="email" class="form-control" id="formCreateUserEmail" name="email" required>
                     </div>
                     <div class="mb-3">
                         <label for="formUserRole" class="form-label">Role</label>
-                        <select class="form-select" id="formUserRole" name="role">
+                        <select class="form-select" id="formCreateUserRole" name="role">
                             <option value="Owner">Owner</option>
                             <option value="Admin">Admin</option>
                             <option value="Gudang">Gudang</option>
                             <option value="Kasir">Kasir</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formUserRole" class="form-label">Enable or disabled</label>
+                        <select class="form-select" id="formUserDisabled" name="is_disabled">
+                            <option value="0">Enable Account</option>
+                            <option value="1">Disable Account</option>
+                        </select>
+                    </div>
+                    <div class="mb-3" id="create-kasir">
+                        <label for="formUserIdShop" class="form-label">Pilih Toko/Kios</label>
+                        <select class="form-select" id="formUserIdShop" name="id_shop">
+                            <option value="">Pilih Toko/Kios</option>
+                            @foreach (App\Models\Shop::all() as $item)
+                                <option value="{{ $item->id }}">{{ $item->name }} - {{ $item->address }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3" id="create-gudang">
+                        <label for="formUserIdShop" class="form-label">Pilih Gudang</label>
+                        <select class="form-select" id="formUserIdWirehouse" name="id_wirehouse">
+                            <option value="">Pilih Gudang</option>
+                            @foreach (App\Models\wirehouse::all() as $item)
+                                <option value="{{ $item->id }}">{{ $item->name }} - {{ $item->address }}
+                                </option>
+                            @endforeach
                         </select>
                     </div>
                 </form>

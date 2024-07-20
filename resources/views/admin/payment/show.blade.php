@@ -90,7 +90,7 @@
         $(function() {
             $('#datatable-detail-payment').DataTable({
                 processing: true,
-                serverSide: true,
+                serverSide: false,
                 responsive: true,
                 ajax: '{{ url('payment-detail-datatable', $order->id) }}',
                 columns: [{
