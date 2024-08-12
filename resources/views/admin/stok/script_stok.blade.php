@@ -347,6 +347,7 @@
                     $('#formCreateProductId').val(id);
                     $('#formCreateStokName').val(name);
                     $('#formCreateStokUnit').text(unit);
+                    $('#formCreateStokBarcode').val(barcode).prop('readonly', true);
                     $('#formCreateStokUnit2').text('/' + unit);
 
                     $('#productSelectionModal').modal('hide');
@@ -443,6 +444,54 @@
             }
             getWirehouseOptions();
 
+        });
+        $(document).ready(function() {
+            $('#formCreateStokBarcode').on('input', function() {
+                var barcode = $(this).val().trim();
+
+                // Cek apakah barcode tidak kosong
+                if (barcode !== '') {
+                    // Lakukan AJAX request untuk mencari nama produk dan barcode produk
+                    $.ajax({
+                        url: '/products/scan', // Ganti dengan URL endpoint Anda
+                        method: 'GET', // Metode request (GET, POST, dll)
+                        data: {
+                            barcode: barcode
+                        }, // Data yang dikirimkan dalam request
+                        success: function(response) {
+                            // Response dari server berisi data nama dan barcode produk
+                            var name = response
+                                .name; // Ganti 'name' dengan nama variabel yang sesuai
+                            var barcode = response
+                                .barcode; // Ganti 'barcode' dengan nama variabel yang sesuai
+                            console.log(response);
+                            // Kosongkan konten sebelumnya di #descriptionCreateStok
+                            $('#descriptionCreateStok').empty();
+                            $('#formCreateStokBarcode').prop('readonly', true);
+                            // Tambahkan informasi produk ke dalam #descriptionCreateStok
+                            $('#descriptionCreateStok').append(
+                                '<div class="list-group">' +
+                                '<a href="javascript:void(0);" class="list-group-item list-group-item-action">' +
+                                '<strong>Nama produk : </strong>' + name +
+                                '</a>' +
+                                '<a href="javascript:void(0);" class="list-group-item list-group-item-action">' +
+                                '<strong>Barcode produk : </strong>' + barcode +
+                                '</a>' +
+                                '</div>'
+                            );
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error:', error); // Tangani kesalahan jika terjadi
+                        }
+                    });
+                } else {
+                    // Jika input barcode kosong, kosongkan juga konten di #descriptionCreateStok
+                    $('#descriptionCreateStok').empty();
+                }
+            });
+
+            // Jika form sudah terisi saat halaman dimuat, trigger event input untuk memeriksa barcode
+            $('#formCreateStokBarcode').trigger('input');
         });
     </script>
     @include('admin.script.barcode_scanner')

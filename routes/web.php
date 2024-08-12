@@ -69,6 +69,7 @@ Route::middleware(['auth:web', 'role:Gudang,Admin,Owner', 'checkDisabled'])->gro
     Route::get('/damageds-datatable', [ProductDamagedController::class, 'getDamagedsDataTable']);
     //stok managemen
     Route::get('/products', [StokController::class, 'products'])->name('products');
+    Route::get('/products/scan', [StokController::class, 'scanProduct'])->name('products.scan');
     Route::get('/products/getall', [StokController::class, 'getAllProduct'])->name('products.getall');
     Route::get('/products/show/{id}', [StokController::class, 'show_product'])->name('products.show');
     Route::get('/products-datatable', [StokController::class, 'getProductsDataTable']);

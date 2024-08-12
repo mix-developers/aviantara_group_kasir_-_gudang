@@ -45,6 +45,12 @@ class StokController extends Controller
         $Product = Product::all();
         return response()->json($Product);
     }
+    public function scanProduct(Request $request)
+    {
+        $barcode = $request->input('barcode');
+        $Product = Product::where('barcode', $barcode)->first();
+        return response()->json($Product);
+    }
     public function getAllStok()
     {
         $stok = ProductStok::all();

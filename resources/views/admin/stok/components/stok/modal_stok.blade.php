@@ -14,7 +14,6 @@ i<!-- Modal for Create and Edit -->
                     <input type="hidden" id="formStoktId" name="id">
                     <input type="hidden" id="formProductId" name="id_product">
                     <div class="my-3" id="descriptionStok">
-
                     </div>
 
                     <div class="mb-3">
@@ -38,7 +37,6 @@ i<!-- Modal for Create and Edit -->
                     </div>
                     <input type="hidden" name="description" value="Barang Masuk" id="formStokDescription">
                     <input type="hidden" name="type" value="Keluar" id="formStokType">
-
                 </form>
             </div>
             <div class="modal-footer">
@@ -71,6 +69,12 @@ i<!-- Modal for Create and Edit -->
                     <div class="mb-3">
                         {{-- <label for="formCreateStokName" class="form-label">Nama Produk<span>*</span></label> --}}
                         <input type="hidden" class="form-control" id="formCreateStokName" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formCreateStokQuantity" class="form-label">Barcode
+                            <span>*</span></label>
+                        <input type="number" class="form-control" id="formCreateStokBarcode" name="barcode"
+                            autofocus="true">
                     </div>
                     <div class="mb-3">
                         <label for="formCreateStokQuantity" class="form-label">Jumlah Stok
