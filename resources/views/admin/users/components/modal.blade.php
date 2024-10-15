@@ -44,7 +44,7 @@
                         <label for="formUserIdShop" class="form-label">Pilih Gudang</label>
                         <select class="form-select" id="formEditUserIdWirehouse" name="id_wirehouse">
                             <option value="">Pilih Gudang</option>
-                            @foreach (App\Models\wirehouse::all() as $item)
+                            @foreach (App\Models\Wirehouse::all() as $item)
                                 <option value="{{ $item->id }}">{{ $item->name }} - {{ $item->address }}</option>
                             @endforeach
                         </select>

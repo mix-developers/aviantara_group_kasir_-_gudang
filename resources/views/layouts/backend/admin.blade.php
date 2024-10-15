@@ -70,7 +70,7 @@
     <!-- Vendor Styles -->
     <link rel="stylesheet"
         href="{{ asset('backend_theme/') }}/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css">
-    <link rel="stylesheet"
+    {{-- <link rel="stylesheet"
         href="https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template/demo/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css">
     <link rel="stylesheet"
         href="https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template/demo/assets/vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css">
@@ -80,7 +80,7 @@
         href="https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template/demo/assets/vendor/libs/flatpickr/flatpickr.css" />
     <!-- Row Group CSS -->
     <link rel="stylesheet"
-        href="https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template/demo/assets/vendor/libs/datatables-rowgroup-bs5/rowgroup.bootstrap5.css">
+        href="https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template/demo/assets/vendor/libs/datatables-rowgroup-bs5/rowgroup.bootstrap5.css"> --}}
 
     <link rel="stylesheet" href="{{ asset('backend_theme/') }}/assets/vendor/libs/apex-charts/apex-charts.css" />
     <meta name="csrf-token" content="{{ csrf_token() }}">

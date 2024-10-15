@@ -63,7 +63,7 @@ class HomeController extends Controller
         $stok_keluar = $stok_keluar->sum('quantity');
         $stok_masuk = $stok_masuk->sum('quantity');
         //rusak
-        $rusak = $stok_masuk->sum('total');
+        $rusak = $rusak->sum('total');
         $stok = $stok_masuk - $stok_keluar - $rusak;
         $stok < 0 ? 0 : $stok;
         return $stok;
