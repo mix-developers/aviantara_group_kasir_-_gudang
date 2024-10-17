@@ -3,7 +3,7 @@
         //stok gudang
         $(function() {
             $('.refresh-stok').click(function() {
-                getStok().ajax.reload;
+                getStok();
 
             });
 
@@ -43,21 +43,22 @@
                     }
                 });
             };
+            @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Owner')
+                function notPriceAlert() {
+                    $.ajax({
+                        type: 'GET',
+                        url: '/prices/get-not-price',
+                        success: function(response) {
+                            var text = '<strong><i class="bx bx-error-circle"></i> ' + response +
+                                ' Produk belum diberikan harga</small>';
+                            if (response !== 0) {
+                                getAlert(text, 'danger');
 
-            function notPriceAlert() {
-                $.ajax({
-                    type: 'GET',
-                    url: '/prices/get-not-price',
-                    success: function(response) {
-                        var text = '<strong><i class="bx bx-error-circle"></i> ' + response +
-                            ' Produk belum diberikan harga</small>';
-                        if (response !== 0) {
-                            getAlert(text, 'danger');
-
+                            }
                         }
-                    }
-                });
-            };
+                    });
+                };
+            @endif
 
             function getAlert(alertValue, type) {
                 $('#alert').append(
