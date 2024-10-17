@@ -136,6 +136,26 @@
                     }
                 });
             });
+            $('#resetPassword').click(function() {
+                var formData = $('#userForm').serialize();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/users/reset',
+                    data: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        alert(response.message);
+                        $('#datatable-users').DataTable().ajax.reload();
+                        $('#UsersModal').modal('hide');
+                    },
+                    error: function(xhr) {
+                        alert('Terjadi kesalahan: ' + xhr.responseText);
+                    }
+                });
+            });
             $('#createUserBtn').click(function() {
                 var formData = $('#createUserForm').serialize();
 
@@ -159,6 +179,7 @@
                     }
                 });
             });
+
 
             window.deleteUser = function(id) {
                 if (confirm('Apakah Anda yakin ingin menghapus pengguna ini?')) {

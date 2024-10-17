@@ -1,7 +1,7 @@
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
         {{-- logo aplikasi --}}
-        <a href="index.html" class="app-brand-link">
+        <a href="{{ url('/') }}" class="app-brand-link">
             <span class="app-brand-logo demo text-center">
                 <img src="{{ asset('img/') }}/logo.png" alt="logo" style="width: 10%">
             </span>
@@ -20,7 +20,7 @@
             <span class="menu-header-text">{{ env('APP_NAME') ?? 'Laravel' }}</span>
         </li>
         <li class="menu-item {{ request()->is('/') ? 'active' : '' }}">
-            <a href="{{ url('/') }}" class="menu-link">
+            <a href="{{ url('/home') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                 <div data-i18n="Analytics">Dashboard</div>
             </a>
@@ -65,7 +65,8 @@
             <li class="menu-item {{ request()->is('shops*') ? 'active' : '' }}">
                 <a href="{{ url('/shops') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-store"></i>
-                    <div data-i18n="Analytics">Toko</div>
+                    <div data-i18n="Analytics">Toko <span class="badge bg-danger">Soon</span></div>
+
                 </a>
             </li>
             <li class="menu-header small text-uppercase">
@@ -79,6 +80,12 @@
             </li>
             <li class="menu-header small text-uppercase">
                 <span class="menu-header-text">Laporan</span>
+            </li>
+            <li class="menu-item {{ request()->is('report/price') ? 'active' : '' }}">
+                <a href="{{ url('/report/price') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-folder"></i>
+                    <div data-i18n="Analytics">Harga Produk</div>
+                </a>
             </li>
             <li class="menu-item {{ request()->is('report/income') ? 'active' : '' }}">
                 <a href="{{ url('/report/income') }}" class="menu-link">
@@ -95,7 +102,7 @@
             <li class="menu-item {{ request()->is('report/shops') ? 'active' : '' }}">
                 <a href="{{ url('/report/shops') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-folder"></i>
-                    <div data-i18n="Analytics"> Transaksi Toko</div>
+                    <div data-i18n="Analytics"> Transaksi Toko <span class="badge bg-danger">Soon</span></div>
                 </a>
             </li>
             <li class="menu-item {{ request()->is('report/damaged') ? 'active' : '' }}">

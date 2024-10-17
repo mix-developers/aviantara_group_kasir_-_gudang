@@ -239,6 +239,28 @@
                 }
             };
 
+            function expiredAlert() {
+                $.ajax({
+                    type: 'GET',
+                    url: '/expired-alert',
+                    success: function(response) {
+                        var expiredText = '<span class="h4 text-danger"><i class="bx bx-error"></i> ' +
+                            response.expired +
+                            ' Barang pada gudang telah kadaluarsa ..</span>';
+                        var remainingText = '<strong><i class="bx bx-error-circle"></i> ' + response
+                            .remaining +
+                            ' Barang pada gudang akan kadaluarsa..</strong><br><small>*Waktu peringatan dihitung 3 bulan sebelum tanggal kadaluarsa tiba.</small>';
+                        if (response.expired != 0) {
+                            getAlert2(expiredText, 'danger');
+                        }
+                        if (response.remaining != 0) {
+                            getAlert2(remainingText, 'warning');
+
+                        }
+                    }
+                });
+            };
+
             function getAlert(alertValue) {
                 $('#alert').append(
                     '<div class="alert alert-success alert-dismissible" role="alert">' +
@@ -246,8 +268,17 @@
                     '<button type = "button" class = "btn-close"  data-bs-dismiss="alert" aria - label = "Close" ></button> </div>'
                 )
             }
+
+            function getAlert2(alertValue, type) {
+                $('#alert').append(
+                    '<div class="alert alert-' + type + ' alert-dismissible" role="alert">' +
+                    alertValue +
+                    '<button type = "button" class = "btn-close"  data-bs-dismiss="alert" aria - label = "Close" ></button> </div>'
+                )
+            }
             selectStok();
             getWirehouseOptions();
+            expiredAlert();
 
         });
     </script>

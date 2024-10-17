@@ -8,7 +8,7 @@
                 <img src="{{ asset('img/') }}/logo.png" alt="logo" style="width: 20vh;" class="text-center">
             </div> --}}
             <div class="app-brand justify-content-center " style="line-height:2; margin-bottom:10px;">
-                <a href="{{ url('/invoice') }}" class="app-brand-link gap-2">
+                <a href="{{ url('/') }}" class="app-brand-link gap-2">
                     <span class="app-brand-logo demo">
                     </span>
                     <span class="app-brand-text demo text-body "><span class="fw-bolder text-warning">AVIANTARA</span>

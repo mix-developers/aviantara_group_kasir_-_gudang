@@ -144,6 +144,7 @@
                         // Refresh DataTable setelah menyimpan perubahan
                         $('#formPriceGrosir').val('');
                         $('#datatable-price').DataTable().ajax.reload();
+                        notPriceAlert();
                         $('#pricesModal').modal('hide');
                     },
                     error: function(xhr) {
@@ -159,6 +160,30 @@
                     '<button type = "button" class = "btn-close"  data-bs-dismiss="alert" aria - label = "Close" ></button> </div>'
                 )
             }
+
+            function getAlertDanger(alertValue) {
+                $('#alert').append(
+                    '<div class="alert alert-danger alert-dismissible" role="alert">' +
+                    alertValue +
+                    '<button type = "button" class = "btn-close"  data-bs-dismiss="alert" aria - label = "Close" ></button> </div>'
+                )
+            }
+
+            function notPriceAlert() {
+                $.ajax({
+                    type: 'GET',
+                    url: '/prices/get-not-price',
+                    success: function(response) {
+                        var text = '<strong><i class="bx bx-error-circle"></i> ' + response +
+                            ' Produk belum diberikan harga</small>';
+                        if (response !== 0) {
+                            getAlertDanger(text);
+
+                        }
+                    }
+                });
+            };
+            notPriceAlert();
             getWirehouseOptions();
         });
     </script>

@@ -9,9 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ProductStok extends Model
 {
     use HasFactory;
-    protected $fillable = [
-        'id_product', 'id_user', 'type', 'price_origin', 'quantity', 'expired_date', 'description'
-    ];
+    protected $guarded = [];
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'id_product');

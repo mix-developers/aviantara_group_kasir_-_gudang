@@ -44,6 +44,21 @@
                 });
             };
 
+            function notPriceAlert() {
+                $.ajax({
+                    type: 'GET',
+                    url: '/prices/get-not-price',
+                    success: function(response) {
+                        var text = '<strong><i class="bx bx-error-circle"></i> ' + response +
+                            ' Produk belum diberikan harga</small>';
+                        if (response !== 0) {
+                            getAlert(text, 'danger');
+
+                        }
+                    }
+                });
+            };
+
             function getAlert(alertValue, type) {
                 $('#alert').append(
                     '<div class="alert alert-' + type + ' alert-dismissible" role="alert">' +
@@ -55,6 +70,7 @@
             function formatNumberWithDot(number) {
                 return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
             }
+            notPriceAlert();
             getStok();
             expiredAlert();
             //end stok gudang

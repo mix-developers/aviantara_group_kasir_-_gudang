@@ -32,6 +32,7 @@ class PaymentMethodController extends Controller
         $PaymentMethod = PaymentMethod::all();
         return response()->json($PaymentMethod);
     }
+
     public function getPaymentMethodDataTable()
     {
         $PaymentMethod = PaymentMethod::select(['id', 'method', 'enabled', 'created_at', 'updated_at'])->orderByDesc('id');
@@ -138,9 +139,24 @@ class PaymentMethodController extends Controller
 
         return response()->json($PaymentMethod);
     }
-    public function getTotalPaymentMethod($id)
+    public function getTotalPaymentMethod(Request $request, $id)
     {
-        $data = paymentMethodItem::where('id_payment_method', $id)->sum('paid');
-        return response()->json(['total' => $data]);
+        $data = paymentMethodItem::where('id_payment_method', $id);
+
+        if ($request->has('from-date') && $request->has('to-date')) {
+            $fromDate = $request->input('from-date');
+            $toDate = $request->input('to-date');
+
+            if ($fromDate != '' && $toDate != '') {
+                // Convert dates to timestamps
+                $fromDate = Carbon::parse($fromDate)->startOfDay()->toDateTimeString();
+                $toDate = Carbon::parse($toDate)->endOfDay()->toDateTimeString();
+
+                // Apply date filter
+                $data->whereBetween('created_at', [$fromDate, $toDate]);
+            }
+        }
+        $totalPaid = $data->sum('paid');
+        return response()->json(['total' => $totalPaid]);
     }
 }

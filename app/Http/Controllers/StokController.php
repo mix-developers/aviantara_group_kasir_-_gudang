@@ -58,26 +58,22 @@ class StokController extends Controller
     }
     public function getProductsDataTable(Request $request)
     {
-        $query = Product::select(['id', 'name', 'unit', 'barcode', 'quantity_unit', 'photo', 'id_wirehouse', 'created_at', 'updated_at'])
-            ->orderByDesc('id');
+        $query = Product::orderByDesc('id');
+
+        $stokValue = $request->input('stok');
 
         if ($request->has('stok')) {
             $stokValue = $request->input('stok');
-
-            if ($request->has('stok')) {
+            $query->whereHas('product_stoks', function ($query) use ($stokValue) {
+                $query->selectRaw('id_product, COALESCE(SUM(CASE WHEN type = "Masuk" THEN quantity ELSE 0 END), 0) - COALESCE(SUM(CASE WHEN type = "Keluar" THEN quantity ELSE 0 END), 0) as available_quantity')
+                    ->groupBy('id_product');
 
                 if ($stokValue == 'Tersedia') {
-                    $query->whereHas('product_stoks', function ($query) {
-                        $query->selectRaw('COALESCE(SUM(CASE WHEN type = "Masuk" THEN quantity ELSE 0 END), 0) - COALESCE(SUM(CASE WHEN type = "Keluar" THEN quantity ELSE 0 END), 0) as available_quantity')
-                            ->having('available_quantity', '>', 0);
-                    });
+                    $query->having('available_quantity', '>', 0);
                 } elseif ($stokValue == 'Kosong') {
-                    $query->whereHas('product_stoks', function ($query) {
-                        $query->selectRaw('COALESCE(SUM(CASE WHEN type = "Masuk" THEN quantity ELSE 0 END), 0) - COALESCE(SUM(CASE WHEN type = "Keluar" THEN quantity ELSE 0 END), 0) as available_quantity')
-                            ->having('available_quantity', '<=', 0);
-                    });
+                    $query->having('available_quantity', '<=', 0);
                 }
-            }
+            });
         }
         $user = User::with(['wirehouse'])->where('id', Auth::id())->first();
         if (Auth::user()->role == 'Gudang' && $user->wirehouse) {

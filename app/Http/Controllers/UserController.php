@@ -111,6 +111,18 @@ class UserController extends Controller
 
         return response()->json(['message' => $message]);
     }
+    public function resetPassword(Request $request)
+    {
+        $user = User::find($request->input('id'));
+        if ($user) {
+            $user->password = Hash::make('password');
+            $user->save();
+
+            return response()->json(['message' => 'Berhasil Reset Password ke default']);
+        } else {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+    }
     public function edit($id)
     {
         $User = User::find($id);
@@ -128,7 +140,7 @@ class UserController extends Controller
             $user->delete();
             return response()->json(['message' => 'User deleted successfully']);
         } catch (\Illuminate\Database\QueryException $e) {
-            return response()->json(['message' => 'Gagal menghapus karena user telah memiliki riwayat, disable akun jika akan menonaktifkan'], 500);
+            return response()->json(['message' => 'Gagal menghapus karena user telah memiliki riwayat, disable akun jika ingin menonaktifkan'], 500);
         } catch (\Exception $e) {
             // Jika terjadi kesalahan lainnya
             return response()->json(['message' => $e->getMessage()], 500);

@@ -18,7 +18,8 @@ class ShopController extends Controller
             'title' => 'Toko/Kios',
             'shops' => $shop
         ];
-        return view('admin.shop.index', $data);
+        // return view('admin.shop.index', $data);
+        return view('admin.soon', $data);
     }
     public function show($id)
     {

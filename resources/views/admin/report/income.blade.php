@@ -3,7 +3,7 @@
 @section('content')
     @include('layouts.backend.alert')
     <div class="" id="alert"></div>
-    <div class="row" id="paymentCard">
+    <div class="row justify-content-center" id="paymentCard">
     </div>
     <div class="row justify-content-center">
         <div class="col-md-12">
@@ -131,7 +131,17 @@
                             doc.styles.tableHeader.fontSize = 8;
                             doc.styles.tableHeader.fillColor = '#2a6908';
                         },
-                        header: true
+                        header: true,
+                        action: function(e, dt, button, config) {
+                            var fromDate = $('#fromDate').val();
+                            var toDate = $('#toDate').val();
+                            var selectMethod = $('#selectMethod').val();
+
+                            var url = '/report/pdf-income?method=' + selectMethod +
+                                '&from-date=' + fromDate + '&to-date=' + toDate;
+
+                            window.open(url, '_blank');
+                        }
                     },
                     {
                         extend: 'excelHtml5',
@@ -156,6 +166,7 @@
                 var newUrl = '{{ url('report/report-payment-datatable') }}?method=' + selectMethod +
                     '&from-date=' + fromDate + '&to-date=' + toDate;
                 table.ajax.url(newUrl).load();
+                getPaymentCard();
             });
 
             function getPaymentCard() {
@@ -166,19 +177,29 @@
                     success: function(data) {
                         $('#paymentCard').empty();
 
+                        var fromDate = $('#fromDate').val();
+                        var toDate = $('#toDate').val();
                         // console.log(data.id);
                         $.each(data, function(index, method) {
-                            $.getJSON("/get_total_payment_method/" + method.id, function(
-                                respons) {
-                                // console.log(respons.total);
-                                $('#paymentCard').append(
-                                    '<div class="col-md-3 col-6 mb-4"><div class="card"><div class="card-header">' +
-                                    method.method +
-                                    '</div><div class="card-body"><span class="h3 text-primary">Rp ' +
-                                    formatNumberWithDot(respons.total) +
-                                    '</span></div></div></div>'
-                                );
-                            });
+                            // Update the URL to include from-date and to-date
+                            $.getJSON("/get_total_payment_method/" + method.id + "?from-date=" +
+                                fromDate + "&to-date=" + toDate,
+                                function(respons) {
+                                    console.log(respons); // Log the entire response
+                                    if (respons.total !==
+                                        undefined) { // Check if the total exists
+                                        $('#paymentCard').append(
+                                            '<div class="col-md-3 col-6 mb-4"><div class="card bg-primary text-white"><div class="card-header">' +
+                                            method.method +
+                                            '</div><div class="card-body"><span class="h3 text-white fw-bold">Rp ' +
+                                            formatNumberWithDot(respons.total) +
+                                            '</span></div></div></div>'
+                                        );
+                                    } else {
+                                        console.error("Total not found in response",
+                                            respons);
+                                    }
+                                });
                         });
                     },
                     error: function(xhr, status, error) {

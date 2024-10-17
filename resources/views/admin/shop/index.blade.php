@@ -2,6 +2,7 @@
 
 @section('content')
     @include('layouts.backend.alert')
+
     <div class="" id="alert"></div>
     <div class="row">
 

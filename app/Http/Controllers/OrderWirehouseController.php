@@ -20,6 +20,8 @@ class OrderWirehouseController extends Controller
         if ($user->role == 'Gudang') {
             $wirehouse = Wirehouse::find($user->id_wirehouse);
             $add = ' : ' . $wirehouse->name;
+        } else {
+            $add = 'semua';
         }
         $data = [
             'title' => 'Transaksi gudang ' . $add ?? '',

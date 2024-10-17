@@ -31,6 +31,9 @@ use App\Http\Controllers\ReportController;
 |
 */
 
+Route::get('/', function () {
+    return view('pages/index', ['title' => 'Homepage']);
+});
 Route::get('/invoice', function () {
     return view('pages/cek_invoice', ['title' => 'Cek Invoice']);
 })->name('invoice');
@@ -38,7 +41,7 @@ Route::get('/get-invoice/{invoice}', [OrderWirehouseController::class, 'getInvoi
 
 Auth::routes(['register' => false, 'reset' => false]);
 Route::middleware(['auth:web', 'checkDisabled'])->group(function () {
-    Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index']);
 
     //dashboard
     Route::get('/expired-alert', [HomeController::class, 'expiredAlert']);
@@ -115,20 +118,24 @@ Route::middleware(['auth:web', 'role:Gudang,Admin,Owner', 'checkDisabled'])->gro
     Route::delete('/wirehouses/delete/{id}',  [WirehouseController::class, 'destroy'])->name('wirehouses.delete');
     Route::get('/wirehouses-datatable', [WirehouseController::class, 'getWirehousesDataTable']);
 });
-Route::middleware(['auth:web', 'role:Gudang', 'checkDisabled'])->group(function () {
-});
+Route::middleware(['auth:web', 'role:Gudang', 'checkDisabled'])->group(function () {});
 Route::middleware(['auth:web', 'role:Admin', 'checkDisabled'])->group(function () {
 
     //report managemen
     Route::get('/report/report-payment-datatable', [PaymentMethodController::class, 'getReportPaymentsDataTable']);
+    Route::get('/report/price', [ReportController::class, 'price'])->name('report.price');
+    Route::get('/report/pdf-price', [ReportController::class, 'pdf_price'])->name('report.pdf-price');
     Route::get('/report/income', [ReportController::class, 'income'])->name('report.income');
+    Route::get('/report/pdf-income', [ReportController::class, 'pdf_income'])->name('report.pdf-income');
     Route::get('/report/damaged', [ReportController::class, 'damaged'])->name('report.damaged');
     Route::get('/report/wirehouses', [ReportController::class, 'transactionWirehouses'])->name('report.wirehouses');
+    Route::get('/report/pdf-wirehouses', [ReportController::class, 'pdf_transactionWirehouses'])->name('report.pdf-wirehouses');
     Route::get('/report/shops', [ReportController::class, 'transactionShops'])->name('report.shops');
     //user managemen
     Route::get('/users', [UserController::class, 'index'])->name('users');
     Route::get('/users/getall', [UserController::class, 'getAll']);
     Route::post('/users/store',  [UserController::class, 'store'])->name('users.store');
+    Route::post('/users/reset', [UserController::class, 'resetPassword'])->name('users.reset');
     Route::get('/users/edit/{id}',  [UserController::class, 'edit'])->name('users.edit');
     Route::delete('/users/delete/{id}',  [UserController::class, 'destroy'])->name('users.delete');
     Route::get('/users-datatable', [UserController::class, 'getUsersDataTable']);
@@ -144,6 +151,7 @@ Route::middleware(['auth:web', 'role:Admin', 'checkDisabled'])->group(function (
     Route::get('/get_total_payment_method/{id}', [PaymentMethodController::class, 'getTotalPaymentMethod']);
     //product price managemen
     Route::get('/prices', [PriceController::class, 'index'])->name('prices');
+    Route::get('/prices/get-not-price', [PriceController::class, 'getNotPrice'])->name('prices.get-not-price');
     Route::get('/prices/getall', [PriceController::class, 'getAll'])->name('prices.getall');
     Route::post('/prices/store',  [PriceController::class, 'store'])->name('prices.store');
     Route::get('/prices/show/{id}',  [PriceController::class, 'show'])->name('prices.show');

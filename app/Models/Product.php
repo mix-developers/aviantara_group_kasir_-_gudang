@@ -34,4 +34,8 @@ class Product extends Model
     {
         return $this->belongsTo(Wirehouse::class, 'id_wirehouse');
     }
+    public function product_stoks()
+    {
+        return $this->hasMany(ProductStok::class, 'id_product');
+    }
 }

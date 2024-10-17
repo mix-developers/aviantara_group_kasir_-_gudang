@@ -3,6 +3,7 @@
 @section('content')
     @include('layouts.backend.alert')
     <div class="" id="alert"></div>
+
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
@@ -15,9 +16,11 @@
                             <button class="btn btn-secondary refresh btn-default" type="button">
                                 <span>
                                     <i class="bx bx-sync me-sm-1"> </i>
-                                    <span class="d-none d-sm-inline-block">Refresh</span>
+                                    <span class="d-none d-sm-inline-block"></span>
                                 </span>
+                                Refresh
                             </button>
+
                         </div>
                     </div>
                 </div>
@@ -25,57 +28,39 @@
                 <div style="margin-left:24px; margin-right: 24px;">
                     <strong>Filter Data</strong>
                     <div class="d-flex justify-content-center align-items-center row gap-3 gap-md-0">
-                        <div class="col-md-4 col-12">
-                            <div class="input-group">
-                                <span class="input-group-text">Tanggal</span>
-                                <input type="date" class="form-control" id="fromDate"
-                                    value="{{ date('Y-m-d', strtotime('-1 month')) }}">
-                                <span class="input-group-text"> - </span>
-                                <input type="date" class="form-control" id="toDate" value="{{ date('Y-m-d') }}">
-                            </div>
-                        </div>
                         <div class="col-md-3 col-12">
                             <select id="selectWirehouse" class="form-select text-capitalize">
-                                <option value="-">Semua Gudang</option>
-                                @foreach (App\Models\Wirehouse::all() as $wirehouse)
-                                    <option value="{{ $wirehouse->id }}">{{ $wirehouse->name }}</option>
-                                @endforeach
+
                             </select>
-                        </div>
-                        <div class="col-md-2 col-12">
-                            <button type="button" id="filterBtn" class="btn btn-primary"><i class="bx bx-filter"></i>
-                                Filter</button>
                         </div>
                     </div>
                 </div>
                 <hr>
                 <div class="card-datatable table-responsive">
-                    <table id="datatable-payment" class="table table-hover table-bordered display table-sm">
+                    <table id="datatable-price" class="table table-hover table-bordered display table-sm">
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Tanggal</th>
-                                <th>No. Invoice</th>
-                                <th>Pelanggan</th>
+                                <th>Produk</th>
                                 <th>Gudang</th>
-                                <th>Tagihan</th>
-                                <th>Terbayar</th>
-                                <th>Sisa</th>
-                                <th>status</th>
+                                <th>Isi Produk</th>
+                                <th>Harga Modal</th>
+                                <th>Harga Grosir</th>
+                                <th>Keuntungan</th>
+                                <th>%</th>
                             </tr>
                         </thead>
 
                         <tfoot>
                             <tr>
                                 <th>ID</th>
-                                <th>Tanggal</th>
-                                <th>No. Invoice</th>
-                                <th>Pelanggan</th>
+                                <th>Produk</th>
                                 <th>Gudang</th>
-                                <th>Tagihan</th>
-                                <th>Terbayar</th>
-                                <th>Sisa</th>
-                                <th>status</th>
+                                <th>Isi Produk</th>
+                                <th>Harga Modal</th>
+                                <th>Harga Grosir</th>
+                                <th>Keuntungan</th>
+                                <th>%</th>
                             </tr>
                         </tfoot>
                     </table>
@@ -86,51 +71,48 @@
 @endsection
 @push('js')
     <script>
+        var dataTable;
         $(function() {
-            var table = $('#datatable-payment').DataTable({
+            dataTable = $('#datatable-price').DataTable({
                 processing: true,
-                serverSide: false,
-                responsive: false,
-                ajax: '{{ url('order-wirehouses-datatable') }}',
+                serverSide: true,
+                responsive: true,
+                ajax: '{{ url('prices-datatable') }}',
                 columns: [{
                         data: 'id',
                         name: 'id'
                     },
                     {
-                        data: 'date',
-                        name: 'date'
-                    },
-                    {
-                        data: 'no_invoice',
-                        name: 'no_invoice'
-                    },
-                    {
-                        data: 'customer.name',
-                        name: 'customer.name'
+                        data: 'name',
+                        name: 'name'
                     },
                     {
                         data: 'wirehouse',
-                        name: 'wirehouse'
+                        name: 'wirehouse',
+                        searchable: true
                     },
                     {
-                        data: 'total_fee',
-                        name: 'total_fee'
+                        data: 'quantity',
+                        name: 'quantity'
                     },
                     {
-                        data: 'terbayar',
-                        name: 'terbayar'
+                        data: 'price_origin',
+                        name: 'price_origin'
                     },
                     {
-                        data: 'sisa',
-                        name: 'sisa'
+                        data: 'price_grosir',
+                        name: 'price_grosir'
+                    },
+                    {
+                        data: 'price_fee',
+                        name: 'price_fee'
+                    },
+                    {
+                        data: 'percentese_fee_text',
+                        name: 'percentese_fee_text'
                     },
 
-                    {
-                        data: 'payment',
-                        name: 'payment'
-                    },
                 ],
-
                 dom: 'Bfrtip',
                 buttons: [{
                         extend: 'pdf',
@@ -149,12 +131,9 @@
                         },
                         header: true,
                         action: function(e, dt, button, config) {
-                            var fromDate = $('#fromDate').val();
-                            var toDate = $('#toDate').val();
                             var selectWirehouse = $('#selectWirehouse').val();
 
-                            var url = '/report/pdf-wirehouses?wirehouse=' + selectWirehouse +
-                                '&from-date=' + fromDate + '&to-date=' + toDate;
+                            var url = '/report/pdf-price?wirehouse=' + selectWirehouse;
 
                             window.open(url, '_blank');
                         }
@@ -171,25 +150,69 @@
                 ]
             });
             $('.refresh').click(function() {
-                $('#datatable-payment').DataTable().ajax.reload();
-            });
-            $('#filterBtn').click(function() {
-                var selectWirehouse = $('#selectWirehouse').val();
-                var fromDate = $('#fromDate').val();
-                var toDate = $('#toDate').val();
-
-                var newUrl = '{{ url('order-wirehouses-datatable') }}?wirehouse=' + selectWirehouse +
-                    '&from-date=' + fromDate + '&to-date=' + toDate;
-                table.ajax.url(newUrl).load();
+                $('#datatable-price').DataTable().ajax.reload();
             });
 
-            function getAlert(alertValue) {
-                $('#alert').append(
-                    '<div class="alert alert-success alert-dismissible" role="alert">' +
-                    alertValue +
-                    '<button type = "button" class = "btn-close"  data-bs-dismiss="alert" aria - label = "Close" ></button> </div>'
-                )
+            $('#selectWirehouse').on('change', function() {
+                applyFilters();
+            });
+
+            function applyFilters() {
+                var wirehouseFilter = $('#selectWirehouse').val();
+
+                var newUrl = '{{ url('prices-datatable') }}?&wirehouse=' + wirehouseFilter;
+                dataTable.ajax.url(newUrl).load();
             }
+
+            function getWirehouseOptions(unitValue) {
+                $.ajax({
+                    url: '/wirehouses/getall',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#formProductIdWirehouse').empty();
+                        $('#formProductIdWirehouseCreate').empty();
+
+                        $('#selectWirehouse').empty();
+                        $('#selectWirehouse').append(
+                            '<option value="-" >Pilih Gudang</option>');
+                        $.each(data, function(index, wirehouse) {
+                            $('#selectWirehouse').append('<option value="' +
+                                wirehouse.id +
+                                '" >' +
+                                wirehouse.name + ' - ' + wirehouse.address +
+                                '</option>');
+                        });
+
+                        $.each(data, function(index, wirehouse) {
+                            $('#formProductIdWirehouseCreate').append(
+                                '<option value="' +
+                                wirehouse.id +
+                                '" >' +
+                                wirehouse.name + ' - ' + wirehouse.address +
+                                '</option>');
+
+                        });
+
+                        $.each(data, function(index, wirehouse) {
+                            var selected = (wirehouse.id === unitValue) ? 'selected' :
+                                '';
+                            $('#formProductIdWirehouse').append('<option value="' +
+                                wirehouse
+                                .id +
+                                '" ' +
+                                selected + '>' +
+                                wirehouse.name + ' - ' + wirehouse.address +
+                                '</option>');
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Terjadi kesalahan: ' + error);
+                    }
+                });
+            }
+
+            getWirehouseOptions();
         });
     </script>
     <!-- JS DataTables Buttons -->
