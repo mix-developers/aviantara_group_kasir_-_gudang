@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container px-4 px-lg-5">
         <!-- Navbar Brand -->
-        <a class="navbar-brand fw-bold mx-auto d-lg-none text-center" href="#!">
+        <a class="navbar-brand fw-bold mx-auto d-lg-none text-center" href="{{ url('/') }}">
             <img src="{{ asset('img/') }}/logo.png" alt="logo" style="width: 10%" class="mx-2">
             <span class="text-warning">Aviantara</span>
             <span style="font-size: 12px;">Gruop</span>
@@ -14,7 +14,7 @@
         </button>
 
         <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
-            <a class="navbar-brand fw-bold d-none d-lg-block" href="#!">
+            <a class="navbar-brand fw-bold d-none d-lg-block" href="{{ url('/') }}">
                 <img src="{{ asset('img/') }}/logo.png" alt="logo" style="width: 5%" class="mx-2">
                 <span class="text-warning">Aviantara</span>
                 <span style="font-size: 12px;">Gruop</span>
@@ -42,12 +42,21 @@
     </div>
 </nav>
 <!-- Header-->
-<header class=" py-2" style="background-color: #696cff;">
+<header class="position-relative py-2"
+    style="
+    background-image: url('{{ asset('img/gudang.webp') }}'); 
+    background-size: cover; 
+    background-position: center;
+">
+    <div class="overlay"></div>
     <div class="container px-4 px-lg-5 my-5">
-        <div class="text-center text-white">
+        <div class="text-center text-white top">
             <img src="{{ asset('img/') }}/logo.png" alt="logo" style="width: 20%">
             <h1 class="display-4 fw-bolder">AVIANTARA GROUP</h1>
-            <p class="lead fw-normal text-white-50 mb-0">Pusat Grosir Frozen Food dan Dry Food</p>
+            <p class="lead fw-normal text-white-90 mb-0">Pusat Grosir Frozen Food dan Dry Food</p>
+            <a href="https://maps.app.goo.gl/DqphJkB4rEJUwupj6" target="__blank" class="btn btn-light mt-3"><i
+                    class="bi bi-pin-map"></i>
+                Alamat Gudang</a>
         </div>
     </div>
 </header>

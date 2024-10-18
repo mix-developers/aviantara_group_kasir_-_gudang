@@ -10,6 +10,10 @@
                     name: 'warning'
                 },
                 {
+                    data: 'tanggal',
+                    name: 'tanggal'
+                },
+                {
                     data: 'product.name',
                     name: 'product.name'
                 },
@@ -67,7 +71,7 @@
                 var fromDate = $('#fromDate').val();
                 var toDate = $('#toDate').val();
 
-                var newUrl = '{{ url('stoks-datatable') }}?user=' + userFilter + '&type=' + typeFilter +
+                var newUrl = '{{ url('stoks-datatable') }}?type=' + typeFilter +
                     '&expired=' + expiredFilter + '&from-date=' + fromDate + '&to-date=' + toDate;
 
                 dataTable.ajax.url(newUrl).load();
@@ -130,10 +134,12 @@
                             '<option value="-" >Pilih Pegawai</option>');
 
                         $.each(data, function(index, user) {
-                            $('#selectUser').append('<option value="' +
-                                user.id +
-                                '" >' +
-                                user.name + ' - ' + user.role + '</option>');
+                            if (user.role === 'Gudang') {
+                                $('#selectUser').append('<option value="' +
+                                    user.id +
+                                    '" >' +
+                                    user.name + ' - ' + user.role + '</option>');
+                            }
                         });
 
                     },

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Laporan Pendapatan</title>
+    <title>Laporan Stok Gudang</title>
     <meta http-equiv="Content-Type" content="charset=utf-8" />
     <link rel="stylesheet" href="{{ public_path('css') }}/pdf/bootstrap.min.css" media="all" />
     <style>
@@ -58,39 +58,53 @@
         </table>
         <hr>
         <p>
-            <b>Laporan : </b> Pendapatan<br>
-            <b>Metode : </b> {{ $metode }}<br>
+            <b>Laporan : </b> Stok Gudang<br>
             <b>Periode : </b>
-            {{ date('d-m-Y', strtotime($from_date)) . ' sampai ' . date('d-m-Y', strtotime($to_date)) }}
+            {{ date('d-m-Y', strtotime($from_date)) . ' sampai ' . date('d-m-Y', strtotime($to_date)) }}<br>
+            <b>Jenis : </b> {{ $type ?? 'Semua' }}<br>
+            <b>Pegawai : </b> {{ $user ?? 'Semua' }}<br>
         </p>
         <table class="table-custom">
             <thead style="background-color: rgb(224, 116, 0); color:white; " class="text-center">
                 <tr>
                     <th>No</th>
                     <th>Tanggal</th>
-                    <th>Metode</th>
-                    <th>Dibayarkan</th>
-                    <th>Deskripsi</th>
-                    <th>Pegawai</th>
+                    <th>Produk</th>
+                    <th>Jumlah</th>
+                    <th>Kadaluarsa</th>
+                    @if (Auth::user()->role != 'Gudang')
+                        <th>Pegawai</th>
+                    @endif
+                    <th>Keterangan</th>
+                    <th>Status</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($data as $item)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ $item->created_at->format('d-m-Y') }}</td>
-                        <td>{{ $item->payment_method->method }}</td>
-                        <td> Rp {{ number_format($item->paid) }}</td>
+                        <td>{{ $item->created_at->format('d/m/Y') }}</td>
+                        <td>{{ $item->product->name }}</td>
+                        <td>{{ $item->quantity }} {{ $item->product->unit }}</td>
+                        <td>{{ $item->expired_date }}</td>
+                        @if (Auth::user()->role != 'Gudang')
+                            <td>{{ $item->user->name }}</td>
+                        @endif
                         <td>{{ $item->description }}</td>
-                        <td>{{ $item->user->name }}</td>
+                        <td>
+                            @if ($item->expired_date <= date('Y-m-d'))
+                                Kadaluarsa
+                            @elseif($item->expired_date <= date('Y-m-d', strtotime('+3 month')))
+                                Akan Kadaluarsa
+                            @else
+                                Aman
+                            @endif
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
-
-
     </main>
-
 </body>
 
 </html>

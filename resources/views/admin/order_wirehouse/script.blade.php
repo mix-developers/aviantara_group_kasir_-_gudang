@@ -211,10 +211,10 @@
                         $('#formEditDelivery').change(function() {
                             if ($(this).is(':checked')) {
                                 $(this).val(
-                                '1'); // Mengatur nilai 1 jika checkbox dicentang
+                                    '1'); // Mengatur nilai 1 jika checkbox dicentang
                             } else {
                                 $(this).val(
-                                '0'); // Mengatur nilai 0 jika checkbox tidak dicentang
+                                    '0'); // Mengatur nilai 0 jika checkbox tidak dicentang
                             }
                         });
                         $('#formEditDelivery').change(function() {
@@ -285,7 +285,7 @@
                 });
             });
             window.deleteOrder = function(id) {
-                if (confirm('Apakah Anda yakin ingin menghapus metode ini?')) {
+                if (confirm('Apakah Anda yakin ingin menghapus pesanan ini?')) {
                     $.ajax({
                         type: 'DELETE',
                         url: '/order_wirehouses/delete/' + id,
@@ -294,7 +294,7 @@
                         },
                         success: function(response) {
                             getAlert(response.message);
-                            $('#datatable-payment-method').DataTable().ajax.reload();
+                            $('#datatable-order-wirehouse').DataTable().ajax.reload();
                             getPaymentCard().ajax.reload();
                         },
                         error: function(xhr) {
@@ -411,7 +411,7 @@
             $('#productSelectionTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: '{{ url('prices-datatable') }}',
+                ajax: '{{ url('prices-order-datatable') }}',
                 columns: [{
                         data: 'id',
                         name: 'id'
@@ -532,7 +532,6 @@
                     }
                 });
             }
-
 
 
         });

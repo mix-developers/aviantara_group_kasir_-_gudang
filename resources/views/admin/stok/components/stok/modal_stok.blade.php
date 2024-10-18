@@ -85,9 +85,9 @@ i<!-- Modal for Create and Edit -->
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="formCreateStokPrice" class="form-label">Harga <spam id="formCreateStokUnit2"
+                        <label for="formCreateStokPrice" class="form-label">Harga <span id="formCreateStokUnit2"
                                 class="text-primary">
-                            </spam>
+                            </span>
                             <span>*</span></label>
                         <input type="number" class="form-control" id="formCreateStokPrice" name="price_origin">
                     </div>

@@ -4,6 +4,15 @@
     @include('layouts.backend.alert')
     <div class="row justify-content-center">
         <div class="col-md-4 mb-4">
+            <div class="mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <img class="card-img-top"
+                            src="{{ $product->photo != null ? Storage::url($product->photo) : asset('img/default.webp') }}"
+                            alt="..." style="width: 100%; height:200px; object-fit:cover;" />
+                    </div>
+                </div>
+            </div>
             <div class="card">
                 <div class="card-header">
                     Informasi Produk

@@ -19,6 +19,8 @@ use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\OrderWirehouseController;
 use App\Http\Controllers\ProductDamagedController;
 use App\Http\Controllers\ReportController;
+use App\Models\Product;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,7 +34,16 @@ use App\Http\Controllers\ReportController;
 */
 
 Route::get('/', function () {
-    return view('pages/index', ['title' => 'Homepage']);
+    return view('pages/index', [
+        'product' => Product::paginate(12)
+    ]);
+});
+Route::get('/search', function (Request $request) {
+    $search = $request->input('search');
+    return view('pages.index', [
+        'product' => Product::where('name', 'LIKE', '%' . $search . '%')->paginate(12),
+        'search' => $search
+    ]);
 });
 Route::get('/invoice', function () {
     return view('pages/cek_invoice', ['title' => 'Cek Invoice']);
@@ -107,6 +118,7 @@ Route::middleware(['auth:web', 'role:Gudang,Admin,Owner', 'checkDisabled'])->gro
     Route::post('/send_bill/{id}', [OrderPaymentController::class, 'send_bill'])->name('send_bill');
     //prices
     Route::get('/prices-datatable', [PriceController::class, 'getPricesDataTable']);
+    Route::get('/prices-order-datatable', [PriceController::class, 'getPricesOrderDataTable']);
     //wirehouse managemen
     Route::get('/wirehouses', [WirehouseController::class, 'index'])->name('wirehouses');
     Route::get('/wirehouses/show/{id}', [WirehouseController::class, 'show'])->name('wirehouses.show');
@@ -122,12 +134,15 @@ Route::middleware(['auth:web', 'role:Gudang', 'checkDisabled'])->group(function 
 Route::middleware(['auth:web', 'role:Admin', 'checkDisabled'])->group(function () {
 
     //report managemen
+    Route::get('/report/stok-wirehouse', [ReportController::class, 'stok_wirehouse'])->name('report.stok-wirehouse');
+    Route::get('/report/pdf-stok-wirehouse', [ReportController::class, 'pdf_stok_wirehouse'])->name('report.pdf-stok-wirehouse');
     Route::get('/report/report-payment-datatable', [PaymentMethodController::class, 'getReportPaymentsDataTable']);
     Route::get('/report/price', [ReportController::class, 'price'])->name('report.price');
     Route::get('/report/pdf-price', [ReportController::class, 'pdf_price'])->name('report.pdf-price');
     Route::get('/report/income', [ReportController::class, 'income'])->name('report.income');
     Route::get('/report/pdf-income', [ReportController::class, 'pdf_income'])->name('report.pdf-income');
     Route::get('/report/damaged', [ReportController::class, 'damaged'])->name('report.damaged');
+    Route::get('/report/pdf-damaged', [ReportController::class, 'pdf_damaged'])->name('report.pdf-damaged');
     Route::get('/report/wirehouses', [ReportController::class, 'transactionWirehouses'])->name('report.wirehouses');
     Route::get('/report/pdf-wirehouses', [ReportController::class, 'pdf_transactionWirehouses'])->name('report.pdf-wirehouses');
     Route::get('/report/shops', [ReportController::class, 'transactionShops'])->name('report.shops');

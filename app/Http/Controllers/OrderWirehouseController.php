@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\OrderWirehouse;
 use App\Models\OrderWirehouseItem;
 use App\Models\OrderWirehousePayment;
+use App\Models\paymentMethodItem;
 use App\Models\ProductStok;
 use App\Models\Wirehouse;
 use Carbon\Carbon;
@@ -44,7 +45,6 @@ class OrderWirehouseController extends Controller
             $fromDate = $request->input('from-date');
             $toDate = $request->input('to-date');
             if ($fromDate != '' && $toDate != '') {
-                // $paymentMethodItem->where('created_at', '>=', $fromDate)->where('created_at', '<=', $toDate);
                 if ($fromDate && $toDate) {
                     // Konversi tanggal ke format timestamp
                     $fromDate = Carbon::parse($fromDate)->startOfDay()->toDateTimeString();
@@ -272,5 +272,20 @@ class OrderWirehouseController extends Controller
         }
 
         return response()->json($data);
+    }
+    public function destroy($id)
+    {
+        $data = OrderWirehouse::find($id);
+        OrderWirehouseItem::where('id_order_wirehouse', $id)->delete();
+        OrderWirehousePayment::where('id_order_wirehouse', $id)->delete();
+        paymentMethodItem::where('id_order_wirehouse', $id)->delete();
+
+        if (!$data) {
+            return response()->json(['message' => 'Data tidak ditemukan'], 404);
+        }
+
+        $data->delete();
+
+        return response()->json(['message' => 'Berhasil menghapus data']);
     }
 }

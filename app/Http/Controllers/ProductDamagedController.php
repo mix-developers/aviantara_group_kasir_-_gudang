@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\ProductDamaged;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
@@ -16,16 +18,42 @@ class ProductDamagedController extends Controller
         ];
         return view('admin.damaged.index', $data);
     }
-    public function getDamagedsDataTable()
+    public function getDamagedsDataTable(Request $request)
     {
         $damaged = ProductDamaged::orderByDesc('id')->with(['product', 'user']);
+        if ($request->has('from-date') && $request->has('to-date')) {
+            $fromDate = $request->input('from-date');
+            $toDate = $request->input('to-date');
+            if ($fromDate != '' && $toDate != '') {
+                if ($fromDate && $toDate) {
+                    $fromDate = Carbon::parse($fromDate)->startOfDay()->toDateTimeString();
+                    $toDate = Carbon::parse($toDate)->endOfDay()->toDateTimeString();
 
+                    $damaged->whereBetween('created_at', [$fromDate, $toDate]);
+                }
+            }
+        }
+        if ($request->has('user')) {
+            $userId = $request->input('user');
+            if ($userId !== '-') {
+                $damaged->where('id_user', $userId);
+            }
+        }
+        if ($request->has('type')) {
+            $type = $request->input('type');
+            if ($type !== '-') {
+                $damaged->where('type', $type);
+            }
+        }
         return Datatables::of($damaged)
 
             ->addColumn('action', function ($damaged) {
                 return view('admin.damaged.components.actions', compact('damaged'));
             })
-            ->rawColumns(['action'])
+            ->addColumn('tanggal', function ($damaged) {
+                return $damaged->created_at->format('d/m/Y');
+            })
+            ->rawColumns(['action', 'tanggal'])
             ->make(true);
     }
     public function store(Request $request)
@@ -33,9 +61,9 @@ class ProductDamagedController extends Controller
         $request->validate([
             'id_product' => 'required|string|max:255',
             'photo' => 'required|file|mimes:jpeg,png,jpg,gif',
+            'photo2' => 'file|mimes:jpeg,png,jpg,gif',
             'type' => 'required|string',
-            'total' => 'required|string',
-            'satuan' => 'required|string',
+            'quantity_unit' => 'required|string',
             'expired_date' => 'required|string',
             'description' => 'required|string',
         ]);
@@ -46,12 +74,18 @@ class ProductDamagedController extends Controller
         } else {
             return response()->json(['message' => 'File photo tidak ditemukan'], 400);
         }
+        if ($request->hasFile('photo2')) {
+            $file = $request->file('photo2');
+            $fileName2 = time() . '_' . $file->getClientOriginalName();
+            $filePath2 = $file->storeAs('public/photos', $fileName2);
+        }
         $productData = [
             'id_product' => $request->input('id_product'),
             'photo' => $filePath,
+            'photo2' => $filePath2,
             'type' => $request->input('type'),
-            'total' => $request->input('total'),
-            'satuan' => $request->input('satuan'),
+            'quantity_unit' => $request->input('quantity_unit'),
+            'quantity_sub_unit' => $request->input('quantity_sub_unit'),
             'expired_date' => $request->input('expired_date'),
             'description' => $request->input('description'),
             'id_user' => Auth::id(),

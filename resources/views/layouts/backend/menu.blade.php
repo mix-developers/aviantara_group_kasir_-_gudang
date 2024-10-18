@@ -19,7 +19,7 @@
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">{{ env('APP_NAME') ?? 'Laravel' }}</span>
         </li>
-        <li class="menu-item {{ request()->is('/') ? 'active' : '' }}">
+        <li class="menu-item {{ request()->is('home') ? 'active' : '' }}">
             <a href="{{ url('/home') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                 <div data-i18n="Analytics">Dashboard</div>
@@ -93,6 +93,13 @@
                     <div data-i18n="Analytics">Pendapatan</div>
                 </a>
             </li>
+            <li class="menu-item {{ request()->is('report/stok-wirehouse') ? 'active' : '' }}">
+                <a href="{{ url('/report/stok-wirehouse') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-folder"></i>
+                    <div data-i18n="Analytics">Stok Gudang</div>
+                </a>
+            </li>
+
             <li class="menu-item {{ request()->is('report/wirehouses') ? 'active' : '' }}">
                 <a href="{{ url('/report/wirehouses') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-folder"></i>

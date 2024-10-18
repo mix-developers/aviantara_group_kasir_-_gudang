@@ -1,7 +1,7 @@
 @push('js')
     <script>
         $(function() {
-            $('#datatable-damageds').DataTable({
+            var table = $('#datatable-damageds').DataTable({
                 processing: true,
                 serverSide: true,
                 responsive: true,
@@ -11,17 +11,30 @@
                         name: 'id'
                     },
                     {
+                        data: 'tanggal',
+                        name: 'tanggal'
+                    },
+                    {
                         data: 'product.name',
                         name: 'product.name'
                     },
                     {
-                        data: 'description',
-                        name: 'description'
+                        data: 'type',
+                        name: 'type'
                     },
                     {
-                        data: 'user.name',
-                        name: 'user.name'
+                        data: 'quantity_unit',
+                        name: 'quantity_unit'
                     },
+                    {
+                        data: 'quantity_sub_unit',
+                        name: 'quantity_sub_unit'
+                    },
+                    {
+                        data: 'expired_date',
+                        name: 'expired_date'
+                    },
+
                     {
                         data: 'action',
                         name: 'action'
@@ -33,6 +46,16 @@
             });
             $('.refresh').click(function() {
                 $('#datatable-damageds').DataTable().ajax.reload();
+            });
+            $('#filterBtn').click(function() {
+                var selectType = $('#selectType').val();
+                var fromDate = $('#fromDate').val();
+                var toDate = $('#toDate').val();
+
+                var newUrl = '{{ url('damageds-datatable') }}?type=' +
+                    selectType + '&from-date=' + fromDate + '&to-date=' + toDate;
+                table.ajax.url(newUrl).load();
+
             });
             window.editDamaged = function(id) {
                 $.ajax({
@@ -52,39 +75,13 @@
                     }
                 });
             };
-            $('#saveDamagedrBtn').click(function() {
-                var formData = $('#damagedForm').serialize();
 
-                $.ajax({
-                    type: 'POST',
-                    url: '/damageds/store',
-                    data: formData,
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(response) {
-                        getAlert(response.message);
-                        // Refresh DataTable setelah menyimpan perubahan
-                        $('#datatable-customers').DataTable().ajax.reload();
-                        $('#customersModal').modal('hide');
-                    },
-                    error: function(xhr) {
-                        alert('Terjadi kesalahan: ' + xhr.responseText);
-                    }
-                });
-            });
             $('#createDamagedBtn').click(function(e) {
                 e.preventDefault();
 
-                // Mengambil data dari form
-                var formData = new FormData();
-                formData.append('id_product', $('#formIdProduct').val());
-                formData.append('photo', $('#formPhoto')[0].files[0]);
-                formData.append('type', $('#formType').val());
-                formData.append('total', $('#formTotal').val());
-                formData.append('satuan', $('#formSatuan').val());
-                formData.append('expired_date', $('#formExpiredDate').val());
-                formData.append('description', $('#formDescription').val());
+                // Ambil semua data dari form
+                var form = $('#createDamagedForm')[0]; // Ganti #formDamaged dengan ID form Anda
+                var formData = new FormData(form); // Mengambil semua data dari form secara dinamis
 
                 // Mengirimkan permintaan AJAX
                 $.ajax({
@@ -98,21 +95,11 @@
                     },
                     success: function(response) {
                         console.log(response);
-                        $('#formIdProduct').val('');
-                        $('#formPhoto').val('');
-                        $('#formType').val('');
-                        $('#formTotal').val('');
-                        $('#formSatuan').val('');
-                        $('#formExpiredDate').val('');
-                        $('#formDescription').val('');
-                        // Tambahkan logika lain sesuai kebutuhan, misalnya menampilkan pesan sukses
-                        alert('Data berhasil disimpan!');
-                        $('#create').modal('hide'); // Menutup modal setelah berhasil disimpan
+                        $('#createDamagedForm')[0].reset();
+                        $('#create').modal('hide');
                         $('#datatable-damageds').DataTable().ajax.reload();
                     },
                     error: function(xhr, status, error) {
-                        // console.error(xhr.responseText);
-                        // Tambahkan logika untuk menampilkan pesan error, jika diperlukan
                         alert('Terjadi kesalahan saat menyimpan data. : ' + xhr.responseText);
                     }
                 });
@@ -121,13 +108,13 @@
                 if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
                     $.ajax({
                         type: 'DELETE',
-                        url: '/customers/delete/' + id,
+                        url: '/damageds/delete/' + id,
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         success: function(response) {
                             getAlert(response.message);
-                            $('#datatable-customers').DataTable().ajax.reload();
+                            $('#datatable-damageds').DataTable().ajax.reload();
                         },
                         error: function(xhr) {
                             alert('Terjadi kesalahan: ' + xhr.responseText);
@@ -143,6 +130,123 @@
                     '<button type = "button" class = "btn-close"  data-bs-dismiss="alert" aria - label = "Close" ></button> </div>'
                 )
             }
+        });
+        $(document).ready(function() {
+            var selectedProduct = null;
+
+            function selectProduct() {}
+            $('.select-produk').click(function() {
+                $('#productSelectionModal').modal('show');
+            });
+            $('#productSelectionTable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: '{{ url('products-datatable') }}',
+                columns: [{
+                        data: 'id',
+                        name: 'id'
+                    },
+                    {
+                        data: 'name',
+                        name: 'name'
+                    },
+                    {
+                        data: 'barcode',
+                        name: 'barcode'
+                    },
+                    {
+                        data: 'unit',
+                        name: 'unit'
+                    },
+                    {
+                        data: 'sub_unit',
+                        name: 'sub_unit'
+                    },
+                ],
+                select: {
+                    blurable: true
+                }
+            });
+
+            $('#productSelectionTable tbody').on('click', 'tr', function(e) {
+                var selectedRowData = $('#productSelectionTable').DataTable().rows('.selected').data();
+
+                let id = $(this).closest('tr').find('td:eq( 0 )').text();
+
+                let name = $(this).closest('tr').find('td:eq( 1 )').text();
+                let barcode = $(this).closest('tr').find('td:eq( 2 )').text();
+                let unit = $(this).closest('tr').find('td:eq( 3 )').text();
+                let sub_unit = $(this).closest('tr').find('td:eq( 4 )').text();
+
+                // console.log(name);
+                $('.selectProduct').click(function() {
+                    $('#createFormIdProduct').val(id);
+                    $('#formCreateStokName').val(name);
+                    $('#formCreateStokUnit').text('/' + unit);
+                    $('#formCreateStokBarcode').val(barcode).prop('readonly', true);
+                    $('#formCreateStokUnit2').text('/' + unit);
+                    $('#formCreateSubUnit').text('/' + sub_unit);
+                    $('#formCreateSubUnit2').text('/' + sub_unit);
+
+                    getExpiredOptions(id);
+
+                    $('#productSelectionModal').modal('hide');
+                    $('#descriptionCreateStok').empty();
+
+                    $('#descriptionCreateStok').append('<div class="list-group">' +
+                        '<a href="javascript:void(0);" class="list-group-item list-group-item-action">' +
+                        '<strong>Nama produk : </strong>' +
+                        name +
+                        '</a>' +
+                        '<a href="javascript:void(0);" class="list-group-item list-group-item-action ">' +
+                        '<strong>Barcode produk : </strong>' +
+                        barcode +
+                        '</a>' +
+                        '</div>');
+
+                    // console.log('close modal');
+                });
+            });
+
+            function getExpiredOptions(id) {
+                $.ajax({
+                    url: '/stoks-expired-date/' + id,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#selectExpired').empty();
+                        $.each(data, function(index, expired) {
+                            $('#selectExpired').append('<option value="' +
+                                expired.expired_date + '">' + expired.expired_date +
+                                '</option>');
+
+                        });
+
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Terjadi kesalahan select user: ' + error);
+                    }
+                });
+            }
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            // Event listener untuk perubahan pada dropdown
+            $('#formType').on('change', function() {
+                var selectedValue = $(this).val();
+
+                // Jika nilai yang dipilih adalah "Rusak", tampilkan #jeniRusak
+                if (selectedValue === 'Rusak') {
+                    $('#jeniRusak').show();
+                } else {
+                    // Jika tidak, sembunyikan
+                    $('#jeniRusak').hide();
+                }
+            });
+
+            // Jalankan sekali pada halaman load untuk memastikan kondisi awal
+            $('#formType').trigger('change');
         });
     </script>
 @endpush

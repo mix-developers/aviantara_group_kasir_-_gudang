@@ -62,7 +62,7 @@
             <b>Gudang : </b> {{ $wirehouse }}<br>
         </p>
         <table class="table-custom">
-            <thead>
+            <thead style="background-color: rgb(224, 116, 0); color:white; " class="text-center">
                 <tr>
                     <th>No</th>
                     <th>Produk</th>

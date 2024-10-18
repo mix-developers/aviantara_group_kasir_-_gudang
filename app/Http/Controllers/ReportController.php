@@ -6,6 +6,9 @@ use App\Models\OrderWirehouse;
 use App\Models\PaymentMethod;
 use App\Models\paymentMethodItem;
 use App\Models\Product;
+use App\Models\ProductDamaged;
+use App\Models\ProductStok;
+use App\Models\User;
 use App\Models\Wirehouse;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -15,6 +18,86 @@ use Mockery\Generator\Method;
 
 class ReportController extends Controller
 {
+    public function stok_wirehouse()
+    {
+        $data = [
+            'title' => 'Laporan Stok Gudang',
+        ];
+        return view('admin.report.stok_wirehouse', $data);
+    }
+    public function pdf_stok_wirehouse(Request $request)
+    {
+        $query = ProductStok::orderByDesc('id')
+            ->with(['product', 'user']);
+
+        $user_name = 'Semua';
+        $type_name = 'Semua';
+
+
+        if ($request->has('user')) {
+            $userId = $request->input('user');
+            if ($userId !== '-') {
+                $query->where('id_user', $userId);
+                $table_user = User::find($userId);
+                $user_name = $table_user->name;
+            }
+        }
+        if ($request->has('type')) {
+            $type = $request->input('type');
+            if ($type !== '-') {
+                if ($type == 'Stok Masuk') {
+                    $query->where('type', 'Masuk');
+                    $type_name = 'Stok Masuk';
+                } else {
+                    $query->where('type', 'Keluar');
+                    $type_name = 'Stok Keluar';
+                }
+            }
+        }
+        if ($request->has('expired')) {
+            $expired = $request->input('expired');
+            if ($expired !== '-') {
+                if ($expired == 'Telah Kadaluarsa') {
+                    $query->where('expired_date', '<=', date('Y-m-d'));
+                } elseif ($expired == 'Akan Kadaluarsa') {
+                    $query->where('expired_date', '<=', date('Y-m-d', strtotime('+3 month')));
+                } elseif ($expired == 'Belum Kadaluarsa') {
+                    $query->where('expired_date', '>', date('Y-m-d'));
+                    $query->where('expired_date', '>', date('Y-m-d', strtotime('+3 month')));
+                }
+            }
+        }
+
+        if ($request->has('from-date') && $request->has('to-date')) {
+            $fromDate = $request->input('from-date');
+            $toDate = $request->input('to-date');
+            if ($fromDate != '' && $toDate != '') {
+                if ($fromDate && $toDate) {
+                    $fromDate = Carbon::parse($fromDate)->startOfDay()->toDateTimeString();
+                    $toDate = Carbon::parse($toDate)->endOfDay()->toDateTimeString();
+
+                    $query->whereBetween('created_at', [$fromDate, $toDate]);
+                }
+            }
+        }
+        if (Auth::user()->role == 'Gudang') {
+            $user = Auth::user();
+            $query->whereHas('product', function ($query) use ($user) {
+                $query->where('id_wirehouse', $user->id_wirehouse);
+            });
+        }
+        $data = $query->get();
+
+        $pdf =  \PDF::loadView('admin.report.pdf.stok_wirehouse', [
+            'data' => $data,
+            'from_date' => $fromDate ?? '',
+            'to_date' => $toDate ?? '',
+            'user' => $user_name ?? '',
+            'type' => $type_name ?? ''
+        ])->setPaper('a4', 'landscape');
+
+        return $pdf->stream('Laporan Stok Gudang ' . date('Y-m-d H:i') . '.pdf');
+    }
     public function income()
     {
         $data = [
@@ -100,6 +183,47 @@ class ReportController extends Controller
             'title' => 'Laporan Produk Rusak',
         ];
         return view('admin.report.damaged', $data);
+    }
+    public function pdf_damaged(Request $request)
+    {
+        $damaged = ProductDamaged::orderByDesc('id')->with(['product', 'user']);
+        if ($request->has('from-date') && $request->has('to-date')) {
+            $fromDate = $request->input('from-date');
+            $toDate = $request->input('to-date');
+            if ($fromDate != '' && $toDate != '') {
+                if ($fromDate && $toDate) {
+                    $fromDate = Carbon::parse($fromDate)->startOfDay()->toDateTimeString();
+                    $toDate = Carbon::parse($toDate)->endOfDay()->toDateTimeString();
+
+                    $damaged->whereBetween('created_at', [$fromDate, $toDate]);
+                }
+            }
+        }
+        $user_name = 'Semua';
+        if ($request->has('user')) {
+            $userId = $request->input('user');
+            if ($userId !== '-') {
+                $damaged->where('id_user', $userId);
+                $table_user = User::find($userId);
+                $user_name = $table_user->name;
+            }
+        }
+
+        if ($request->has('type')) {
+            $type = $request->input('type');
+            if ($type !== '-') {
+                $damaged->where('type', $type);
+            }
+        }
+        $pdf =  \PDF::loadView('admin.report.pdf.damaged', [
+            'data' => $damaged->get(),
+            'from_date' => $fromDate ?? '',
+            'to_date' => $toDate ?? '',
+            'user' => $user_name,
+            'type' => $type ?? 'Semua'
+        ])->setPaper('a4', 'potrait');
+
+        return $pdf->stream('Laporan Produk Rusak ' . date('Y-m-d H:i') . '.pdf');
     }
     public function transactionWirehouses()
     {

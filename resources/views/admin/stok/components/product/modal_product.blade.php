@@ -8,8 +8,13 @@
             </div>
             <div class="modal-body">
                 <!-- Form for Create and Edit -->
-                <form id="productForm">
+                <form id="productForm" enctype="multipart/form-data">
                     <input type="hidden" id="formProductId" name="id">
+                    <div class="mb-3">
+                        <label for="formProductName" class="form-label">Foto Produk (kosongkan jika tidak
+                            merubah)</label>
+                        <input type="file" class="form-control" id="formProductPhoto" name="photo">
+                    </div>
                     <div class="mb-3">
                         <label for="formProductName" class="form-label">Nama <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="formProductName" name="name" required>
@@ -67,7 +72,7 @@
             </div>
             <div class="modal-body">
                 <!-- Form for Create and Edit -->
-                <form id="createProductForm">
+                <form id="createProductForm" enctype="multipart/form-data">
                     {{-- barcode scanner --}}
                     <div class="mb-3" id="scanner" style="display:none;">
                         <center>
@@ -85,11 +90,16 @@
                     </div>
                     {{-- end barcode scanner --}}
                     <div class="mb-3">
+                        <label for="formProductName" class="form-label">Foto Produk (dapat dikosongkan)</label>
+                        <input type="file" class="form-control" id="formCreateProductPhoto" name="photo">
+                    </div>
+                    <div class="mb-3">
                         <label for="formProductName" class="form-label">Nama <span
                                 class="text-danger">*</span></label>
                         <input type="text" class="form-control " id="formCreateProductName" name="name"
                             required>
                     </div>
+
                     <div class="mb-3">
                         <label for="formProductBarcode" class="form-label">Barcode <span
                                 class="text-danger">*</span></label>

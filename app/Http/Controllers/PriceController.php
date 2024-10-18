@@ -36,7 +36,7 @@ class PriceController extends Controller
     {
         $productsWithoutPrice = Product::leftJoin('product_prices', 'products.id', '=', 'product_prices.id_product')
             ->whereNull('product_prices.id_product')
-            ->select('products.*')
+            ->select('products.id')
             ->count();
 
         return response()->json($productsWithoutPrice);
@@ -50,6 +50,96 @@ class PriceController extends Controller
                 $query->where('id_wirehouse', $wirehouseId);
             }
         }
+        if (Auth::user()->role == 'Gudang') {
+            $query->where('id_wirehouse', Auth::user()->id_wirehouse);
+        }
+        $product = $query;
+        return Datatables::of($product)
+            ->addColumn('quantity', function ($product) {
+                return $product->quantity_unit . ' ' . $product->sub_unit . ' /' . $product->unit;
+            })
+            ->addColumn('grosir', function ($product) {
+                $price_grosir = ProductPrice::where('id_product', $product->id)->orderByDesc('id')->first();
+                $price = $price_grosir != null ? $price_grosir->price_grosir : 0;
+
+                $price_origin = ProductStok::where('id_product', $product->id)->where('type', 'Masuk')->orderByDesc('id')->first();
+                $price_stok = $price_origin != null ? $price_origin->price_origin : 0;
+
+                $color = $price <= $price_stok ? 'text-danger' : 'text-info';
+
+                return '<span class="text-primary h3">Rp ' . number_format($price) . '</span> /' . $product->unit . '<br> <small class="' . $color . '">Modal : Rp ' . number_format($price_stok) . ' /' . $product->unit . '</small>';
+            })
+            ->addColumn('price_grosir', function ($product) {
+                $price_grosir = ProductPrice::where('id_product', $product->id)->orderByDesc('id')->first();
+                $price = $price_grosir != null ? $price_grosir->price_grosir : 0;
+
+                return $price;
+            })
+            ->addColumn('percentese_fee', function ($product) {
+                $price_grosir = ProductPrice::where('id_product', $product->id)->orderByDesc('id')->first();
+                $grosir = $price_grosir != null ? $price_grosir->price_grosir : 0;
+
+                $price_origin = ProductStok::where('id_product', $product->id)->where('type', 'Masuk')->orderByDesc('id')->first();
+                $modal = $price_origin != null ? $price_origin->price_origin : 0;
+
+                $fee = $modal > 0 ? (($grosir - $modal) / $modal) * 100 : 0;
+                $color = $fee <= 0 ? 'danger' : 'success';
+                $fee_rupiah = $modal > 0 ? $grosir - $modal : 0;
+
+                return '<span class="text-' . $color . ' h4"><i class="bx bx-trending-up"></i> ' . number_format($fee, 2, '.', '') . '% </span><br><small class="text-info text-center">Untung : Rp ' . number_format($fee_rupiah) . '</small>';
+            })
+            ->addColumn('percentese_fee_text', function ($product) {
+                $price_grosir = ProductPrice::where('id_product', $product->id)->orderByDesc('id')->first();
+                $grosir = $price_grosir != null ? $price_grosir->price_grosir : 0;
+
+                $price_origin = ProductStok::where('id_product', $product->id)->where('type', 'Masuk')->orderByDesc('id')->first();
+                $modal = $price_origin != null ? $price_origin->price_origin : 0;
+
+                $fee = $modal > 0 ? (($grosir - $modal) / $modal) * 100 : 0;
+                $color = $fee <= 0 ? 'danger' : 'success';
+                $fee_rupiah = $modal > 0 ? $grosir - $modal : 0;
+
+                return number_format($fee, 2, '.', '') . '% ';
+            })
+
+            ->addColumn('price_origin', function ($product) {
+                $price_origin = ProductStok::where('id_product', $product->id)->where('type', 'Masuk')->orderByDesc('id')->first();
+                $modal = $price_origin != null ? $price_origin->price_origin : 0;
+                return $modal;
+            })
+            ->addColumn('price_fee', function ($product) {
+                $price_grosir = ProductPrice::where('id_product', $product->id)->orderByDesc('id')->first();
+                $grosir = $price_grosir != null ? $price_grosir->price_grosir : 0;
+
+                $price_origin = ProductStok::where('id_product', $product->id)->where('type', 'Masuk')->orderByDesc('id')->first();
+                $modal = $price_origin != null ? $price_origin->price_origin : 0;
+
+                return $modal > 0 ? $grosir - $modal : 0;
+            })
+            ->addColumn('wirehouse', function ($product) {
+                return '<strong>' . $product->wirehouse->name . '</strong><br><span class="text-muted">' . $product->wirehouse->address . '</span>';
+            })
+            ->addColumn('stok', function ($product) {
+                $stok = Product::getStok($product->id);
+
+                return $stok;
+            })
+            ->addColumn('action', function ($product) {
+                return view('admin.price.components.actions', compact('product'));
+            })
+
+            ->rawColumns(['action', 'grosir', 'wirehouse', 'percentese_fee', 'stok', 'price_origin', 'price_fee', 'percentese_fee_text'])
+            ->make(true);
+    }
+    public function getPricesOrderDataTable(Request $request)
+    {
+        $query = Product::orderByDesc('id');
+
+        $query->whereHas('product_prices', function ($q) {
+            $q->where('price_grosir', '>', 0)
+                ->orWhereNotNull('price_grosir');
+        });
+
         if (Auth::user()->role == 'Gudang') {
             $query->where('id_wirehouse', Auth::user()->id_wirehouse);
         }

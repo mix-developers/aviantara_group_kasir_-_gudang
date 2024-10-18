@@ -64,7 +64,7 @@
             {{ date('d-m-Y', strtotime($from_date)) . ' sampai ' . date('d-m-Y', strtotime($to_date)) }}
         </p>
         <table class="table-custom">
-            <thead>
+            <thead style="background-color: rgb(224, 116, 0); color:white; " class="text-center">
                 <tr>
                     <th>ID</th>
                     <th>Tanggal</th>

@@ -177,11 +177,14 @@
                 });
             };
             $('#saveProductBtn').click(function() {
-                var formData = $('#productForm').serialize();
+                var formData = new FormData($('#productForm')[
+                    0]); // Gunakan FormData untuk mengambil data, termasuk file
                 $.ajax({
                     type: 'POST',
                     url: '/products/store',
                     data: formData,
+                    processData: false, // Jangan proses data, biarkan FormData menghandle
+                    contentType: false, // Matikan contentType agar multipart/form-data diatur otomatis
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
@@ -195,13 +198,16 @@
                     }
                 });
             });
-            $('#createProductBtn').click(function() {
-                var formData = $('#createProductForm').serialize();
 
+            $('#createProductBtn').click(function() {
+                var formData = new FormData($('#createProductForm')[
+                    0]); // Gunakan FormData untuk mengambil data, termasuk file
                 $.ajax({
                     type: 'POST',
                     url: '/products/store',
                     data: formData,
+                    processData: false, // Jangan proses data, biarkan FormData menghandle
+                    contentType: false, // Matikan contentType agar multipart/form-data diatur otomatis
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
@@ -209,6 +215,7 @@
                         getAlert(response.message);
                         $('#datatable-product').DataTable().ajax.reload();
                         $('#formCreateProductName').val('');
+                        $('#formCreateProductPhoto').val('');
                         $('#formCreateProductBarcode').val('');
                         $('#formCreateProductQUantityUnit').val('');
                         $('#formProductIdWirehouseCreate').val('');

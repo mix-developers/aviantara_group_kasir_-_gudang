@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Laporan Pendapatan</title>
+    <title>Laporan Produk Rusak</title>
     <meta http-equiv="Content-Type" content="charset=utf-8" />
     <link rel="stylesheet" href="{{ public_path('css') }}/pdf/bootstrap.min.css" media="all" />
     <style>
@@ -58,19 +58,22 @@
         </table>
         <hr>
         <p>
-            <b>Laporan : </b> Pendapatan<br>
-            <b>Metode : </b> {{ $metode }}<br>
+            <b>Laporan : </b> Produk Rusak<br>
+            <b>Pegawai : </b> {{ $user ?? '' }}<br>
+            <b>Type : </b> {{ $type ?? '' }}<br>
             <b>Periode : </b>
             {{ date('d-m-Y', strtotime($from_date)) . ' sampai ' . date('d-m-Y', strtotime($to_date)) }}
         </p>
         <table class="table-custom">
-            <thead style="background-color: rgb(224, 116, 0); color:white; " class="text-center">
+            <thead style="background-color: red; color:white; " class="text-center">
                 <tr>
                     <th>No</th>
                     <th>Tanggal</th>
-                    <th>Metode</th>
-                    <th>Dibayarkan</th>
-                    <th>Deskripsi</th>
+                    <th>Produk</th>
+                    <th>Jenis</th>
+                    <th>Jumlah</th>
+                    <th>Sub Jumlah </th>
+                    <th>Kadaluarsa</th>
                     <th>Pegawai</th>
                 </tr>
             </thead>
@@ -79,18 +82,17 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $item->created_at->format('d-m-Y') }}</td>
-                        <td>{{ $item->payment_method->method }}</td>
-                        <td> Rp {{ number_format($item->paid) }}</td>
-                        <td>{{ $item->description }}</td>
+                        <td>{{ $item->product->name }}</td>
+                        <td>{{ $item->type }}</td>
+                        <td>{{ $item->quantity_unit }}</td>
+                        <td>{{ $item->quantity_sub_unit }}</td>
+                        <td>{{ $item->expired_date }}</td>
                         <td>{{ $item->user->name }}</td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
-
-
     </main>
-
 </body>
 
 </html>

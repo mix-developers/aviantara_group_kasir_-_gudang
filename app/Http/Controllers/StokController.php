@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\ProductPrice;
 use App\Models\ProductStok;
 use App\Models\User;
 use App\Models\Wirehouse;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -179,8 +181,16 @@ class StokController extends Controller
         if ($request->has('from-date') && $request->has('to-date')) {
             $fromDate = $request->input('from-date');
             $toDate = $request->input('to-date');
+            // if ($fromDate != '' && $toDate != '') {
+            //     $query->where('created_at', '>=', $fromDate)->where('created_at', '<=', $toDate);
+            // }
             if ($fromDate != '' && $toDate != '') {
-                $query->where('created_at', '>=', $fromDate)->where('created_at', '<=', $toDate);
+                if ($fromDate && $toDate) {
+                    $fromDate = Carbon::parse($fromDate)->startOfDay()->toDateTimeString();
+                    $toDate = Carbon::parse($toDate)->endOfDay()->toDateTimeString();
+
+                    $query->whereBetween('created_at', [$fromDate, $toDate]);
+                }
             }
         }
         if (Auth::user()->role == 'Gudang') {
@@ -192,6 +202,9 @@ class StokController extends Controller
         $stoks = $query;
 
         return Datatables::of($stoks)
+            ->addColumn('tanggal', function ($stok) {
+                return $stok->created_at->format('d/m/Y');
+            })
             ->addColumn('produk', function ($stok) {
                 $typeClass = ($stok->type == "Masuk") ? "primary" : "danger";
                 return "<strong class='text-$typeClass'>$stok->product->name</strong><br><span class='text-muted'>$stok->product->wirehouse->name</span>";
@@ -210,7 +223,10 @@ class StokController extends Controller
             ->addColumn('warning', function ($stok) {
                 return view('admin.stok.components.stok.warning', compact('stok'));
             })
-            ->rawColumns(['produk', 'action', 'total', 'user', 'warning'])
+            ->addColumn('status', function ($stok) {
+                return view('admin.stok.components.stok.status', compact('stok'));
+            })
+            ->rawColumns(['produk', 'action', 'total', 'user', 'warning', 'tanggal', 'status'])
             ->make(true);
     }
 
@@ -258,16 +274,23 @@ class StokController extends Controller
             'quantity_unit' => $request->input('quantity_unit'),
             'id_wirehouse' => $request->input('id_wirehouse'),
         ];
+        if ($request->hasFile('photo')) {
+            $file = $request->file('photo');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $filePath = $file->storeAs('public/photos', $fileName);
+        }
 
         if ($request->filled('id')) {
             $Product = Product::find($request->input('id'));
             if (!$Product) {
                 return response()->json(['message' => 'Data tidak ditemukan'], 404);
             }
+            $ProductData['photo'] = $filePath ?? $Product->photo;
 
             $Product->update($ProductData);
             $message = 'Berhasil mengedit data';
         } else {
+            $ProductData['photo'] = $filePath;
             Product::create($ProductData);
             $message = 'Berhasil menambah data';
         }
@@ -310,6 +333,8 @@ class StokController extends Controller
     public function destroy_product($id)
     {
         $Product = Product::find($id);
+        ProductPrice::where('id_product', $id)->delete();
+        ProductStok::where('id_product', $id)->delete();
 
         if (!$Product) {
             return response()->json(['message' => 'Data tidak ditemukan'], 404);
@@ -322,6 +347,7 @@ class StokController extends Controller
     public function edit_product($id)
     {
         $Product = Product::find($id);
+
 
         if (!$Product) {
             return response()->json(['message' => 'Data tidak ditemukan'], 404);

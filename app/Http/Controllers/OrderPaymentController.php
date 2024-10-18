@@ -87,6 +87,7 @@ class OrderPaymentController extends Controller
 
             $paymentItems = new paymentMethodItem;
             $paymentItems->id_user =  Auth::user()->id;
+            $paymentItems->id_order_wirehouse =  $request->input('id_order_wirehouse');
             $paymentItems->id_payment_method = $request->input('id_payment_method');
             $paymentItems->description = 'Pembayaran tagihan invoice ' . $invoice;
             $paymentItems->paid = $request->input('paid');

@@ -121,6 +121,7 @@
                                 <th>ID</th>
                                 <th style="width:10px;"><i class="bx bx-info-circle"></i>
                                 </th>
+                                <th>Tanggal</th>
                                 <th>Produk</th>
                                 <th>Jumlah</th>
                                 <th>Kadaluarsa</th>
@@ -136,6 +137,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th><i class="bx bx-info-circle"></i></th>
+                                <th>Tanggal</th>
                                 <th>Produk</th>
                                 <th>Jumlah</th>
                                 <th>Kadaluarsa</th>

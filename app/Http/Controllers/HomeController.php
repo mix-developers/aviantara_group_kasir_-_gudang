@@ -31,11 +31,16 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $product = Product::query();
+        if (Auth::user()->role == 'Gudang') {
+            $product->where('id_wirehouse', Auth::user()->id_wirehouse);
+        }
+        $product_data = $product->count();
         $data = [
             'title' => 'Dashboard',
             'users' => User::where('role', '!=', 'admin')->where('role', '!=', 'owner')->count(),
             'customers' => Customer::count(),
-            'product' => Product::count(),
+            'product' => $product_data,
             'shops' => Shop::count(),
             'wirehouses' => Wirehouse::count(),
         ];
