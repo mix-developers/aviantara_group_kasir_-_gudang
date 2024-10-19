@@ -103,6 +103,7 @@ Route::middleware(['auth:web', 'role:Gudang,Admin,Owner', 'checkDisabled'])->gro
     Route::get('/order_wirehouses/getall', [OrderWirehouseController::class, 'getAll'])->name('order_wirehouses.getall');
     Route::post('/order_wirehouses/update',  [OrderWirehouseController::class, 'update'])->name('order_wirehouses.update');
     Route::post('/order_wirehouses/store',  [OrderWirehouseController::class, 'store'])->name('order_wirehouses.store');
+    Route::get('/order_wirehouses/print-invoice/{id}',  [OrderWirehouseController::class, 'printInvoice'])->name('order_wirehouses.print-invoice');
     Route::get('/order_wirehouses/edit/{id}',  [OrderWirehouseController::class, 'edit'])->name('order_wirehouses.edit');
     Route::delete('/order_wirehouses/delete/{id}',  [OrderWirehouseController::class, 'destroy'])->name('order_wirehouses.delete');
     Route::get('/order-wirehouses-datatable', [OrderWirehouseController::class, 'getOrderWirehousesDataTable']);

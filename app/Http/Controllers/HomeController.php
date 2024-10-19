@@ -68,7 +68,7 @@ class HomeController extends Controller
         $stok_keluar = $stok_keluar->sum('quantity');
         $stok_masuk = $stok_masuk->sum('quantity');
         //rusak
-        $rusak = $rusak->sum('total');
+        $rusak = $rusak->sum('quantity_unit');
         $stok = $stok_masuk - $stok_keluar - $rusak;
         $stok < 0 ? 0 : $stok;
         return $stok;
@@ -95,7 +95,7 @@ class HomeController extends Controller
         $stok_keluar = $stok_keluar->sum('quantity');
         $stok_masuk = $stok_masuk->sum('quantity');
         //rusak
-        $rusak = $rusak->sum('total');
+        $rusak = $rusak->sum('quantity_unit');
         $stok = $stok_masuk - $stok_keluar - $rusak;
         return $stok;
     }
@@ -154,7 +154,7 @@ class HomeController extends Controller
         $stok_keluar = $stok_keluar->sum('quantity');
         $stok_masuk = $stok_masuk->sum('quantity');
         //rusak
-        $rusak = $rusak->sum('total');
+        $rusak = $rusak->sum('quantity_unit');
         $stok = $stok_masuk - $stok_keluar;
         return $stok;
     }
@@ -180,7 +180,7 @@ class HomeController extends Controller
         $stok_keluar = $stok_keluar->sum('quantity');
         $stok_masuk = $stok_masuk->sum('quantity');
         //rusak
-        $rusak = $rusak->sum('total');
+        $rusak = $rusak->sum('quantity_unit');
         $stok = $stok_masuk - $stok_keluar - $rusak;
         return $stok;
     }

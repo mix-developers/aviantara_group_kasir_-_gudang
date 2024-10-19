@@ -82,7 +82,7 @@ class ProductDamagedController extends Controller
         $productData = [
             'id_product' => $request->input('id_product'),
             'photo' => $filePath,
-            'photo2' => $filePath2,
+            'photo2' => $filePath2 ?? null,
             'type' => $request->input('type'),
             'quantity_unit' => $request->input('quantity_unit'),
             'quantity_sub_unit' => $request->input('quantity_sub_unit'),

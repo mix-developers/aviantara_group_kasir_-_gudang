@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\ProductDamaged;
 use App\Models\ProductPrice;
 use App\Models\ProductStok;
 use App\Models\User;
@@ -116,9 +117,12 @@ class StokController extends Controller
                                 ->where('type', 'Keluar')
                                 ->where('expired_date', $itemStok->expired_date)
                                 ->sum('quantity');
+                            $stok_rusak =  ProductDamaged::where('id_product', $product->id)
+                                ->where('expired_date', $itemStok->expired_date)
+                                ->sum('quantity_unit');
 
                             if ($stok_keluar >= 0) {
-                                $total_stok = $itemStok->quantity - $stok_keluar;
+                                $total_stok = $itemStok->quantity - $stok_keluar - $stok_rusak;
                                 if ($total_stok > 0) {
                                     if ($itemStok->expired_date <= date('Y-m-d')) {
                                         $expiredHtml .= '<li class="text-danger"><b>' . ($total_stok) . '</b> ' . $product->unit . ' Kadaluarsa</li>';
@@ -145,8 +149,7 @@ class StokController extends Controller
     }
     public function getStoksDataTable(Request $request)
     {
-        $query = ProductStok::select(['id', 'id_product', 'quantity', 'type', 'expired_date', 'description', 'id_user', 'created_at', 'updated_at'])
-            ->orderByDesc('id')
+        $query = ProductStok::orderByDesc('id')
             ->with(['product', 'user']);
 
         if ($request->has('user')) {

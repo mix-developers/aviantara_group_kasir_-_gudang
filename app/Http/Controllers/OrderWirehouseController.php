@@ -6,12 +6,15 @@ use App\Models\OrderWirehouse;
 use App\Models\OrderWirehouseItem;
 use App\Models\OrderWirehousePayment;
 use App\Models\paymentMethodItem;
+use App\Models\Product;
 use App\Models\ProductStok;
 use App\Models\Wirehouse;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\DataTables;
+use Barryvdh\DomPDF\Facade as PDF;
+use Spatie\LaravelIgnition\Solutions\SolutionProviders\RunningLaravelDuskInProductionProvider;
 
 class OrderWirehouseController extends Controller
 {
@@ -199,12 +202,10 @@ class OrderWirehouseController extends Controller
                 $ProductStokOut->quantity = $quantitys[$key];
                 $ProductStokOut->save();
             }
-
-            $message = 'Berhasil menambah data';
         }
 
 
-        return response()->json(['message' => $message]);
+        return response()->json(['message' => 'Order berhasil dibuat.', 'order' => $order->id]);
     }
     public function update(Request $request)
     {
@@ -276,7 +277,24 @@ class OrderWirehouseController extends Controller
     public function destroy($id)
     {
         $data = OrderWirehouse::find($id);
-        OrderWirehouseItem::where('id_order_wirehouse', $id)->delete();
+        $OrderWirehouseItem = OrderWirehouseItem::where('id_order_wirehouse', $id);
+
+        foreach ($OrderWirehouseItem->get() as $item) {
+            $ProductStok = ProductStok::where('id_product', $item->id_product)->latest();
+            //masukkan kembali stok
+            $ProductStokOut = new ProductStok();
+            $ProductStokOut->id_product = $item->id_product;
+            $ProductStokOut->id_user = Auth::user()->id;
+            $ProductStokOut->type = 'Masuk';
+            $ProductStokOut->price_origin = $ProductStok->price_origin;
+            $ProductStokOut->description = 'Pengembalian stok gudang';
+            $ProductStokOut->expired_date = $item->expired_date;
+            $ProductStokOut->quantity = $item->quantity;
+            $ProductStokOut->save();
+        }
+
+        $OrderWirehouseItem->delete();
+
         OrderWirehousePayment::where('id_order_wirehouse', $id)->delete();
         paymentMethodItem::where('id_order_wirehouse', $id)->delete();
 
@@ -287,5 +305,17 @@ class OrderWirehouseController extends Controller
         $data->delete();
 
         return response()->json(['message' => 'Berhasil menghapus data']);
+    }
+    public function printInvoice($id)
+    {
+        $data = OrderWirehouse::where('id', $id)->with(['customer', 'product'])->first();
+        $item = OrderWirehouseItem::where('id_order_wirehouse', $id)->get();
+
+        $pdf =  \PDF::loadView('admin.order_wirehouse.pdf.print_invoice', [
+            'data' => $data,
+            'item' => $item
+        ])->setPaper('a4', 'potrait');
+
+        return $pdf->download('Invoice ' . $data->no_invoice . '.pdf');
     }
 }

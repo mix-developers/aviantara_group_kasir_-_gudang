@@ -74,7 +74,6 @@
             notPriceAlert();
             getStok();
             expiredAlert();
-            //end stok gudang
         });
     </script>
 @endpush

@@ -10,23 +10,15 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'name',
-        'unit',
-        'barcode',
-        'unit',
-        'quantity_unit',
-        'photo',
-        'id_wirehouse',
-        'sub_unit',
-    ];
+    protected $guarded = [];
 
     static function getStok($id)
     {
         $stok_masuk =  ProductStok::where('id_product', $id)->select('quantity')->where('type', 'Masuk')->sum('quantity');
         $stok_keluar =  ProductStok::where('id_product', $id)->select('quantity')->where('type', 'Keluar')->sum('quantity');
+        $rusak =  ProductDamaged::where('id_product', $id)->sum('quantity_unit');
 
-        $total_stok = $stok_masuk - $stok_keluar;
+        $total_stok = $stok_masuk - $stok_keluar - $rusak;
         return $total_stok;
     }
 

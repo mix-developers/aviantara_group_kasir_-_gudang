@@ -266,7 +266,6 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
-                        console.log(response.message);
                         // getAlert(response.message);
                         $('#tableProductList').empty();
                         $('#totalOrder').text('0');
@@ -278,6 +277,12 @@
                         $('#createOrderForm')[0].reset();
                         $('#datatable-order-wirehouse').DataTable().ajax.reload();
                         $('#create').modal('hide');
+                        console.log(response.order);
+
+                        window.open('/order_wirehouses/print-invoice/' + response.order,
+                            '_blank');
+
+
                     },
                     error: function(xhr) {
                         alert('Terjadi kesalahan: ' + xhr.responseText);
