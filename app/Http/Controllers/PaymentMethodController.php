@@ -7,6 +7,7 @@ use App\Models\PaymentMethod;
 use App\Models\paymentMethodItem;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
 class PaymentMethodController extends Controller
@@ -81,6 +82,16 @@ class PaymentMethodController extends Controller
                 }
             }
         }
+        if ($request->has('wirehouse')) {
+            $wirehouseId = $request->input('wirehouse');
+            if ($wirehouseId !== '-') {
+                $paymentMethodItem->whereHas('order_wirehouse', function ($paymentMethodItem) use ($wirehouseId) {
+                    $paymentMethodItem->where('id_wirehouse', $wirehouseId);
+                });
+            }
+        }
+
+
         if ($request->has('method')  && $request->input('method') !== 'all') {
             $paymentMethodItem->where('id_payment_method', $request->input('method'));
         }
@@ -154,6 +165,14 @@ class PaymentMethodController extends Controller
 
                 // Apply date filter
                 $data->whereBetween('created_at', [$fromDate, $toDate]);
+            }
+        }
+        if ($request->has('wirehouse')) {
+            $wirehouseId = $request->input('wirehouse');
+            if ($wirehouseId !== '-') {
+                $data->whereHas('order_wirehouse', function ($data) use ($wirehouseId) {
+                    $data->where('id_wirehouse', $wirehouseId);
+                });
             }
         }
         $totalPaid = $data->sum('paid');

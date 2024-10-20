@@ -38,6 +38,15 @@
                                 <input type="date" class="form-control" id="toDate" value="{{ date('Y-m-d') }}">
                             </div>
                         </div>
+                        <div class="col-md-2 col-12">
+                            <select id="selectWirehouse" class="form-select text-capitalize">
+                                <option value="-">Semua Gudang</option>
+                                @foreach (App\Models\Wirehouse::all() as $item)
+                                    <option value="{{ $item->id }}">{{ $item->name }} - {{ $item->address }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                         <div class="col-md-3 col-12">
                             <select id="selectMethod" class="form-select text-capitalize">
                                 <option value="all">Semua Metode</option>
@@ -160,10 +169,12 @@
             });
             $('#filterBtn').click(function() {
                 var selectMethod = $('#selectMethod').val();
+                var selectWirehouse = $('#selectWirehouse').val();
                 var fromDate = $('#fromDate').val();
                 var toDate = $('#toDate').val();
 
                 var newUrl = '{{ url('report/report-payment-datatable') }}?method=' + selectMethod +
+                    '&wirehouse=' + selectWirehouse +
                     '&from-date=' + fromDate + '&to-date=' + toDate;
                 table.ajax.url(newUrl).load();
                 getPaymentCard();
@@ -179,11 +190,13 @@
 
                         var fromDate = $('#fromDate').val();
                         var toDate = $('#toDate').val();
+                        var selectWirehouse = $('#selectWirehouse').val();
                         // console.log(data.id);
                         $.each(data, function(index, method) {
                             // Update the URL to include from-date and to-date
                             $.getJSON("/get_total_payment_method/" + method.id + "?from-date=" +
-                                fromDate + "&to-date=" + toDate,
+                                fromDate + "&to-date=" + toDate + '&wirehouse=' +
+                                selectWirehouse,
                                 function(respons) {
                                     console.log(respons); // Log the entire response
                                     if (respons.total !==

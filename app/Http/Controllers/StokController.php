@@ -293,7 +293,7 @@ class StokController extends Controller
             $Product->update($ProductData);
             $message = 'Berhasil mengedit data';
         } else {
-            $ProductData['photo'] = $filePath;
+            $ProductData['photo'] = $filePath ?? null;
             Product::create($ProductData);
             $message = 'Berhasil menambah data';
         }

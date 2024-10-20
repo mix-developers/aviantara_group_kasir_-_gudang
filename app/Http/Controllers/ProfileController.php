@@ -19,7 +19,7 @@ class ProfileController extends Controller
         $data = [
             'title' => 'Profile',
         ];
-        return view('akun.profile', $data);
+        return view('admin.akun.profile', $data);
     }
 
     public function update(Request $request)

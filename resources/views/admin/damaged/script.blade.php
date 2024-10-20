@@ -15,6 +15,10 @@
                         name: 'tanggal'
                     },
                     {
+                        data: 'wirehouse.name',
+                        name: 'wirehouse.name'
+                    },
+                    {
                         data: 'product.name',
                         name: 'product.name'
                     },

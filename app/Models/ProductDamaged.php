@@ -15,6 +15,10 @@ class ProductDamaged extends Model
     {
         return $this->belongsTo(Product::class, 'id_product');
     }
+    public function wirehouse(): BelongsTo
+    {
+        return $this->belongsTo(Wirehouse::class, 'id_wirehouse');
+    }
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id_user');

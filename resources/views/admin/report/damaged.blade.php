@@ -36,6 +36,15 @@
                             </div>
                         </div>
                         <div class="col-md-2 col-12">
+                            <select id="selectWirehouse" class="form-select text-capitalize">
+                                <option value="-">Semua Gudang</option>
+                                @foreach (App\Models\Wirehouse::all() as $item)
+                                    <option value="{{ $item->id }}">{{ $item->name }} - {{ $item->address }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-2 col-12">
                             <select id="selectUser" class="form-select text-capitalize">
                                 <option value="-">Semua Pegawai</option>
                                 @foreach (App\Models\User::where('role', 'Gudang')->get() as $item)
@@ -51,7 +60,7 @@
                                 <option value="Rusak">Rusak</option>
                             </select>
                         </div>
-                        <div class="col-md-3 col-12">
+                        <div class="col-md-2 col-12">
                             <button type="button" id="filterBtn" class="btn btn-primary"><i class="bx bx-filter"></i>
                                 Filter</button>
                         </div>
@@ -64,6 +73,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Tanggal</th>
+                                <th>Gudang</th>
                                 <th>Produk</th>
                                 <th>Jenis</th>
                                 <th>Jumlah</th>
@@ -77,6 +87,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Tanggal</th>
+                                <th>Gudang</th>
                                 <th>Produk</th>
                                 <th>Jenis</th>
                                 <th>Jumlah</th>
@@ -106,6 +117,10 @@
                     {
                         data: 'tanggal',
                         name: 'tanggal'
+                    },
+                    {
+                        data: 'wirehouse.name',
+                        name: 'wirehouse.name'
                     },
                     {
                         data: 'product.name',
@@ -151,13 +166,14 @@
                         header: true,
                         action: function(e, dt, button, config) {
                             var selectUser = $('#selectUser').val();
+                            var selectWirehouse = $('#selectWirehouse').val();
                             var selectType = $('#selectType').val();
                             var fromDate = $('#fromDate').val();
                             var toDate = $('#toDate').val();
 
                             var url = '{{ url('report/pdf-damaged') }}?user=' + selectUser +
-                                '&type=' + selectType + '&from-date=' + fromDate + '&to-date=' +
-                                toDate;
+                                '&wirehouse=' + selectWirehouse + '&type=' + selectType +
+                                '&from-date=' + fromDate + '&to-date=' + toDate;
 
                             window.open(url, '_blank');
                         }
@@ -179,12 +195,15 @@
             });
             $('#filterBtn').click(function() {
                 var selectUser = $('#selectUser').val();
+                var selectWirehouse = $('#selectWirehouse').val();
                 var selectType = $('#selectType').val();
                 var fromDate = $('#fromDate').val();
                 var toDate = $('#toDate').val();
 
-                var newUrl = '{{ url('damageds-datatable') }}?user=' + selectUser + '&type=' +
-                    selectType + '&from-date=' + fromDate + '&to-date=' + toDate;
+                var newUrl = '{{ url('damageds-datatable') }}?user=' + selectUser +
+                    '&wirehouse=' + selectWirehouse + '&type=' + selectType + '&from-date=' + fromDate +
+                    '&to-date=' + toDate;
+
                 table.ajax.url(newUrl).load();
 
             });

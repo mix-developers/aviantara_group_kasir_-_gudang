@@ -61,6 +61,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Tanggal</th>
+                                <th>Gudang</th>
                                 <th>Produk</th>
                                 <th>Jenis</th>
                                 <th>Jumlah</th>
@@ -74,6 +75,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Tanggal</th>
+                                <th>Gudang</th>
                                 <th>Produk</th>
                                 <th>Jenis</th>
                                 <th>Jumlah</th>

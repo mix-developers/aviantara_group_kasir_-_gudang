@@ -23,4 +23,8 @@ class paymentMethodItem extends Model
     {
         return $this->belongsTo(User::class, 'id_user');
     }
+    public function order_wirehouse()
+    {
+        return $this->hasMany(OrderWirehouse::class, 'id', 'id_order_wirehouse');
+    }
 }

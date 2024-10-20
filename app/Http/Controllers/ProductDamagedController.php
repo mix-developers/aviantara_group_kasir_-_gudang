@@ -20,7 +20,7 @@ class ProductDamagedController extends Controller
     }
     public function getDamagedsDataTable(Request $request)
     {
-        $damaged = ProductDamaged::orderByDesc('id')->with(['product', 'user']);
+        $damaged = ProductDamaged::orderByDesc('id')->with(['product', 'user', 'wirehouse']);
         if ($request->has('from-date') && $request->has('to-date')) {
             $fromDate = $request->input('from-date');
             $toDate = $request->input('to-date');
@@ -39,11 +39,20 @@ class ProductDamagedController extends Controller
                 $damaged->where('id_user', $userId);
             }
         }
+        if ($request->has('wirehouse')) {
+            $wirehouseId = $request->input('wirehouse');
+            if ($wirehouseId !== '-') {
+                $damaged->where('id_wirehouse', $wirehouseId);
+            }
+        }
         if ($request->has('type')) {
             $type = $request->input('type');
             if ($type !== '-') {
                 $damaged->where('type', $type);
             }
+        }
+        if (Auth::user()->role == 'Gudang') {
+            $damaged->where('id_wirehouse', Auth::user()->id_wirehouse);
         }
         return Datatables::of($damaged)
 
@@ -81,6 +90,7 @@ class ProductDamagedController extends Controller
         }
         $productData = [
             'id_product' => $request->input('id_product'),
+            'id_wirehouse' => Auth::user()->id_wirehouse,
             'photo' => $filePath,
             'photo2' => $filePath2 ?? null,
             'type' => $request->input('type'),

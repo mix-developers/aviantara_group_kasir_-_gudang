@@ -150,7 +150,7 @@
             function formatNumberWithDot(number) {
                 return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
             }
-            getPaymentCard();
+            // getPaymentCard();
         });
     </script>
 @endpush

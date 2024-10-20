@@ -3,7 +3,7 @@
 @section('content')
     @include('layouts.backend.alert')
     <div class="" id="alert"></div>
-    <div class="row" id="paymentCard">
+    {{-- <div class="row" id="paymentCard"> --}}
     </div>
     <div class="row justify-content-center">
         <div class="col-md-12">
