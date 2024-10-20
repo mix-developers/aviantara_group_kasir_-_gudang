@@ -20,7 +20,7 @@ class TruncateTables extends Command
      *
      * @var string
      */
-    protected $description = 'Truncate all tables except users';
+    protected $description = 'Truncate all tables except users and migrations';
 
     /**
      * Execute the console command.
@@ -29,17 +29,17 @@ class TruncateTables extends Command
      */
     public function handle()
     {
-        // Dapatkan semua tabel
+        // Nonaktifkan foreign key checks untuk sementara
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
+        // Ambil semua tabel di database
         $tables = Schema::getConnection()->getDoctrineSchemaManager()->listTableNames();
 
         // Daftar tabel yang tidak ingin dihapus
-        $excludedTables = ['users', 'migrations']; // Tambahkan tabel yang tidak ingin dihapus
+        $excludedTables = ['users', 'migrations']; // Tambahkan tabel yang ingin dikecualikan
 
-        // Matikan foreign key checks untuk sementara waktu
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-
-        // Hapus semua data kecuali di tabel yang dikecualikan
         foreach ($tables as $table) {
+            // Truncate semua tabel kecuali yang ada di $excludedTables
             if (!in_array($table, $excludedTables)) {
                 DB::table($table)->truncate();
             }
