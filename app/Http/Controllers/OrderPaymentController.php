@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\OrderWirehouse;
+use App\Models\OrderWirehouseItem;
 use App\Models\OrderWirehousePayment;
 use App\Models\paymentMethodItem;
 use App\Models\Wirehouse;
@@ -29,9 +30,32 @@ class OrderPaymentController extends Controller
         $bill = OrderWirehouse::find($id);
         $bill->send_bill = 1;
         $bill->save();
-        $message = 'Berhasil mengirim tagihan';
 
-        return response()->json(['message' => $message]);
+        $bill_items = OrderWirehouseItem::where('id_order_wirehouse', $id)->get();
+
+        // Nomor tujuan dan isi pesan
+        $phone = $bill->customer->phone;
+        $message =
+            "Hai, " . $bill->customer->name . "\n==================\n" .
+            "Tagihan untuk Order #" . $bill->no_invoice . "\n" .
+            "Total tagihan sebesar: Rp " . number_format($bill->total_fee, 0, ',', '.') . "\n" .
+            "Biaya tambahan: Rp " . number_format($bill->additional_fee, 0, ',', '.') . "\n" .
+            "\n===================\n Daftar produk yang dibeli:\n";
+
+        foreach ($bill_items as $item) {
+            $message .= "- " . $item->product->name . " (Jumlah: " . $item->quantity . " " . $item->product->unit . " ) " . "Rp " . number_format($item->subtotal) . "\n";
+        }
+
+        $message .= "\nTerima kasih telah berbelanja. \n #AVIANTARA GROUP";
+
+
+        // Encode pesan agar bisa digunakan di URL
+        $messageEncoded = rawurlencode($message);
+
+        // URL WhatsApp API
+        $whatsappUrl = 'https://wa.me/' . $phone . '?text=' . $messageEncoded;
+
+        return response()->json(['message' => 'Berhasil mengirim tagihan', 'whatsapp_url' => $whatsappUrl]);
     }
     public function invoice($invoice)
     {
@@ -67,10 +91,12 @@ class OrderPaymentController extends Controller
             'paid' => 'required|max:20',
         ]);
 
+        $OrderWirehouse = OrderWirehouse::find($request->input('id_order_wirehouse'));
+
         $PaymentData = [
             'id_payment_method' => $request->input('id_payment_method'),
             'id_order_wirehouse' => $request->input('id_order_wirehouse'),
-            'paid' => $request->input('paid'),
+            'paid' => $request->input('paid') > $OrderWirehouse->total_fee ? $OrderWirehouse->total_fee : $request->input('paid'),
             'id_user' => Auth::user()->id,
         ];
 
@@ -97,7 +123,8 @@ class OrderPaymentController extends Controller
             $message = 'Berhasil menambah data';
         }
 
-        return response()->json(['message' => $message]);
+
+        return response()->json(['message' => $message, 'order' => $request->input('id_order_wirehouse')]);
     }
     public function getDataTagihan(request $request)
     {

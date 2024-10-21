@@ -277,10 +277,73 @@
                         $('#createOrderForm')[0].reset();
                         $('#datatable-order-wirehouse').DataTable().ajax.reload();
                         $('#create').modal('hide');
-                        console.log(response.order);
+                        // console.log(response.order);
 
-                        window.open('/order_wirehouses/print-invoice/' + response.order,
-                            '_blank');
+                        // $('#create-payment').modal('show');
+                        $('#create-payment').modal({
+                            backdrop: 'static',
+                            keyboard: false
+                        }).modal('show');
+
+                        $('#idOrderWirehouse').val(response.order);
+                        $('#payment-tagihan').text(response.tagihan);
+                        getPaymentMethodOptions();
+
+                        function getPaymentMethodOptions() {
+                            $.ajax({
+                                url: '/paymentMethod/getall',
+                                type: 'GET',
+                                dataType: 'json',
+                                success: function(data) {
+                                    $('#formProductIdWirehouseCreate').empty();
+                                    $('#selectPaymentMethod').empty();
+                                    $.each(data, function(index, method) {
+                                        $('#selectPaymentMethod').append(
+                                            ' <div class="form-check form-check-inline mt-3"><input  class="form-check-input" type="radio" name="id_payment_method" value="' +
+                                            method.id +
+                                            '" >' +
+                                            '</input><label class="form-check-label">' +
+                                            method.method +
+                                            '</label></div>');
+
+                                    });
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error('Terjadi kesalahan: ' + error);
+                                }
+                            });
+                        }
+
+                        $('#createPaymentBtn').click(function() {
+                            var formData = $('#createPaymentForm').serialize();
+
+                            $.ajax({
+                                type: 'POST',
+                                url: '/payments/store',
+                                data: formData,
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
+                                        .attr('content')
+                                },
+                                success: function(response) {
+                                    $('#create-payment').modal('hide');
+                                    $('#paid').val('');
+
+                                    window.open(
+                                        '/order_wirehouses/print-invoice/' +
+                                        response.order,
+                                        'Print Invoice',
+                                        'width=800,height=600'
+                                    )
+                                },
+                                error: function(xhr) {
+                                    alert('Terjadi kesalahan: ' + xhr
+                                        .responseText);
+                                }
+                            });
+                        });
+
+
 
 
                     },

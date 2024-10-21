@@ -7,6 +7,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
 class ProductDamagedController extends Controller
@@ -137,6 +138,8 @@ class ProductDamagedController extends Controller
         if (!$ProductDamaged) {
             return response()->json(['message' => 'data tidak ditemukan'], 404);
         }
+        $ProductDamaged['photo_url'] = Storage::url($ProductDamaged->photo);
+        $ProductDamaged['photo2_url'] = Storage::url($ProductDamaged->photo2);
 
         return response()->json($ProductDamaged);
     }

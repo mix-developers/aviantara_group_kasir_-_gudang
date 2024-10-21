@@ -80,6 +80,7 @@
                                 <th>Sub Jumlah </th>
                                 <th>Kadaluarsa</th>
                                 <th>Pegawai</th>
+                                <th>Lihat</th>
                             </tr>
                         </thead>
 
@@ -94,9 +95,30 @@
                                 <th>Sub Jumlah </th>
                                 <th>Kadaluarsa</th>
                                 <th>Pegawai</th>
+                                <th>Lihat</th>
                             </tr>
                         </tfoot>
                     </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- modal --}}
+    <div class="modal fade" id="show" tabindex="-1" aria-labelledby="productSelectionModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="padding-left:5px; padding-right:5px;">
+                    <!-- Placeholder for images -->
+                    <img id="photo1" src="" alt="Photo 1" style="width: 100%; height: auto;" />
+                    <img id="photo2" src=""
+                        alt="Photo 2"style="width: 100%; height: auto; margin-top: 10px;  display:none;" />
+                    <div class="mt-2">
+                        <h4>keterangan :</h4>
+                        <p id="description_show"></p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -146,6 +168,10 @@
                         data: 'user.name',
                         name: 'user.name'
                     },
+                    {
+                        data: 'action',
+                        name: 'action'
+                    },
                 ],
                 dom: 'Bfrtip',
                 buttons: [{
@@ -193,6 +219,28 @@
             $('.refresh').click(function() {
                 $('#datatable-damageds').DataTable().ajax.reload();
             });
+            window.showDamaged = function(id) {
+                $.ajax({
+                    type: 'GET',
+                    url: '/damageds/edit/' + id,
+                    success: function(response) {
+
+                        $('#photo1').attr('src', response.photo_url);
+                        if (response.photo2 != null) {
+                            $('#photo2').attr('src', response.photo2_url).show();
+                        } else {
+                            $('#photo2').hide();
+                        }
+                        $('#description_show').text(response.description);
+
+                        // Show the modal
+                        $('#show').modal('show');
+                    },
+                    error: function(xhr) {
+                        alert('Terjadi kesalahan: ' + xhr.responseText);
+                    }
+                });
+            };
             $('#filterBtn').click(function() {
                 var selectUser = $('#selectUser').val();
                 var selectWirehouse = $('#selectWirehouse').val();

@@ -40,9 +40,16 @@ Route::get('/', function () {
 });
 Route::get('/search', function (Request $request) {
     $search = $request->input('search');
+    $wirehouse = $request->input('wirehouse');
+
+    $product = Product::where('name', 'LIKE', '%' . $search . '%');
+    if ($wirehouse != '-') {
+        $product->where('id_wirehouse', $wirehouse);
+    }
     return view('pages.index', [
-        'product' => Product::where('name', 'LIKE', '%' . $search . '%')->paginate(12),
-        'search' => $search
+        'product' => $product->paginate(12),
+        'search' => $search,
+        'wirehouse' => $wirehouse,
     ]);
 });
 Route::get('/invoice', function () {

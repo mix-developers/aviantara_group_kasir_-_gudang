@@ -103,3 +103,23 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="show" tabindex="-1" aria-labelledby="productSelectionModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="padding-left:5px; padding-right:5px;">
+                <!-- Placeholder for images -->
+                <img id="photo1" src="" alt="Photo 1" style="width: 100%; height: auto;" />
+                <img id="photo2" src=""
+                    alt="Photo 2"style="width: 100%; height: auto; margin-top: 10px;  display:none;" />
+                <div class="mt-2">
+                    <h4>keterangan :</h4>
+                    <p id="description_show"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

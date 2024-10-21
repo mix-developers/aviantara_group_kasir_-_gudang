@@ -75,6 +75,7 @@
                     success: function(response) {
                         $('#datatable-payment').DataTable().ajax.reload();
                         getAlert(response.message);
+                        window.open(response.whatsapp_url, '_blank');
                     },
                     error: function(xhr) {
                         alert('Terjadi kesalahan: ' + xhr.responseText);

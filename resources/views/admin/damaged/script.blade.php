@@ -61,25 +61,29 @@
                 table.ajax.url(newUrl).load();
 
             });
-            window.editDamaged = function(id) {
+
+            window.showDamaged = function(id) {
                 $.ajax({
                     type: 'GET',
-                    url: '/customers/edit/' + id,
+                    url: '/damageds/edit/' + id,
                     success: function(response) {
-                        $('#customersModalLabel').text('Edit Customer');
-                        $('#formCustomerId').val(response.id);
-                        $('#formCustomerName').val(response.name);
-                        $('#formCustomerPhone').val(response.phone);
-                        $('#formCustomerAddressHome').val(response.address_home);
-                        $('#formCustomerAddressCompany').val(response.address_company);
-                        $('#customersModal').modal('show');
+
+                        $('#photo1').attr('src', response.photo_url);
+                        if (response.photo2 != null) {
+                            $('#photo2').attr('src', response.photo2_url).show();
+                        } else {
+                            $('#photo2').hide();
+                        }
+                        $('#description_show').text(response.description);
+
+                        // Show the modal
+                        $('#show').modal('show');
                     },
                     error: function(xhr) {
                         alert('Terjadi kesalahan: ' + xhr.responseText);
                     }
                 });
             };
-
             $('#createDamagedBtn').click(function(e) {
                 e.preventDefault();
 

@@ -205,7 +205,7 @@ class OrderWirehouseController extends Controller
         }
 
 
-        return response()->json(['message' => 'Order berhasil dibuat.', 'order' => $order->id]);
+        return response()->json(['message' => 'Order berhasil dibuat.', 'order' => $order->id, 'tagihan' => $order->total_fee]);
     }
     public function update(Request $request)
     {
@@ -280,13 +280,13 @@ class OrderWirehouseController extends Controller
         $OrderWirehouseItem = OrderWirehouseItem::where('id_order_wirehouse', $id);
 
         foreach ($OrderWirehouseItem->get() as $item) {
-            $ProductStok = ProductStok::where('id_product', $item->id_product)->latest();
+            $ProductStokPrice = ProductStok::where('id_product', $item->id_product)->where('type', 'Masuk')->where('price_origin', '>', 0)->latest()->first();
             //masukkan kembali stok
             $ProductStokOut = new ProductStok();
             $ProductStokOut->id_product = $item->id_product;
             $ProductStokOut->id_user = Auth::user()->id;
             $ProductStokOut->type = 'Masuk';
-            $ProductStokOut->price_origin = $ProductStok->price_origin;
+            $ProductStokOut->price_origin = $ProductStokPrice->price_origin;
             $ProductStokOut->description = 'Pengembalian stok gudang';
             $ProductStokOut->expired_date = $item->expired_date;
             $ProductStokOut->quantity = $item->quantity;
@@ -309,13 +309,14 @@ class OrderWirehouseController extends Controller
     public function printInvoice($id)
     {
         $data = OrderWirehouse::where('id', $id)->with(['customer', 'product'])->first();
-        $item = OrderWirehouseItem::where('id_order_wirehouse', $id)->get();
+        $items = OrderWirehouseItem::where('id_order_wirehouse', $id)->get();
 
-        $pdf =  \PDF::loadView('admin.order_wirehouse.pdf.print_invoice', [
-            'data' => $data,
-            'item' => $item
-        ])->setPaper('a4', 'potrait');
+        // $pdf =  \PDF::loadView('admin.order_wirehouse.pdf.print_invoice', [
+        //     'data' => $data,
+        //     'item' => $item
+        // ])->setPaper('a4', 'potrait');
 
-        return $pdf->download('Invoice ' . $data->no_invoice . '.pdf');
+        // return $pdf->download('Invoice ' . $data->no_invoice . '.pdf');
+        return view('admin.order_wirehouse.pdf.print_invoice', compact('data', 'items'));
     }
 }

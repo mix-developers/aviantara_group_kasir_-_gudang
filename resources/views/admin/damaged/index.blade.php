@@ -48,6 +48,7 @@
                                 <option value="Rusak">Rusak</option>
                             </select>
                         </div>
+
                         <div class="col-md-3 col-12">
                             <button type="button" id="filterBtn" class="btn btn-primary"><i class="bx bx-filter"></i>
                                 Filter</button>

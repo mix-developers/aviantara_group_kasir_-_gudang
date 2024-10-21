@@ -8,10 +8,18 @@
                 <div class="col-md-8">
                     <form action="{{ url('/search') }}" method="GET" enctype="multipart/form-data">
 
-                        <div class="input-group shadow-lg"><input type="text"
-                                class="form-control form-control-lg rounded-start" name="search"
+                        <div class="input-group shadow-lg">
+                            <input type="text" class="form-control form-control-lg rounded-start" name="search"
                                 placeholder="Cari Produk..." aria-label="Cari Produk" value="{{ request('search') }}"
                                 autofocus>
+                            <select class="form-control form-control-lg" name="wirehouse">
+                                <option value="-" @if (request('wirehouse') == '-') selected @endif>Semua Gudang
+                                </option>
+                                @foreach (App\Models\Wirehouse::all() as $item)
+                                    <option value="{{ $item->id }}" @if (request('wirehouse') == $item->id) selected @endif>
+                                        {{ $item->name }} - {{ $item->address }}</option>
+                                @endforeach
+                            </select>
                             <button class="btn btn-primary px-4" type="submit"><i class="bi bi-search"></i> Cari</button>
                         </div>
                     </form>
@@ -35,7 +43,13 @@
                                     <div><span class="fw-bolder h5">{{ $item->name }} </span><span
                                             style="font-size: 10px;"
                                             class="badge bg-{{ App\Models\Product::getStok($item->id) <= 0 ? 'danger' : 'primary' }}">{{ App\Models\Product::getStok($item->id) <= 0 ? 'Habis' : 'Tersedia' }}</span>
-                                    </div>Stok :
+                                    </div>
+                                    <div class="my-2">
+                                        <small class="text-secondary">
+                                            {{ $item->wirehouse->name }}
+                                        </small>
+                                    </div>
+                                    Stok :
                                     {{ App\Models\Product::getStok($item->id) }} {{ $item->unit }}
                                 </div>
                             </div>

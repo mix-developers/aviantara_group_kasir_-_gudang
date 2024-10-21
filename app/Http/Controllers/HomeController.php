@@ -49,7 +49,7 @@ class HomeController extends Controller
     }
     public function getStokExpired()
     {
-        $stok_masuk = ProductStok::where('expired_date', '<=', date('Y-m-d'))->where('type', 'Masuk');
+        $stok_masuk = ProductStok::where('expired_date', '<=', date('Y-m-d'))->where('type', 'Masuk')->where('sub_type', 'masuk');
         $stok_keluar = ProductStok::where('expired_date', '<=', date('Y-m-d'))->where('type', 'Keluar');
         //tambahkan produk rusak
         $rusak = ProductDamaged::where('expired_date', '<=', date('Y-m-d'));
@@ -76,7 +76,7 @@ class HomeController extends Controller
     }
     public function getStokRemainingExpired()
     {
-        $stok_masuk = ProductStok::where('expired_date', '<=', date('Y-m-d', strtotime('+3 month')))->where('expired_date', '>', date('Y-m-d'))->where('type', 'Masuk');
+        $stok_masuk = ProductStok::where('expired_date', '<=', date('Y-m-d', strtotime('+3 month')))->where('expired_date', '>', date('Y-m-d'))->where('type', 'Masuk')->where('sub_type', 'masuk');
         $stok_keluar = ProductStok::where('expired_date', '<=', date('Y-m-d', strtotime('+3 month')))->where('expired_date', '>', date('Y-m-d'))->where('type', 'Keluar');
         //rusak
         $rusak = ProductDamaged::where('expired_date', '<=', date('Y-m-d', strtotime('+3 month')))->where('expired_date', '>', date('Y-m-d'));
@@ -110,7 +110,7 @@ class HomeController extends Controller
     }
     public function getStokInput()
     {
-        $stok = ProductStok::where('type', 'Masuk');
+        $stok = ProductStok::where('type', 'Masuk')->where('sub_type', 'masuk');
         if (Auth::user()->role == 'Gudang') {
             $user = Auth::user();
             $stok->whereHas('product', function ($stok) use ($user) {
