@@ -8,6 +8,7 @@ use App\Models\ProductStok;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
+use Barryvdh\DomPDF\Facade as PDF;
 
 class PriceController extends Controller
 {
@@ -26,6 +27,17 @@ class PriceController extends Controller
             'product' => $product
         ];
         return view('admin.price.show', $data);
+    }
+    public function pdf($id)
+    {
+        $product = Product::find($id);
+        $data = ProductPrice::where('id_product', $id)->get();
+        $pdf =  \PDF::loadView('admin.price.pdf', [
+            'data' => $data,
+            'product' => $product,
+        ])->setPaper('a4', 'potrait');
+
+        return $pdf->stream('Laporan Riwayat harga ' . date('Y-m-d H:i') . '.pdf');
     }
     public function getAll()
     {
@@ -83,6 +95,7 @@ class PriceController extends Controller
                 $modal = $price_origin != null ? $price_origin->price_origin : 0;
 
                 $fee = $modal > 0 ? (($grosir - $modal) / $modal) * 100 : 0;
+                $fee = $fee < 0 ? 0 : $fee;
                 $color = $fee <= 0 ? 'danger' : 'success';
                 $fee_rupiah = $modal > 0 ? $grosir - $modal : 0;
 

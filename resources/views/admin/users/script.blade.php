@@ -28,6 +28,10 @@
                         name: 'role'
                     },
                     {
+                        data: 'last_login',
+                        name: 'last_login'
+                    },
+                    {
                         data: 'action',
                         name: 'action'
                     }

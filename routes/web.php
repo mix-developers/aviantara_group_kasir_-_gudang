@@ -132,8 +132,9 @@ Route::middleware(['auth:web', 'role:Gudang,Admin,Owner', 'checkDisabled'])->gro
     Route::get('/wirehouses-datatable', [WirehouseController::class, 'getWirehousesDataTable']);
 });
 Route::middleware(['auth:web', 'role:Gudang', 'checkDisabled'])->group(function () {});
-Route::middleware(['auth:web', 'role:Admin', 'checkDisabled'])->group(function () {
+Route::middleware(['auth:web', 'role:Admin,Owner', 'checkDisabled'])->group(function () {
 
+    Route::get('/get-sales-data', [HomeController::class, 'getSalesData'])->name('get-sales-data');
     //report managemen
     Route::get('/report/stok-wirehouse', [ReportController::class, 'stok_wirehouse'])->name('report.stok-wirehouse');
     Route::get('/report/pdf-stok-wirehouse', [ReportController::class, 'pdf_stok_wirehouse'])->name('report.pdf-stok-wirehouse');
@@ -171,6 +172,7 @@ Route::middleware(['auth:web', 'role:Admin', 'checkDisabled'])->group(function (
     Route::get('/prices/getall', [PriceController::class, 'getAll'])->name('prices.getall');
     Route::post('/prices/store',  [PriceController::class, 'store'])->name('prices.store');
     Route::get('/prices/show/{id}',  [PriceController::class, 'show'])->name('prices.show');
+    Route::get('/prices/pdf/{id}',  [PriceController::class, 'pdf'])->name('prices.pdf');
     Route::get('/prices/edit/{id}',  [PriceController::class, 'edit'])->name('prices.edit');
     Route::delete('/prices/delete/{id}',  [PriceController::class, 'destroy'])->name('prices.delete');
     // Route::get('/prices-datatable', [PriceController::class, 'getPricesDataTable']);

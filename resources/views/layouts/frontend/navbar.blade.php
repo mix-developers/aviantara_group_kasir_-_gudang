@@ -4,7 +4,7 @@
         <a class="navbar-brand fw-bold mx-auto d-lg-none text-center" href="{{ url('/') }}">
             <img src="{{ asset('img/') }}/logo.png" alt="logo" style="width: 10%" class="mx-2">
             <span class="text-warning">Aviantara</span>
-            <span style="font-size: 12px;">Gruop</span>
+            <span style="font-size: 12px;">Group</span>
         </a>
 
         <!-- Navbar content hidden on small screens -->

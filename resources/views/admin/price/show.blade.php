@@ -80,8 +80,43 @@
                     },
                 ],
                 dom: 'Bfrtip',
-                buttons: [
-                    'csv', 'excel', 'pdf', 'print'
+                buttons: [{
+                        extend: 'pdf',
+                        text: '<i class="bx bxs-file-pdf"></i> PDF',
+                        className: 'btn-danger mx-3',
+                        orientation: 'landscape',
+                        title: '{{ $title . date('d-m-y H:i:s') }}',
+                        pageSize: 'A4',
+                        exportOptions: {
+                            columns: ':visible'
+                        },
+                        customize: function(doc) {
+                            doc.defaultStyle.fontSize = 8;
+                            doc.styles.tableHeader.fontSize = 8;
+                            doc.styles.tableHeader.fillColor = '#2a6908';
+                        },
+                        header: true,
+                        action: function(e, dt, button, config) {
+                            var selectUser = $('#selectUser').val();
+                            var selectWirehouse = $('#selectWirehouse').val();
+                            var selectType = $('#selectType').val();
+                            var fromDate = $('#fromDate').val();
+                            var toDate = $('#toDate').val();
+
+                            var url = '{{ url('prices/pdf', $product->id) }}';
+
+                            window.open(url, '_blank');
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="bx bxs-file-export"></i> Excel',
+                        title: '{{ $title . date('d-m-y H:i:s') }}',
+                        className: 'btn-success',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }
                 ]
             });
 
@@ -91,4 +126,10 @@
 
         });
     </script>
+    <!-- JS DataTables Buttons -->
+    <script src="https://cdn.datatables.net/buttons/2.1.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.1.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 @endpush

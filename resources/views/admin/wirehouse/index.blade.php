@@ -22,13 +22,15 @@
                                     <span class="d-none d-sm-inline-block"></span>
                                 </span>
                             </button>
-                            <button class="btn btn-secondary create-new btn-primary" type="button" data-bs-toggle="modal"
-                                data-bs-target="#create">
-                                <span>
-                                    <i class="bx bx-plus me-sm-1"> </i>
-                                    <span class="d-none d-sm-inline-block">Tambah Data</span>
-                                </span>
-                            </button>
+                            @if (Auth::user()->role != 'Owner')
+                                <button class="btn btn-secondary create-new btn-primary" type="button"
+                                    data-bs-toggle="modal" data-bs-target="#create">
+                                    <span>
+                                        <i class="bx bx-plus me-sm-1"> </i>
+                                        <span class="d-none d-sm-inline-block">Tambah Data</span>
+                                    </span>
+                                </button>
+                            @endif
                         </div>
                     </div>
                 </div>

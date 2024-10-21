@@ -65,7 +65,7 @@ class PaymentMethodController extends Controller
     public function getReportPaymentsDataTable(Request $request)
     {
         $paymentMethodItem = paymentMethodItem::orderByDesc('id')
-            ->with(['payment_method', 'user']);
+            ->with(['payment_method', 'user', 'order_wirehouses']);
 
         if ($request->has('from-date') && $request->has('to-date')) {
             $fromDate = $request->input('from-date');
@@ -99,7 +99,11 @@ class PaymentMethodController extends Controller
             ->addColumn('date', function ($paymentMethodItem) {
                 return $paymentMethodItem->created_at->format('d F Y');
             })
-            ->rawColumns(['date'])
+            ->addColumn('invoice', function ($paymentMethodItem) {
+                $invoice = $paymentMethodItem->order_wirehouses->no_invoice;
+                return  '<a href="' . url('/payments/invoice', $invoice) . '">' . $invoice . '</a>';
+            })
+            ->rawColumns(['date', 'invoice'])
             ->make(true);
     }
     public function store(Request $request)

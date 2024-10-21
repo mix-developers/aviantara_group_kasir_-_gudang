@@ -2,6 +2,9 @@
 
 @section('content')
     @include('layouts.backend.alert')
+    <div class="my-3">
+        <a href="" class="btn btn-danger"><i class="bx bxs-file-pdf"></i> Export PDF</a>
+    </div>
     <div class="row justify-content-center">
         <div class="col-lg-4">
             <div class="card">
@@ -33,7 +36,7 @@
         </div>
 
         <div class="col-lg-8">
-            <div class="card">
+            <div class="card mb-4">
                 <div class="card-header flex-column flex-md-row">
                     <div class="head-label ">
                         <h5 class="card-title mb-0">{{ $title ?? 'Title' }}</h5>
@@ -43,16 +46,19 @@
                             <button class="btn btn-secondary refresh btn-default" type="button">
                                 <span>
                                     <i class="bx bx-sync me-sm-1"> </i>
-                                    <span class="d-none d-sm-inline-block"></span>
+                                    <span
+                                        class="d-none d-sm-inline-block">{{ Auth::user()->role == 'Gudang' ? '' : 'Refresh' }}</span>
                                 </span>
                             </button>
-                            <button class="btn btn-secondary create-new btn-primary" type="button" data-bs-toggle="modal"
-                                data-bs-target="#create">
-                                <span>
-                                    <i class="bx bx-plus me-sm-1"> </i>
-                                    <span class="d-none d-sm-inline-block">Tambah Data</span>
-                                </span>
-                            </button>
+                            @if (Auth::user()->role == 'Gudang')
+                                <button class="btn btn-secondary create-new btn-primary" type="button"
+                                    data-bs-toggle="modal" data-bs-target="#create">
+                                    <span>
+                                        <i class="bx bx-plus me-sm-1"> </i>
+                                        <span class="d-none d-sm-inline-block">Tambah Data</span>
+                                    </span>
+                                </button>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -64,7 +70,9 @@
                                 <th>Metode Pembayaran</th>
                                 <th>Dibayarkan</th>
                                 <th>Penerima</th>
-                                <th><i class="bx bx-trash"></i></th>
+                                @if (Auth::user()->role == 'Gudang')
+                                    <th><i class="bx bx-trash"></i></th>
+                                @endif
                             </tr>
                         </thead>
 
@@ -74,7 +82,63 @@
                                 <th>Metode Pembayaran</th>
                                 <th>Dibayarkan</th>
                                 <th>Penerima</th>
-                                <th><i class="bx bx-trash"></i></th>
+                                @if (Auth::user()->role == 'Gudang')
+                                    <th><i class="bx bx-trash"></i></th>
+                                @endif
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header flex-column flex-md-row">
+                    <div class="head-label ">
+                        <h5 class="card-title mb-0">{{ $title ?? 'Title' }}</h5>
+                    </div>
+                    <div class="dt-action-buttons text-end pt-3 pt-md-0">
+                        <div class=" btn-group " role="group">
+                            <button class="btn btn-secondary refresh btn-default" type="button">
+                                <span>
+                                    <i class="bx bx-sync me-sm-1"> </i>
+                                    <span
+                                        class="d-none d-sm-inline-block">{{ Auth::user()->role == 'Gudang' ? '' : 'Refresh' }}</span>
+                                </span>
+                            </button>
+                            @if (Auth::user()->role == 'Gudang')
+                                <button class="btn btn-secondary create-new btn-primary" type="button"
+                                    data-bs-toggle="modal" data-bs-target="#create">
+                                    <span>
+                                        <i class="bx bx-plus me-sm-1"> </i>
+                                        <span class="d-none d-sm-inline-block">Tambah Data</span>
+                                    </span>
+                                </button>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+                <div class="card-datatable table-responsive">
+                    <table id="datatable-detail-payment" class="table table-hover table-bordered display">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Metode Pembayaran</th>
+                                <th>Dibayarkan</th>
+                                <th>Penerima</th>
+                                @if (Auth::user()->role == 'Gudang')
+                                    <th><i class="bx bx-trash"></i></th>
+                                @endif
+                            </tr>
+                        </thead>
+
+                        <tfoot>
+                            <tr>
+                                <th>ID</th>
+                                <th>Metode Pembayaran</th>
+                                <th>Dibayarkan</th>
+                                <th>Penerima</th>
+                                @if (Auth::user()->role == 'Gudang')
+                                    <th><i class="bx bx-trash"></i></th>
+                                @endif
                             </tr>
                         </tfoot>
                     </table>
@@ -109,14 +173,12 @@
                         data: 'user.name',
                         name: 'user.name'
                     },
-                    {
-                        data: 'trash',
-                        name: 'trash'
-                    },
-                ],
-                dom: 'Bfrtip',
-                buttons: [
-                    'csv', 'excel', 'pdf', 'print'
+                    @if (Auth::user()->role == 'Gudang')
+                        {
+                            data: 'trash',
+                            name: 'trash'
+                        },
+                    @endif
                 ]
             });
 

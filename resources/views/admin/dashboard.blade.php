@@ -17,6 +17,33 @@
     </div>
     <hr>
     <div class="" id="alert"></div>
+    @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Owner')
+        <hr>
+        <div class="my-4 card">
+            <div class="card-body">
+                <div id="chartContainer" style="height: 500px;"></div>
+            </div>
+        </div>
+        <div class="my-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div id="chartContainerLunas" style="height: 300px; width: 100%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div id="chartContainerExpire" style="height: 300px; width: 100%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+    @endif
     <div class="row justify-content-center">
         @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Owner')
             @include('admin.dashboard_component.card1', [
@@ -65,7 +92,7 @@
                     <i class="bx bx-sync me-sm-1"> </i>
                     <span class="d-none d-sm-inline-block"></span>
                 </span>
-                Refresh Stok</button>
+                Refresh Data</button>
         </div>
 
         <div class="row mb-4 justify-content-center">
@@ -119,6 +146,86 @@
                             <div class="col">
                                 <span class="h3 text-white" id="stokNotExpired">0</span> Aman
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+
+        {{-- penjualan --}}
+        <div class="my-3 d-flex justify-content-between align-items-center">
+            <h4>Data Penjualan Gudang</h4>
+            <button type="button" class="btn btn-secondary refresh-stok"><span>
+                    <i class="bx bx-sync me-sm-1"> </i>
+                    <span class="d-none d-sm-inline-block"></span>
+                </span>
+                Refresh Data</button>
+        </div>
+
+        <div class="row mb-4 justify-content-center">
+            <div class="col-md-3 col-6 mb-2">
+                <div class="card bg-primary text-white">
+                    <div class="card-header" style="padding: 10px;">
+                        Terjual
+                    </div>
+                    <div class="card-body" style="padding: 10px;">
+                        <div class="row">
+                            <div class="col">
+                                <span class="h3 text-white" id="stokInput">0</span> Barang
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-2">
+                <div class="card bg-warning text-white">
+                    <div class="card-header" style="padding: 10px;">
+                        Pembayaran Lunas
+                    </div>
+                    <div class="card-body" style="padding: 10px;">
+                        <div class="row">
+                            <div class="col">
+                                <span class="h3 text-white" id="stokInput">Rp 0</span>
+                            </div>
+                            <div class="col">
+                                <span class="h3 text-white" id="stokInput">0</span> Customer
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-2">
+                <div class="card bg-danger text-white">
+                    <div class="card-header" style="padding: 10px;">
+                        Pembayaran Belum Lunas
+                    </div>
+                    <div class="card-body" style="padding: 10px;">
+                        <div class="row">
+                            <div class="col">
+                                <span class="h3 text-white" id="stokInput">Rp 0</span>
+                            </div>
+                            <div class="col">
+                                <span class="h3 text-white" id="stokInput">0</span> Customer
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-2">
+                <div class="card bg-info text-white">
+                    <div class="card-header" style="padding: 10px;">
+                        Pendapatan
+                    </div>
+                    <div class="card-body" style="padding: 10px;">
+                        <div class="row">
+                            <div class="col">
+                                <span class="h3 text-white" id="stokWirehouse">Rp 0</span>
+                            </div>
+
                         </div>
                     </div>
                 </div>

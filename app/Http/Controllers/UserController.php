@@ -39,6 +39,9 @@ class UserController extends Controller
             ->addColumn('action', function ($user) {
                 return view('admin.users.components.actions', compact('user'));
             })
+            ->addColumn('last_login', function ($user) {
+                return $user->last_login_at ? $user->last_login_at : 'Belum Pernah';
+            })
             ->addColumn('role', function ($user) {
                 $penempatan = '';
 
@@ -52,7 +55,8 @@ class UserController extends Controller
             })
 
 
-            ->rawColumns(['action', 'role', 'avatar', 'name'])
+
+            ->rawColumns(['action', 'role', 'avatar', 'name', 'last_login'])
             ->make(true);
     }
     public function store(Request $request)

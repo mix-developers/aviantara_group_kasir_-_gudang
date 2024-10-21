@@ -25,7 +25,7 @@
                 <div data-i18n="Analytics">Dashboard</div>
             </a>
         </li>
-        @if (Auth::user()->role == 'Admin')
+        @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Owner')
             <li class="menu-header small text-uppercase">
                 <span class="menu-header-text">Data Master</span>
             </li>

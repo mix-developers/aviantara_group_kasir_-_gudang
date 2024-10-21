@@ -68,6 +68,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Tanggal</th>
+                                <th>Invoice</th>
                                 <th>Metode</th>
                                 <th>Dibayarkan</th>
                                 <th>Deskripsi</th>
@@ -79,6 +80,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Tanggal</th>
+                                <th>Invoice</th>
                                 <th>Metode</th>
                                 <th>Dibayarkan</th>
                                 <th>Deskripsi</th>
@@ -106,6 +108,10 @@
                     {
                         data: 'date',
                         name: 'date'
+                    },
+                    {
+                        data: 'invoice',
+                        name: 'invoice'
                     },
                     {
                         data: 'payment_method.method',

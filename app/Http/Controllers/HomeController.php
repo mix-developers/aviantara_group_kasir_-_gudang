@@ -9,6 +9,7 @@ use App\Models\ProductStok;
 use App\Models\Shop;
 use App\Models\User;
 use App\Models\Wirehouse;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -207,6 +208,41 @@ class HomeController extends Controller
             'stok_wirehouse' => $this->getStokWirehouse(),
             'price_stok_input' => $this->getPriceStokInput(),
         ];
+        return response()->json($data);
+    }
+    public function getSalesData()
+    {
+        // Dummy data with dates in 'dd/mm/yy' format
+        $data = [
+            [
+                'tanggal' => '01/04/24', // Date in 'dd/mm/yy' format
+                'penjualan' => 539.42,
+                'stok_masuk' => 100,
+                'Stok_keluar' => 100,
+                'stok_rusak' => 10
+            ],
+            [
+                'tanggal' => '05/04/24',
+                'penjualan' => 540.67,
+                'stok_masuk' => 90,
+                'Stok_keluar' => 100,
+                'stok_rusak' => 5
+            ],
+            [
+                'tanggal' => '08/04/24',
+                'penjualan' => 550.12,
+                'stok_masuk' => 120,
+                'Stok_keluar' => 100,
+                'stok_rusak' => 12
+            ]
+        ];
+
+        // Format the 'tanggal' field from 'dd/mm/yy' to a Unix timestamp
+        foreach ($data as &$item) {
+            $item['tanggal'] = Carbon::createFromFormat('d/m/y', $item['tanggal'])->timestamp * 1000; // Multiply by 1000 to match JS timestamp (milliseconds)
+        }
+
+        // Return the data as JSON
         return response()->json($data);
     }
 }
