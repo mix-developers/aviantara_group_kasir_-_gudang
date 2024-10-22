@@ -1,4 +1,4 @@
-<div class="btn-group">
+<div class="btn-group d-flex">
     <a href="{{ route('wirehouses.show', $wirehouse->id) }}" class="btn btn-sm btn-primary">Data</a>
     @if (Auth::user()->role != 'Owner')
         <button class="btn btn-sm btn-warning" onclick="editWirehouse({{ $wirehouse->id }})">Edit</button>

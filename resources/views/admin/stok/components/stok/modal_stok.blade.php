@@ -117,16 +117,18 @@ i<!-- Modal for Create and Edit -->
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" style="padding-left:5px; padding-right:5px;">
-                <table id="productSelectionTable" class="table table-hover display table-sm">
-                    <thead>
-                        <tr>
-                            <th style="width: 5px;">ID</th>
-                            <th>Nama Produk</th>
-                            <th>Barcode</th>
-                            <th>Satuan</th>
-                        </tr>
-                    </thead>
-                </table>
+                <div class="table-responsive">
+                    <table id="productSelectionTable" class="table table-hover display table-sm">
+                        <thead>
+                            <tr>
+                                <th style="width: 5px;">ID</th>
+                                <th>Nama Produk</th>
+                                <th>Barcode</th>
+                                <th>Satuan</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary btn-md selectProduct">Pilih</button>

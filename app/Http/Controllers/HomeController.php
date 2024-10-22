@@ -130,7 +130,7 @@ class HomeController extends Controller
                 $stok->where('id_wirehouse', $user->id_wirehouse);
             });
         }
-        $stok_kembali = $stok->sum('quantity');
+        $stok_kembali = $stok_kembali->sum('quantity');
         $stok = $stok->sum('quantity');
         return $stok - $stok_kembali;
     }

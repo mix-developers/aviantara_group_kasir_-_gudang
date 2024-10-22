@@ -27,14 +27,14 @@
         <div class="my-4">
             <div class="row">
                 <div class="col-md-6">
-                    <div class="card">
+                    <div class="card mb-3">
                         <div class="card-body">
                             <div id="chartContainerLunas" style="height: 300px; width: 100%;"></div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="card">
+                    <div class="card mb-3">
                         <div class="card-body">
                             <div id="chartContainerExpire" style="height: 300px; width: 100%;"></div>
                         </div>

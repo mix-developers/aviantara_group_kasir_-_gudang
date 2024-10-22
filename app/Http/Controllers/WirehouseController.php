@@ -37,7 +37,7 @@ class WirehouseController extends Controller
     }
     public function getAll()
     {
-        if (Auth::user()->role == 'Admin') {
+        if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Owner') {
             $wirehouse = Wirehouse::all();
         } elseif (Auth::user()->role == 'Gudang') {
             $wirehouse = Wirehouse::where('id', Auth::user()->id_wirehouse)->get();
@@ -46,7 +46,7 @@ class WirehouseController extends Controller
     }
     public function getWirehouseDetailDataTable($id)
     {
-        $products = Product::select(['id', 'name', 'unit', 'barcode', 'quantity_unit', 'photo', 'id_wirehouse', 'created_at', 'updated_at'])->orderByDesc('id')->where('id_wirehouse', $id)->with(['wirehouse'])->get();
+        $products = Product::orderByDesc('id')->where('id_wirehouse', $id)->with(['wirehouse'])->get();
 
         return Datatables::of($products)
             ->addColumn('produk', function ($product) {

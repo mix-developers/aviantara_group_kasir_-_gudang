@@ -91,10 +91,12 @@
                 <!-- Form for Create and Edit -->
                 <form id="createOrderForm">
                     <div class="mb-3">
-                        <button type="button" class="btn btn-primary select-customer"><i class="bx bx-check"></i>
+                        <button type="button" class="btn btn-primary select-customer mb-3"><i
+                                class="bx bx-check"></i>
                             Pilih
                             Pelanggan</button>
-                        <button type="button" class="btn btn-warning create-customer"><i class="bx bx-plus"></i>
+                        <button type="button" class="btn btn-warning create-customer mb-3"><i
+                                class="bx bx-plus"></i>
                             Tambah
                             Pelanggan</button>
                     </div>
@@ -158,9 +160,12 @@
                                 <div class="d-flex justify-content-between mb-3">
                                     <button type="button" class="btn btn-primary  select-product"><i
                                             class="bx bx-plus"></i>
-                                        Tambah Produk</button>
+                                        <span class="d-none d-sm-inline-block">
+                                            Tambah Produk
+                                        </span>
+                                    </button>
                                     <p class="">
-                                        Total :
+                                        Total :<br>
                                         <span class="h3">Rp <span id="totalOrder"
                                                 class="text-danger">0</span></span>
                                         <input type="hidden" id="total_fee" name="total_fee">
@@ -174,19 +179,21 @@
                                         tersedia</small>
                                 </div>
                                 <div class="my-2">
-                                    <table class="table table-hover table-sm">
-                                        <thead>
-                                            <tr>
-                                                <th>Nama Produk</th>
-                                                <th style="width:100px;">Jumlah</th>
-                                                <th>Kadaluarsa</th>
-                                                <th>Sub Total</th>
-                                                <th style="width: 10px;"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="tableProductList">
-                                        </tbody>
-                                    </table>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nama Produk</th>
+                                                    <th style="width:100px;">Jumlah</th>
+                                                    <th>Kadaluarsa</th>
+                                                    <th>Sub Total</th>
+                                                    <th style="width: 10px;"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tableProductList">
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                                 {{-- <div class="form-group my-2" id="form-container">
                                     <div class="d-flex">
@@ -226,7 +233,8 @@
                     </div>
                     <div class="mb-3">
                         <label for="formCustomerPhone" class="form-label">No Hp</label>
-                        <input type="number" class="form-control" id="formCustomerPhone" name="phone" required>
+                        <input type="number" class="form-control" id="formCustomerPhone" name="phone" required
+                            value="+62">
                     </div>
                     <div class="mb-3">
                         <label for="formCustomerAddressHome" class="form-label">Alamat Rumah</label>
@@ -255,17 +263,20 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" style="padding-left:5px; padding-right:5px;">
-                <table id="customerSelectionTable" class="table table-hover display table-sm">
-                    <thead>
-                        <tr>
-                            <th style="width: 5px;">ID</th>
-                            <th>Nama</th>
-                            <th>No Hp</th>
-                            <th>Alamat Rumah</th>
-                            <th>Alamat Usaha</th>
-                        </tr>
-                    </thead>
-                </table>
+                <div class="table-responsive">
+
+                    <table id="customerSelectionTable" class="table table-hover display table-sm">
+                        <thead>
+                            <tr>
+                                <th style="width: 5px;">ID</th>
+                                <th>Nama</th>
+                                <th>No Hp</th>
+                                <th>Alamat Rumah</th>
+                                <th>Alamat Usaha</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary btn-md selectCustomer">Pilih</button>
@@ -281,17 +292,19 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" style="padding-left:5px; padding-right:5px;">
-                <table id="productSelectionTable" class="table table-hover display table-sm">
-                    <thead>
-                        <tr>
-                            <th style="width: 5px;">ID</th>
-                            <th>Nama Produk</th>
-                            <th>Barcode</th>
-                            <th>Harga</th>
-                            <th>Stok</th>
-                        </tr>
-                    </thead>
-                </table>
+                <div class="table-responsive">
+                    <table id="productSelectionTable" class="table table-hover display table-sm">
+                        <thead>
+                            <tr>
+                                <th style="width: 5px;">ID</th>
+                                <th>Nama Produk</th>
+                                <th>Barcode</th>
+                                <th>Harga</th>
+                                <th>Stok</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary btn-md selectProduct">Pilih</button>

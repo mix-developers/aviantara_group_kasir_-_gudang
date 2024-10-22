@@ -4,10 +4,10 @@
     @include('layouts.backend.alert')
     <div class="my-3">
         {{-- <a href="" class="btn btn-danger"><i class="bx bxs-file-pdf"></i> Export PDF</a> --}}
-        <a href="" class="btn btn-primary"
+        <a href="" class="btn btn-primary mb-3"
             onclick="window.open('{{ url('/payments/print-delivery', $order->id) }}', 'Print Invoice', 'width=800,height=600')">
             <i class="bx bxs-truck"></i> Invoice Pengantaran</a>
-        <a href="" class="btn btn-success"
+        <a href="" class="btn btn-success mb-3"
             onclick="window.open('{{ url('/order_wirehouses/print-invoice', $order->id) }}', 'Print Invoice', 'width=800,height=600')">
             <i class="bx bx-printer"></i> Invoice Pembelian</a>
     </div>

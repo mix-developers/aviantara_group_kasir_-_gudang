@@ -177,7 +177,7 @@ class OrderWirehouseController extends Controller
         $order->id_wirehouse = $request->input('id_wirehouse');
         $order->id_user = Auth::user()->id;
         $order->discount =  $request->input('discount');
-        $order->fee =  $total_fee + $additional_fee;
+        $order->fee =   $request->input('total_fee');
         $order->total_fee = $additional_fee > 0
             ? ($total_fee + $additional_fee) * (1 - $discount)
             : $total_fee * (1 - $discount);
@@ -238,14 +238,14 @@ class OrderWirehouseController extends Controller
             $nilai_discount = $discount / 100;
             if ($additional_fee != 0) {
                 $total = ($sub_total_item + $additional_fee) * (1 - $nilai_discount);
-                $fee = $sub_total_item + $additional_fee;
+                $fee = $sub_total_item;
             } else {
                 $total =  $sub_total_item * (1 - $nilai_discount);
                 $fee = $sub_total_item;
             }
         } else {
             $total = $sub_total_item + $additional_fee;
-            $fee = $sub_total_item + $additional_fee;
+            $fee = $sub_total_item;
         }
 
         $delivery = $request->input('delivery') == 'on' ? 1 : 0;
