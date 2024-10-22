@@ -57,7 +57,7 @@ class OrderPaymentController extends Controller
 
         return response()->json(['message' => 'Berhasil mengirim tagihan', 'whatsapp_url' => $whatsappUrl]);
     }
-    
+
     public function getPaymentDetailDataTable($id_order_wirehouse)
     {
         $orderPayment = OrderWirehousePayment::select(['id', 'id_user', 'id_order_wirehouse', 'id_payment_method', 'paid', 'foto', 'created_at', 'updated_at'])
@@ -108,7 +108,7 @@ class OrderPaymentController extends Controller
             $paymentItems->id_order_wirehouse =  $request->input('id_order_wirehouse');
             $paymentItems->id_payment_method = $request->input('id_payment_method');
             $paymentItems->description = 'Pembayaran tagihan invoice ' . $invoice;
-            $paymentItems->paid = $request->input('paid');
+            $paymentItems->paid = $request->input('paid') > $OrderWirehouse->total_fee ? $OrderWirehouse->total_fee : $request->input('paid');
             $paymentItems->save();
 
             OrderWirehousePayment::create($PaymentData);
