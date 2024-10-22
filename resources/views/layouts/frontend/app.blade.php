@@ -27,7 +27,8 @@
     <meta property="twitter:description"
         content="Aviantara Group adalah distributor dan supplier utama untuk frozen food dan dry food dengan penawaran grosir terbaik." />
     <meta property="twitter:image" content="{{ asset('img/') }}/logo.png" />
-
+    {{-- google search --}}
+    <meta name="google-site-verification" content="3H0ej_ut0DGqPQXOIHTyniHSqI5OHNoDHs8gzCPzDRg" />
     <!-- Favicon-->
     <link rel="icon" type="image/x-icon" href="{{ asset('img/') }}/logo.png" />
     <!-- Bootstrap icons-->
