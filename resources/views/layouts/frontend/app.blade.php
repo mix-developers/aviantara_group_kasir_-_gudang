@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Primary Meta Tags -->
     <title>Pusat Grosir Frozen Food & Dry Food - Aviantara Group</title>
     <meta name="title" content="Pusat Grosir Frozen Food & Dry Food - Aviantara Group" />
