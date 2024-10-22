@@ -9,19 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class OrderWirehouse extends Model
 {
     use HasFactory;
-    protected $fillable = [
-        'id_customer',
-        'id_user',
-        'id_wirehouse',
-        'total_fee',
-        'additional_fee',
-        'delivery',
-        'address_delivery',
-        'description',
-        'send_bill',
-        'no_invoice',
-        'discount'
-    ];
+    protected $guarded = [];
     public function wirehouse(): BelongsTo
     {
         return $this->belongsTo(Wirehouse::class, 'id_wirehouse');

@@ -19,6 +19,7 @@ use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\OrderWirehouseController;
 use App\Http\Controllers\ProductDamagedController;
 use App\Http\Controllers\ReportController;
+use App\Models\OrderWirehouse;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -114,13 +115,15 @@ Route::middleware(['auth:web', 'role:Gudang,Admin,Owner', 'checkDisabled'])->gro
     Route::get('/order_wirehouses/edit/{id}',  [OrderWirehouseController::class, 'edit'])->name('order_wirehouses.edit');
     Route::delete('/order_wirehouses/delete/{id}',  [OrderWirehouseController::class, 'destroy'])->name('order_wirehouses.delete');
     Route::get('/order-wirehouses-datatable', [OrderWirehouseController::class, 'getOrderWirehousesDataTable']);
+    Route::get('/order-wirehouses-item-datatable/{id}', [OrderWirehouseController::class, 'getOrderWirehouseItemDataTable']);
     Route::get('/get-order-wirehouse-items/{id}', [OrderWirehouseController::class, 'getOrderWIrehouseItems']);
+    Route::get('/order_wirehouses/invoice/{invoice}',  [OrderWirehouseController::class, 'invoice'])->name('order_wirehouses.invoice');
     //order wirehouses payment managemen
     Route::get('/payments', [OrderPaymentController::class, 'index'])->name('payments');
     Route::get('/payments/getall', [OrderPaymentController::class, 'getAll'])->name('payments.getall');
     Route::post('/payments/store',  [OrderPaymentController::class, 'store'])->name('payments.store');
-    Route::get('/payments/invoice/{invoice}',  [OrderPaymentController::class, 'invoice'])->name('payments.invoice');
     Route::get('/payments/edit/{id}',  [OrderPaymentController::class, 'edit'])->name('payments.edit');
+    Route::get('/payments/print-delivery/{id}',  [OrderPaymentController::class, 'printDelivery'])->name('payments.print-delivery');
     Route::delete('/payments/delete/{id}',  [OrderPaymentController::class, 'destroy'])->name('payments.delete');
     Route::get('/payment-detail-datatable/{id}', [OrderPaymentController::class, 'getPaymentDetailDataTable']);
     Route::post('/send_bill/{id}', [OrderPaymentController::class, 'send_bill'])->name('send_bill');

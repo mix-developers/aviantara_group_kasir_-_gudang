@@ -13,6 +13,10 @@
                     },
 
                     {
+                        data: 'date',
+                        name: 'date'
+                    },
+                    {
                         data: 'no_invoice',
                         name: 'no_invoice'
                     },
@@ -35,25 +39,23 @@
                     },
 
                     {
-                        data: 'description',
-                        name: 'description'
-                    },
-                    {
                         data: 'action',
                         name: 'action'
                     }
                 ]
             });
-            $('#selectDelivery,#selectWirehouse').on('change', function() {
+            $('#selectDelivery,#selectWirehouse,#fromDate,#toDate').on('change', function() {
                 applyFilters();
             });
 
             function applyFilters() {
                 var deliveryFilter = $('#selectDelivery').val();
                 var wirehouseFilter = $('#selectWirehouse').val();
+                var fromDate = $('#fromDate').val();
+                var toDate = $('#toDate').val();
 
                 var newUrl = '{{ url('order-wirehouses-datatable') }}?delivery=' + deliveryFilter + '&wirehouse=' +
-                    wirehouseFilter;
+                    wirehouseFilter + '&from-date=' + fromDate + '&to-date=' + toDate;
                 dataTable.ajax.url(newUrl).load();
             }
 
@@ -327,6 +329,7 @@
                                 },
                                 success: function(response) {
                                     $('#create-payment').modal('hide');
+                                    getAlert('Berhasil membuat pesanan');
                                     $('#paid').val('');
 
                                     window.open(
@@ -335,6 +338,7 @@
                                         'Print Invoice',
                                         'width=800,height=600'
                                     )
+                                    // alert('Berhasil membuat order');
                                 },
                                 error: function(xhr) {
                                     alert('Terjadi kesalahan: ' + xhr
@@ -535,6 +539,9 @@
                                 '</span>' +
                                 '<input type="hidden" name="id_product[]" value="' +
                                 id +
+                                '">' +
+                                '<input type="hidden" name="price[]" value="' +
+                                price +
                                 '">' +
                                 '<input type="hidden" class="total-val" name="subtotal[]" value="">' +
                                 '</td><td><input type="number" class="form-control form-control-sm quantity" name="quantity[]" value="0"></td><td>' +

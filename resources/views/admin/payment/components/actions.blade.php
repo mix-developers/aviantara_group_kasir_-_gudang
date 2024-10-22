@@ -12,11 +12,13 @@
         </button>
     @endif
     <a type="button" class="btn rounded-pill btn-icon btn-primary "
-        href="{{ route('payments.invoice', $OrderWirehouse->no_invoice) }}">
+        href="{{ route('order_wirehouses.invoice', $OrderWirehouse->no_invoice) }}">
         <span class="tf-icons bx bx-file"></span>
     </a>
-    <a type="button" class="btn rounded-pill btn-icon btn-secondary "
-        href="{{ route('payments.invoice', $OrderWirehouse->no_invoice) }}">
-        <span class="tf-icons bx bx-printer"></span>
-    </a>
+    @if ($OrderWirehouse->delivery == 1)
+        <a class="btn rounded-pill btn-icon btn-secondary " href="#"
+            onclick="window.open('{{ url('/payments/print-delivery', $OrderWirehouse->id) }}', 'Print Invoice', 'width=800,height=600')">
+            <span class="tf-icons bx bxs-truck"></span>
+        </a>
+    @endif
 </div>

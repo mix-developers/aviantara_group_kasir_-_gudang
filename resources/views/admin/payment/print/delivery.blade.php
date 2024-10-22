@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Invoice {{ $data->no_invoice }}</title>
+    <title>Delivery Invoice {{ $data->no_invoice }}</title>
     <meta http-equiv="Content-Type" content="charset=utf-8" />
     <link rel="stylesheet" href="{{ asset('css/') }}/pdf/bootstrap.min.css" media="all" />
     <style>
@@ -19,7 +19,7 @@
             border-top: 2px solid #000;
         }
 
-        tr {
+        .table-custom tr {
             margin: 0 !important;
             padding: 0 !important;
         }
@@ -50,8 +50,9 @@
     <main class="px-4">
         <table style=" width:100%; margin-bottom:10px;">
             <tr>
-                <td style="width: 30%" class="text-center fw-bold">
+                <td style="width: 30%" class="text-left fw-bold">
                     <h1 style="font-size: 80px;"><b>INVOICE</b></h1>
+                    <small>PENGANTARAN BARANG</small>
                 </td>
                 <td class="text-right px-4" style="width: 50%">
                     <b>
@@ -65,7 +66,7 @@
             </tr>
         </table>
         <hr class="mb-4">
-        <table style="width:100%; border:0;">
+        <table style="width:100%; border:0; font-size:16px;">
             <tr>
                 <td><b>KEPADA :</b></td>
                 <td class="text-right"><b>TANGGAL :</b></td>
@@ -90,11 +91,9 @@
         <table class="table-custom">
             <thead>
                 <tr>
-                    <th>No</th>
-                    <th>Produk</th>
-                    <th>Harga</th>
-                    <th>Jumlah</th>
-                    <th>Total</th>
+                    <th>NO</th>
+                    <th>PRODUK</th>
+                    <th>JUMLAH</th>
                 </tr>
             </thead>
             <tbody>
@@ -102,39 +101,63 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $item->product->name }}</td>
-                        <td>Rp {{ number_format($item->price) }}</td>
                         <td>{{ $item->quantity }}</td>
-                        <td>Rp {{ number_format($item->subtotal) }}</td>
                     </tr>
                 @endforeach
+                <tr>
+                    <td colspan="2">TOTAL BARANG</td>
+                    <td>{{ $items->sum('quantity') }}</td>
+                </tr>
             </tbody>
         </table>
         <br>
-        <table style="width:100%; border:0;">
+        <table style="width:100%; border:0; font-size:16px;">
             <tr>
-                <td><b>PEMBAYARAN :</b></td>
-                <td colspan="2" class="text-right">SUB TOTAL : </td>
-                <td class="text-right">Rp {{ number_format($data->fee) }}</td>
+                <td><b>PENGANTARAN :</b></td>
+                <td colspan="2" class="text-right">TOTAL : </td>
+                <td class="text-right"> <b>{{ $items->sum('quantity') }}</b> Barang</td>
             </tr>
             <tr>
                 <td colspan="2"></td>
-                <td class="text-right">DISKON : </td>
-                <td class="text-right">{{ $data->discount }} %</td>
+                <td class="text-right">BIAYA : </td>
+                <td class="text-right">Rp {{ number_format($data->additional_fee) }}</td>
             </tr>
-            @if ($data->delivery == 1)
-                <tr>
-                    <td colspan="2"></td>
-                    <td class="text-right">PENGANTARAN : </td>
-                    <td class="text-right">{{ $data->additional_fee }} %</td>
-                </tr>
-            @endif
-            <tr>
-                <td colspan="2"></td>
-                <td class="text-right"><b>TOTAL : </b></td>
-                <td class="text-right">{{ number_format($data->total_fee) }}</td>
-            </tr>
-
         </table>
+        <hr>
+        <br>
+        <div style="font-size:14px;">
+            <strong>CUSTOMER : </strong>
+            <p>
+                Nama: <b>{{ $data->customer->name }}</b><br>HP/WA : {{ $data->customer->phone }}
+            </p>
+            <strong>ALAMAT PENGANTARAN : </strong>
+            <p>
+                {{ $data->address_delivery }}
+            </p>
+            <strong>KETERANGAN : </strong>
+            <p>
+                {{ $data->description }}
+            </p>
+        </div>
+        <br>
+        <table style="width:100%; border:0; font-size:12px;">
+            <tr style="padding-bottom:100px;" class="text-center">
+                <td>KASIR : </td>
+                <td>SUPIR : </td>
+                <td>PENERIMA : </td>
+            </tr>
+            <tr>
+                <td colspan="3" style="height: 30px;"></td>
+            </tr>
+            <tr class="text-center">
+                <td>................</td>
+                <td>................</td>
+                <td>................</td>
+            </tr>
+        </table>
+        <br>
+        <small style="color: rgba(255, 81, 0, 0.734); font-size:10px;"><i>* Sebagai bukti terima Barang, harap untuk
+                menandatangani.</i></small>
     </main>
     <script>
         // Jalankan perintah print saat halaman selesai dimuat

@@ -2,13 +2,34 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <title>{{ $title ?? 'Homepage' }} - {{ env('APP_NAME') }}</title>
+    <!-- Primary Meta Tags -->
+    <title>Pusat Grosir Frozen Food & Dry Food - Aviantara Group</title>
+    <meta name="title" content="Pusat Grosir Frozen Food & Dry Food - Aviantara Group" />
+    <meta name="description"
+        content="Aviantara Group merauke menyediakan berbagai macam produk frozen food dan dry food berkualitas untuk kebutuhan restoran, toko, dan usaha Anda. Hubungi kami untuk penawaran grosir terbaik." />
+
+    <!-- Keywords -->
+    <meta name="keywords"
+        content="Aviantara Group, aviantar group merauke, pusat grosir papua selatan, pusat grosir merauke, frozen food merauke, dry food merauke, distributor makanan beku, supplier makanan kering, grosir frozen food, grosir dry food, makanan beku, makanan kering, distributor makanan, grosir makanan merauke, merauke, papua selatan, pusat merauke, pusat papua selatan" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{ url()->current() }}" />
+    <meta property="og:title" content="Pusat Grosir Frozen Food & Dry Food - Aviantara Group" />
+    <meta property="og:description"
+        content="Aviantara Group menyediakan produk frozen food & dry food terbaik dengan harga grosir. Kami siap memenuhi kebutuhan bisnis Anda dengan produk berkualitas." />
+    <meta property="og:image" content="{{ asset('img/') }}/logo.png" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="{{ asset('img/') }}/logo.png" />
+    <meta property="twitter:url" content="{{ url()->current() }}" />
+    <meta property="twitter:title" content="Pusat Grosir Frozen Food & Dry Food - Aviantara Group" />
+    <meta property="twitter:description"
+        content="Aviantara Group adalah distributor dan supplier utama untuk frozen food dan dry food dengan penawaran grosir terbaik." />
+    <meta property="twitter:image" content="{{ asset('img/') }}/logo.png" />
+
     <!-- Favicon-->
-    <link rel="icon" type="image/x-icon" href="{{ asset('frontend_theme/') }}/assets/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('img/') }}/logo.png" />
     <!-- Bootstrap icons-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
     <!-- Core theme CSS (includes Bootstrap)-->

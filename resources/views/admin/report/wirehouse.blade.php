@@ -62,6 +62,7 @@
                                 <th>Terbayar</th>
                                 <th>Sisa</th>
                                 <th>status</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
 
@@ -76,6 +77,7 @@
                                 <th>Terbayar</th>
                                 <th>Sisa</th>
                                 <th>status</th>
+                                <th>Action</th>
                             </tr>
                         </tfoot>
                     </table>
@@ -128,6 +130,10 @@
                     {
                         data: 'payment',
                         name: 'payment'
+                    },
+                    {
+                        data: 'action',
+                        name: 'action'
                     },
                 ],
 

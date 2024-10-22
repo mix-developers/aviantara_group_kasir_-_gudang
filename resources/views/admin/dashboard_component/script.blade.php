@@ -14,7 +14,7 @@
                     success: function(response) {
                         $('#stokInput').text(response.stok_input);
                         $('#stokOut').text(response.stok_out);
-                        $('#stokExpired').text(response.stok_expired);
+                        $('#stokExpired').text(response.stok_damaged);
                         $('#stokNotExpired').text(response.stok_not_expired);
                         $('#stokWirehouse').text(response.stok_wirehouse);
                         $('#priceStokInput').text(formatNumberWithDot(response.price_stok_input));

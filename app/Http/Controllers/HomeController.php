@@ -123,14 +123,16 @@ class HomeController extends Controller
     public function getStokOut()
     {
         $stok = ProductStok::where('type', 'Keluar');
+        $stok_kembali = ProductStok::where('type', 'Masuk')->where('sub_type', 'kembali');
         if (Auth::user()->role == 'Gudang') {
             $user = Auth::user();
             $stok->whereHas('product', function ($stok) use ($user) {
                 $stok->where('id_wirehouse', $user->id_wirehouse);
             });
         }
+        $stok_kembali = $stok->sum('quantity');
         $stok = $stok->sum('quantity');
-        return $stok;
+        return $stok - $stok_kembali;
     }
 
     public function getStokNotExpired()
@@ -197,6 +199,11 @@ class HomeController extends Controller
         $stok = $stok->sum('price_origin');
         return $stok;
     }
+    public function getStokDamagedWirehouse()
+    {
+        $stok = ProductDamaged::sum('quantity_unit');
+        return $stok;
+    }
     public function getStokCard()
     {
 
@@ -206,6 +213,7 @@ class HomeController extends Controller
             'stok_expired' => $this->getStokExpired(),
             'stok_not_expired' => $this->getStokNotExpired(),
             'stok_wirehouse' => $this->getStokWirehouse(),
+            'stok_damaged' => $this->getStokDamagedWirehouse(),
             'price_stok_input' => $this->getPriceStokInput(),
         ];
         return response()->json($data);

@@ -32,6 +32,15 @@
                 <div style="margin-left:24px; margin-right: 24px;">
                     <strong>Filter Data</strong>
                     <div class="d-flex justify-content-center align-items-center row gap-3 gap-md-0">
+                        <div class="col-md-4 col-12">
+                            <div class="input-group">
+                                <span class="input-group-text">Tanggal</span>
+                                <input type="date" class="form-control" id="fromDate"
+                                    value="{{ date('Y-m-d', strtotime('-1 month')) }}">
+                                <span class="input-group-text"> - </span>
+                                <input type="date" class="form-control" id="toDate" value="{{ date('Y-m-d') }}">
+                            </div>
+                        </div>
                         <div class="col-md-3 col-12">
                             <select id="selectDelivery" class="form-select text-capitalize">
 
@@ -50,12 +59,12 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
+                                <th>Tanggal</th>
                                 <th>No. Invoice</th>
                                 <th>Pelanggan</th>
                                 <th>Gudang</th>
                                 <th> Harga Total</th>
                                 <th>Pengantaran</th>
-                                <th>Keterangan</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -63,12 +72,12 @@
                         <tfoot>
                             <tr>
                                 <th>ID</th>
+                                <th>Tanggal</th>
                                 <th>No. Invoice</th>
                                 <th>Pelanggan</th>
                                 <th>Gudang</th>
                                 <th> Harga Total</th>
                                 <th>Pengantaran</th>
-                                <th>Keterangan</th>
                                 <th>Action</th>
                             </tr>
                         </tfoot>

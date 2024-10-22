@@ -57,15 +57,7 @@ class OrderPaymentController extends Controller
 
         return response()->json(['message' => 'Berhasil mengirim tagihan', 'whatsapp_url' => $whatsappUrl]);
     }
-    public function invoice($invoice)
-    {
-        $order = OrderWirehouse::where('no_invoice', $invoice)->first();
-        $data = [
-            'title' => 'Pembayaran invoice : ' . $invoice,
-            'order' => $order
-        ];
-        return view('admin.payment.show', $data);
-    }
+    
     public function getPaymentDetailDataTable($id_order_wirehouse)
     {
         $orderPayment = OrderWirehousePayment::select(['id', 'id_user', 'id_order_wirehouse', 'id_payment_method', 'paid', 'foto', 'created_at', 'updated_at'])
@@ -129,5 +121,18 @@ class OrderPaymentController extends Controller
     public function getDataTagihan(request $request)
     {
         $OrderWirehouse = OrderWirehouse::with(['customer', 'user'])->get();
+    }
+    public function printDelivery($id)
+    {
+        $data = OrderWirehouse::where('id', $id)->with(['customer', 'product'])->first();
+        $items = OrderWirehouseItem::where('id_order_wirehouse', $id)->get();
+
+        // $pdf =  \PDF::loadView('admin.order_wirehouse.pdf.print_invoice', [
+        //     'data' => $data,
+        //     'item' => $item
+        // ])->setPaper('a4', 'potrait');
+
+        // return $pdf->download('Invoice ' . $data->no_invoice . '.pdf');
+        return view('admin.payment.print.delivery', compact('data', 'items'));
     }
 }

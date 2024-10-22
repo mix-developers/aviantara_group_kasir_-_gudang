@@ -106,9 +106,7 @@
                             <div class="col">
                                 <span class="h3 text-white" id="stokInput">0</span> Stok
                             </div>
-                            <div class="col">
-                                Rp <span class="h5 text-white" id="priceStokInput">0</span>
-                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -126,7 +124,7 @@
             <div class="col-md-3 col-6 mb-2">
                 <div class="card bg-danger text-white">
                     <div class="card-header" style="padding: 10px;">
-                        Stok Kadaluarsa pada gudang
+                        Stok Rusak pada gudang
                     </div>
                     <div class="card-body" style="padding: 10px;">
                         <span class="h3 text-white" id="stokExpired">0</span> Stok
@@ -143,9 +141,7 @@
                             <div class="col">
                                 <span class="h3 text-white" id="stokWirehouse">0</span> Total Stok
                             </div>
-                            <div class="col">
-                                <span class="h3 text-white" id="stokNotExpired">0</span> Aman
-                            </div>
+
                         </div>
                     </div>
                 </div>

@@ -9,12 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class OrderWirehousePayment extends Model
 {
     use HasFactory;
-    protected $fillable = [
-        'id_order_wirehouse',
-        'id_payment_method',
-        'id_user',
-        'paid',
-    ];
+    protected $guarded = [];
     public function payment_method(): BelongsTo
     {
         return $this->belongsTo(PaymentMethod::class, 'id_payment_method');

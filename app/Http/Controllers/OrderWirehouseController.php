@@ -126,7 +126,7 @@ class OrderWirehouseController extends Controller
                 return '<strong>' . $OrderWirehouse->wirehouse->name . '</strong><br><span class="text-muted">' . $OrderWirehouse->wirehouse->address . '</span>';
             })
             ->addColumn('date', function ($OrderWirehouse) {
-                return $OrderWirehouse->created_at->format('d F Y');
+                return $OrderWirehouse->created_at->translatedFormat('d F Y');
             })
             ->addColumn('payment', function ($OrderWirehouse) {
                 $check_payment = OrderWirehousePayment::where('id_order_wirehouse', $OrderWirehouse->id)->sum('paid');
@@ -146,6 +146,13 @@ class OrderWirehouseController extends Controller
             ->rawColumns(['date', 'action', 'actions_payment', 'payment', 'total_fee_text', 'additional_fee_text', 'delivery_text', 'wirehouse', 'tagihan', 'terbayar', 'sisa'])
             ->make(true);
     }
+    public function getOrderWirehouseItemDataTable($id)
+    {
+        $data = OrderWirehouseItem::where('id_order_wirehouse', $id)->with(['product']);
+        return DataTables::of($data)
+            ->make(true);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -155,6 +162,7 @@ class OrderWirehouseController extends Controller
             'description' => 'string',
             'id_product.*' => ['required'],
             'subtotal.*' => ['required'],
+            'price.*' => ['required'],
             'expired_date.*' => ['required'],
             'quantity.*' => ['required'],
         ]);
@@ -164,12 +172,15 @@ class OrderWirehouseController extends Controller
         $delivery = $request->input('delivery') == 'on' ? 1 : 0;
         $additional_fee = $request->input('additional_fee');
         $total_fee =  $request->input('total_fee');
-        $discount =  $request->input('discount') > 0 ? $request->input('discount') / 100 : 1;
-
+        $discount =  $request->input('discount') > 0 ? $request->input('discount') / 100 : 0;
         $order->id_customer = $request->input('id_customer');
         $order->id_wirehouse = $request->input('id_wirehouse');
         $order->id_user = Auth::user()->id;
-        $order->total_fee = $additional_fee > 0 ? ($additional_fee + $total_fee) * $discount  : $total_fee * $discount;
+        $order->discount =  $request->input('discount');
+        $order->fee =  $total_fee + $additional_fee;
+        $order->total_fee = $additional_fee > 0
+            ? ($total_fee + $additional_fee) * (1 - $discount)
+            : $total_fee * (1 - $discount);
         $order->additional_fee = $request->input('additional_fee');
         $order->delivery = $delivery;
         $order->address_delivery = $request->input('address_delivery');
@@ -179,6 +190,7 @@ class OrderWirehouseController extends Controller
         if ($order->save()) {
             $id_products = $request->id_product;
             $subtotals = $request->subtotal;
+            $prices = $request->price;
             $expired_dates = $request->expired_date;
             $quantitys = $request->quantity;
 
@@ -186,6 +198,7 @@ class OrderWirehouseController extends Controller
                 $orderItem = new OrderWirehouseItem();
                 $orderItem->id_order_wirehouse = $order->id;
                 $orderItem->id_product = $id_product;
+                $orderItem->price = $prices[$key];
                 $orderItem->subtotal = $subtotals[$key];
                 $orderItem->expired_date = $expired_dates[$key];
                 $orderItem->quantity = $quantitys[$key];
@@ -225,11 +238,14 @@ class OrderWirehouseController extends Controller
             $nilai_discount = $discount / 100;
             if ($additional_fee != 0) {
                 $total = ($sub_total_item + $additional_fee) * (1 - $nilai_discount);
+                $fee = $sub_total_item + $additional_fee;
             } else {
                 $total =  $sub_total_item * (1 - $nilai_discount);
+                $fee = $sub_total_item;
             }
         } else {
             $total = $sub_total_item + $additional_fee;
+            $fee = $sub_total_item + $additional_fee;
         }
 
         $delivery = $request->input('delivery') == 'on' ? 1 : 0;
@@ -241,6 +257,7 @@ class OrderWirehouseController extends Controller
         $order->additional_fee = $additional_fee;
         $order->delivery = $delivery;
         $order->discount = $discount;
+        $order->fee =  $fee;
         $order->address_delivery = $request->input('address_delivery');
         $order->description = $request->input('description');
 
@@ -286,6 +303,7 @@ class OrderWirehouseController extends Controller
             $ProductStokOut->id_product = $item->id_product;
             $ProductStokOut->id_user = Auth::user()->id;
             $ProductStokOut->type = 'Masuk';
+            $ProductStokOut->sub_type = 'kembali';
             $ProductStokOut->price_origin = $ProductStokPrice->price_origin;
             $ProductStokOut->description = 'Pengembalian stok gudang';
             $ProductStokOut->expired_date = $item->expired_date;
@@ -318,5 +336,14 @@ class OrderWirehouseController extends Controller
 
         // return $pdf->download('Invoice ' . $data->no_invoice . '.pdf');
         return view('admin.order_wirehouse.pdf.print_invoice', compact('data', 'items'));
+    }
+    public function invoice($invoice)
+    {
+        $order = OrderWirehouse::where('no_invoice', $invoice)->first();
+        $data = [
+            'title' => 'Detail : ' . $invoice,
+            'order' => $order
+        ];
+        return view('admin.order_wirehouse.show', $data);
     }
 }
