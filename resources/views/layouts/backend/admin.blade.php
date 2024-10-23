@@ -25,6 +25,7 @@
         rel="stylesheet" /> --}}
 
     <!-- Icons. Uncomment required icon fonts -->
+
     <link rel="stylesheet" href="{{ asset('backend_theme/') }}/assets/vendor/fonts/boxicons.css" />
     {{-- <link rel="stylesheet" href="assets/vendor/libs/animate-css/animate.css" />
     <link rel="stylesheet" href="assets/vendor/libs/sweetalert2/sweetalert2.css" /> --}}

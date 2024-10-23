@@ -200,6 +200,8 @@
             });
 
             $('#createProductBtn').click(function() {
+                $('#createProductBtnSpinner').show();
+                $('#createProductBtn').prop('disabled', true);
                 var formData = new FormData($('#createProductForm')[
                     0]); // Gunakan FormData untuk mengambil data, termasuk file
                 $.ajax({
@@ -212,6 +214,8 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
+                        $('#createProductBtn').prop('disabled', false);
+                        $('#createProductBtnSpinner').hide();
                         getAlert(response.message);
                         $('#datatable-product').DataTable().ajax.reload();
                         $('#formCreateProductName').val('');
@@ -222,6 +226,8 @@
                         $('#create').modal('hide');
                     },
                     error: function(xhr) {
+                        $('#createProductBtnSpinner').hide();
+                        $('#createProductBtn').prop('disabled', false);
                         alert('Terjadi kesalahan: ' + xhr.responseText);
                     }
                 });

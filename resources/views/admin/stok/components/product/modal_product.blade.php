@@ -151,8 +151,13 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="createProductBtn"
-                    @disabled(false)>Save</button>
+                <button type="button" class="btn btn-primary" id="createProductBtn" @disabled(false)>
+                    <div class="spinner-border spinner-border-sm text-white" role="status"
+                        id="createProductBtnSpinner" style="display: none;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    Save
+                </button>
             </div>
         </div>
     </div>
