@@ -90,7 +90,7 @@
             <hr>
             @foreach (App\Models\PaymentMethod::all() as $item)
                 @include('admin.dashboard_component.card1', [
-                    'count' => App\Models\PaymentMethodItem::where('id_payment_method', $item->id)->sum('paid'),
+                    'count' => App\Models\paymentMethodItem::where('id_payment_method', $item->id)->sum('paid'),
                     'title' => $item->method,
                     'subtitle' => 'Total Pembayaran',
                     'color' => 'warning',
