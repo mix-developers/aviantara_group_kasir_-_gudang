@@ -61,6 +61,9 @@ Route::get('/get-invoice/{invoice}', [OrderWirehouseController::class, 'getInvoi
 Auth::routes(['register' => false, 'reset' => false]);
 Route::middleware(['auth:web', 'checkDisabled'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index']);
+    Route::get('/chart-paid', [App\Http\Controllers\HomeController::class, 'getChartPaid']);
+    Route::get('/chart-expired', [App\Http\Controllers\HomeController::class, 'getChartExpired']);
+    Route::get('/chart-order-all-wirehouse', [App\Http\Controllers\HomeController::class, 'getChartOrderAllWirehouses']);
 
     //dashboard
     Route::get('/expired-alert', [HomeController::class, 'expiredAlert']);
@@ -144,7 +147,6 @@ Route::middleware(['auth:web', 'role:Gudang,Admin,Owner', 'checkDisabled'])->gro
 Route::middleware(['auth:web', 'role:Gudang', 'checkDisabled'])->group(function () {});
 Route::middleware(['auth:web', 'role:Admin,Owner', 'checkDisabled'])->group(function () {
 
-    Route::get('/get-sales-data', [HomeController::class, 'getSalesData'])->name('get-sales-data');
     //report managemen
     Route::get('/report/stok-wirehouse', [ReportController::class, 'stok_wirehouse'])->name('report.stok-wirehouse');
     Route::get('/report/pdf-stok-wirehouse', [ReportController::class, 'pdf_stok_wirehouse'])->name('report.pdf-stok-wirehouse');

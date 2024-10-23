@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\OrderWirehouse;
+use App\Models\OrderWirehousePayment;
 use App\Models\Product;
 use App\Models\ProductDamaged;
 use App\Models\ProductStok;
@@ -218,39 +220,163 @@ class HomeController extends Controller
         ];
         return response()->json($data);
     }
-    public function getSalesData()
+
+    public function getChartPaid()
     {
-        // Dummy data with dates in 'dd/mm/yy' format
+        // Mengambil semua order
+        $orders = OrderWirehouse::all();
+
+        // Mendefinisikan variabel untuk menghitung jumlah Lunas dan Belum Lunas
+        $lunasCount = 0;
+        $belumLunasCount = 0;
+
+        // Looping untuk menghitung jumlah order lunas dan belum lunas
+        foreach ($orders as $OrderWirehouse) {
+            $query = OrderWirehousePayment::where('id_order_wirehouse', $OrderWirehouse->id);
+            if (Auth::user()->role == 'Gudang') {
+                $user = Auth::user();
+                $query->whereHas('order_wirehouse', function ($query) use ($user) {
+                    $query->where('id_wirehouse', $user->id_wirehouse);
+                });
+            }
+            $check_payment = $query->sum('paid');
+
+            if ($check_payment >= $OrderWirehouse->total_fee) {
+                // Jika pembayaran sudah lunas
+                $lunasCount++;
+            } else {
+                // Jika pembayaran belum lunas
+                $belumLunasCount++;
+            }
+        }
+
+        // Membuat data yang akan dikirim sebagai JSON
         $data = [
-            [
-                'tanggal' => '01/04/24', // Date in 'dd/mm/yy' format
-                'penjualan' => 539.42,
-                'stok_masuk' => 100,
-                'Stok_keluar' => 100,
-                'stok_rusak' => 10
-            ],
-            [
-                'tanggal' => '05/04/24',
-                'penjualan' => 540.67,
-                'stok_masuk' => 90,
-                'Stok_keluar' => 100,
-                'stok_rusak' => 5
-            ],
-            [
-                'tanggal' => '08/04/24',
-                'penjualan' => 550.12,
-                'stok_masuk' => 120,
-                'Stok_keluar' => 100,
-                'stok_rusak' => 12
+            'labels' => ['Lunas', 'Belum Lunas'],
+            'datasets' => [
+                [
+                    'label' => 'Jumlah Order',
+                    'backgroundColor' => ['#4caf50', '#f44336'], // Warna untuk grafik
+                    'data' => [$lunasCount, $belumLunasCount], // Data jumlah lunas dan belum lunas
+                ]
             ]
         ];
 
-        // Format the 'tanggal' field from 'dd/mm/yy' to a Unix timestamp
-        foreach ($data as &$item) {
-            $item['tanggal'] = Carbon::createFromFormat('d/m/y', $item['tanggal'])->timestamp * 1000; // Multiply by 1000 to match JS timestamp (milliseconds)
+        // Mengembalikan data sebagai JSON
+        return response()->json($data);
+    }
+    public function getChartExpired()
+    {
+
+        $expiredCount = 0;
+        $remainingCount = 0;
+        $normalCount = 0;
+
+        $allProducts = Product::all();
+
+        foreach ($allProducts as $product) {
+            $stok = ProductStok::where('id_product', $product->id);
+
+            if (Auth::user()->role == 'Gudang') {
+                $user = Auth::user();
+                $stok->whereHas('product', function ($stok) use ($user) {
+                    $stok->where('id_wirehouse', $user->id_wirehouse);
+                });
+            }
+
+            if ($stok->count() != 0) {
+                foreach ($stok->get() as $itemStok) {
+                    if ($itemStok->type == 'Masuk') {
+                        $stok_kembali = ProductStok::where('id_product', $product->id)
+                            ->where('type', 'Masuk')
+                            ->where('sub_type', 'kembali')
+                            ->where('expired_date', $itemStok->expired_date)
+                            ->sum('quantity');
+                        $stok_keluar = ProductStok::where('id_product', $product->id)
+                            ->where('type', 'Keluar')
+                            ->where('expired_date', $itemStok->expired_date)
+                            ->sum('quantity');
+                        $stok_rusak = ProductDamaged::where('id_product', $product->id)
+                            ->where('expired_date', $itemStok->expired_date)
+                            ->sum('quantity_unit');
+
+                        if ($stok_keluar >= 0) {
+                            $total_stok = $itemStok->quantity - $stok_keluar - $stok_rusak + $stok_kembali;
+                            if ($total_stok > 0) {
+                                $currentDate = date('Y-m-d');
+                                if ($itemStok->expired_date <= $currentDate) {
+                                    // Expired stock
+                                    $expiredCount += $total_stok;
+                                } elseif ($itemStok->expired_date <= date('Y-m-d', strtotime('+3 months'))) {
+                                    // Stock expiring within 3 months
+                                    $remainingCount += $total_stok;
+                                } else {
+                                    // Normal stock
+                                    $normalCount += $total_stok;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
-        // Return the data as JSON
-        return response()->json($data);
+        // Prepare the JSON response for the chart
+        $response = [
+            'labels' => ['Expired', 'Remaining', 'Normal'],
+            'datasets' => [[
+                'label' => 'Stock Status',
+                'backgroundColor' => ['#f44336', '#ff9800', '#4caf50'],
+                'data' => [$expiredCount, $remainingCount, $normalCount]
+            ]]
+        ];
+
+        // Return the JSON response
+        return response()->json($response);
+    }
+
+    public function getChartOrderAllWirehouses()
+    {
+
+        $startDate = OrderWirehouse::min('created_at');
+        $endDate = OrderWirehouse::max('created_at');
+
+        $startDate = \Carbon\Carbon::parse($startDate)->startOfDay();
+        $endDate = \Carbon\Carbon::parse($endDate)->endOfDay();
+
+        $warehousesData = [];
+
+        $warehouseIdsQuery = OrderWirehouse::query();
+
+        if (Auth::user()->role == 'Gudang') {
+            $warehouseIdsQuery->where('id_wirehouse', Auth::user()->id_wirehouse);
+        }
+
+        $warehouseIds = $warehouseIdsQuery->distinct()->pluck('id_wirehouse');
+
+        foreach ($warehouseIds as $warehouseId) {
+            $warehouseName = Wirehouse::where('id', $warehouseId)->first()->name;
+            $dataPoints = [];
+
+            for ($date = $startDate->copy(); $date <= $endDate; $date->addDay()) {
+                $totalOrders = OrderWirehouse::where('id_wirehouse', $warehouseId)
+                    ->whereDate('created_at', $date->format('Y-m-d'))
+                    ->count();
+
+                $dataPoints[] = [
+                    'x' => strtotime($date->format('Y-m-d')) * 1000,
+                    'y' => $totalOrders
+                ];
+            }
+
+            // Add the dataset for this warehouse
+            $warehousesData[] = [
+                'label' =>  $warehouseName,
+                'dataPoints' => $dataPoints
+            ];
+        }
+
+        // Return the JSON response with all datasets
+        return response()->json($warehousesData);
     }
 }

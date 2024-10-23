@@ -17,33 +17,31 @@
     </div>
     <hr>
     <div class="" id="alert"></div>
-    @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Owner')
-        <hr>
-        <div class="my-4 card">
-            <div class="card-body">
-                <div id="chartContainer" style="height: 500px;"></div>
-            </div>
+    <hr>
+    <div class="my-4 card">
+        <div class="card-body">
+            <div id="chartContainer" style="height: 500px;"></div>
         </div>
-        <div class="my-4">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <div id="chartContainerLunas" style="height: 300px; width: 100%;"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <div id="chartContainerExpire" style="height: 300px; width: 100%;"></div>
-                        </div>
+    </div>
+    <div class="my-4">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div id="chartContainerLunas" style="height: 300px; width: 100%;"></div>
                     </div>
                 </div>
             </div>
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div id="chartContainerExpire" style="height: 300px; width: 100%;"></div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <hr>
-    @endif
+    </div>
+    <hr>
     <div class="row justify-content-center">
         @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Owner')
             @include('admin.dashboard_component.card1', [

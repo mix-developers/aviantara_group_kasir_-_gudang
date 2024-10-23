@@ -78,151 +78,150 @@
             expiredAlert();
         });
     </script>
-    @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Owner')
-        {{-- grafik admin --}}
-        <script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
-        <script type="text/javascript" src="https://cdn.canvasjs.com/canvasjs.stock.min.js"></script>
-        <script type="text/javascript">
-            window.onload = function() {
-                var dataPoints1 = [],
-                    dataPoints2 = [];
-                var stockChart = new CanvasJS.StockChart("chartContainer", {
-                    theme: "light2",
-                    animationEnabled: true,
-                    title: {
-                        text: "Grafik Transaksi"
-                    },
+    <script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="https://cdn.canvasjs.com/canvasjs.stock.min.js"></script>
 
-                    charts: [{
-                        axisY: {
-                            title: "Transaksi"
-                        },
-                        toolTip: {
-                            shared: true
-                        },
-                        legend: {
-                            cursor: "pointer",
-                            itemclick: function(e) {
-                                if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries
-                                    .visible)
-                                    e.dataSeries.visible = false;
-                                else
-                                    e.dataSeries.visible = true;
-                                e.chart.render();
-                            }
-                        },
-                        data: [{
-                            showInLegend: true,
-                            name: "No of Trades in $",
-                            yValueFormatString: "#,##0",
-                            xValueType: "dateTime",
-                            dataPoints: dataPoints1
-                        }, {
-                            showInLegend: true,
-                            name: "No of Trades in €",
-                            yValueFormatString: "#,##0",
-                            dataPoints: dataPoints2
-                        }]
-                    }],
-                    rangeSelector: {
-                        enabled: true
+    {{-- grafik admin --}}
+    <script type="text/javascript">
+        window.onload = function() {
+            var stockChart = new CanvasJS.StockChart("chartContainer", {
+                theme: "light2",
+                animationEnabled: true,
+                title: {
+                    text: "Grafik Transaksi {{ Auth::user()->role == 'Gudang' ? 'Gudang' : '' }}"
+                },
+                charts: [{
+                    axisY: {
+                        title: "Transaksi"
                     },
-                    navigator: {
-                        data: [{
-                            dataPoints: dataPoints1
-                        }],
-                        slider: {
-                            minimum: new Date(2018, 00, 15),
-                            maximum: new Date(2018, 02, 01)
+                    toolTip: {
+                        shared: true
+                    },
+                    legend: {
+                        cursor: "pointer",
+                        itemclick: function(e) {
+                            if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries
+                                .visible)
+                                e.dataSeries.visible = false;
+                            else
+                                e.dataSeries.visible = true;
+                            e.chart.render();
                         }
-                    }
-                });
-                $.getJSON("https://canvasjs.com/data/docs/btcvolume2018.json", function(data) {
-                    for (var i = 0; i < data.length; i++) {
-                        dataPoints1.push({
-                            x: new Date(data[i].date),
-                            y: Number(data[i].volume_btc_usd)
-                        });
-                        dataPoints2.push({
-                            x: new Date(data[i].date),
-                            y: Number(data[i].volume_btc_eur)
-                        });
-                    }
-                    stockChart.render();
-                });
-                // Chart for Pembayaran Customer
-                var chartPaid = new CanvasJS.Chart("chartContainerLunas", {
-                    theme: "light2",
-                    animationEnabled: true,
-                    title: {
-                        text: "Pembayaran Customer"
                     },
-                    data: [{
-                        type: "pie",
-                        indexLabelFontSize: 18,
-                        radius: 80,
-                        indexLabel: "{label} - {y}",
-                        yValueFormatString: "###0.0\"%\"",
-                        click: explodePie,
-                        dataPoints: [{
-                                y: 9,
-                                label: "Lunas"
-                            },
-                            {
-                                y: 3.1,
-                                label: "Belum Lunas"
-                            }
-                        ]
-                    }]
-                });
-                chartPaid.render();
-
-                // Chart for Barang Kadaluarsa
-                var chartExpire = new CanvasJS.Chart("chartContainerExpire", {
-                    theme: "light2",
-                    animationEnabled: true,
-                    title: {
-                        text: "Barang Kadaluarsa"
-                    },
-                    data: [{
-                        type: "pie",
-                        indexLabelFontSize: 18,
-                        radius: 80,
-                        indexLabel: "{label} - {y}",
-                        yValueFormatString: "###0.0\"%\"",
-                        click: explodePie,
-                        dataPoints: [{
-                                y: 42,
-                                label: "Gas"
-                            },
-                            {
-                                y: 21,
-                                label: "Nuclear"
-                            },
-                            {
-                                y: 24.5,
-                                label: "Renewable"
-                            },
-                            {
-                                y: 9,
-                                label: "Coal"
-                            },
-                            {
-                                y: 3.1,
-                                label: "Other Fuels"
-                            }
-                        ]
-                    }]
-                });
-                chartExpire.render();
-
-                function explodePie(e) {
-                    for (var i = 0; i < e.dataSeries.dataPoints.length; i++) {
-                        if (i !== e.dataPointIndex)
-                            e.dataSeries.dataPoints[i].exploded = false;
+                    data: [] // Empty array, will be filled dynamically
+                }],
+                rangeSelector: {
+                    enabled: true
+                },
+                navigator: {
+                    slider: {
+                        minimum: new Date(2018, 00, 15), // Adjust this to your date range
+                        maximum: new Date(2018, 02, 01) // Adjust this to your date range
                     }
                 }
+            });
+
+            // Fetch data from the server
+            $.getJSON("/chart-order-all-wirehouse", function(data) {
+                var datasets = [];
+
+                // Loop through each dataset in the response (each warehouse)
+                for (var i = 0; i < data.length; i++) {
+                    datasets.push({
+                        showInLegend: true,
+                        name: data[i].label, // Use warehouse label from backend
+                        yValueFormatString: "#,##0",
+                        xValueType: "dateTime",
+                        dataPoints: data[i].dataPoints // Use data points for each warehouse
+                    });
+                }
+
+                // Add the datasets to the chart's data property
+                stockChart.options.charts[0].data = datasets;
+
+                // Render the chart after data is loaded
+                stockChart.render();
+            });
+            // Chart for Pembayaran Customer
+            // Function to fetch and render both charts
+            function fetchAndRenderCharts() {
+                fetch('/chart-paid')
+                    .then(response => response.json())
+                    .then(data => {
+                        const dataPointsPaid = data.labels.map((label, index) => ({
+                            y: data.datasets[0].data[index],
+                            label: label,
+                            color: data.datasets[0].backgroundColor[index]
+                        }));
+
+                        const chartPaid = new CanvasJS.Chart("chartContainerLunas", {
+                            theme: "light2",
+                            animationEnabled: true,
+                            title: {
+                                text: "Pembayaran"
+                            },
+                            data: [{
+                                type: "pie",
+                                indexLabelFontSize: 18,
+                                radius: 80,
+                                indexLabel: "{label} - {y}",
+                                yValueFormatString: "###0",
+                                click: explodePie,
+                                dataPoints: dataPointsPaid
+                            }]
+                        });
+
+                        chartPaid.render();
+                    })
+                    .catch(error => console.error('Error fetching data for chart paid:', error));
+
+                fetch('/chart-expired')
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Data from /chart-expired:', data);
+                        const dataPointsExpired = data.labels.map((label, index) => ({
+                            y: data.datasets[0].data[index],
+                            label: label,
+                            color: data.datasets[0].backgroundColor[index]
+                        }));
+
+                        if (dataPointsExpired.every(point => point.y === 0)) {
+                            document.getElementById("chartContainerExpire").innerHTML =
+                                "No data available.";
+                            return;
+                        }
+
+                        const chartExpired = new CanvasJS.Chart("chartContainerExpire", {
+                            theme: "light2",
+                            animationEnabled: true,
+                            title: {
+                                text: "Barang Kadaluarsa"
+                            },
+                            data: [{
+                                type: "pie",
+                                indexLabelFontSize: 18,
+                                radius: 80,
+                                indexLabel: "{label} - {y}",
+                                yValueFormatString: "###0",
+                                click: explodePie,
+                                dataPoints: dataPointsExpired
+                            }]
+                        });
+
+                        chartExpired.render();
+                    })
+                    .catch(error => console.error('Error fetching data for chart expired:', error));
             }
-        </script>
-    @endif
+
+            // Call the function to fetch data and render both charts
+            fetchAndRenderCharts();
+
+            function explodePie(e) {
+                for (var i = 0; i < e.dataSeries.dataPoints.length; i++) {
+                    if (i !== e.dataPointIndex)
+                        e.dataSeries.dataPoints[i].exploded = false;
+                }
+            }
+        }
+    </script>
 @endpush

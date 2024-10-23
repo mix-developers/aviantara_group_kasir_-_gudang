@@ -113,6 +113,11 @@ class StokController extends Controller
 
                     foreach ($stok->get() as $itemStok) {
                         if ($itemStok->type == 'Masuk') {
+                            $stok_kembali = ProductStok::where('id_product', $product->id)
+                                ->where('type', 'Masuk')
+                                ->where('sub_type', 'kembali')
+                                ->where('expired_date', $itemStok->expired_date)
+                                ->sum('quantity');
                             $stok_keluar = ProductStok::where('id_product', $product->id)
                                 ->where('type', 'Keluar')
                                 ->where('expired_date', $itemStok->expired_date)
@@ -122,7 +127,7 @@ class StokController extends Controller
                                 ->sum('quantity_unit');
 
                             if ($stok_keluar >= 0) {
-                                $total_stok = $itemStok->quantity - $stok_keluar - $stok_rusak;
+                                $total_stok = $itemStok->quantity - $stok_keluar - $stok_rusak + $stok_kembali;
                                 if ($total_stok > 0) {
                                     if ($itemStok->expired_date <= date('Y-m-d')) {
                                         $expiredHtml .= '<li class="text-danger"><b>' . ($total_stok) . '</b> ' . $product->unit . ' Kadaluarsa</li>';
