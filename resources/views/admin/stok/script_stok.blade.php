@@ -216,6 +216,8 @@
                 });
             };
             $('#saveStokBtn').click(function() {
+                $('#saveStokBtnSpinner').show();
+                $('#saveStokBtntBtn').prop('disabled', true);
                 var formData = $('#stokForm').serialize();
                 $.ajax({
                     type: 'POST',
@@ -225,17 +227,23 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
+                        $('#saveStokBtnSpinner').hide();
+                        $('#saveStokBtntBtn').prop('disabled', false);
                         // getAlert(response.message);
                         $('#datatable-stok').DataTable().ajax.reload();
                         getStok();
                         $('#stoksModal').modal('hide');
                     },
                     error: function(xhr) {
+                        $('#saveStokBtnSpinner').hide();
+                        $('#saveStokBtntBtn').prop('disabled', false);
                         alert('Terjadi kesalahan: ' + xhr.responseText);
                     }
                 });
             });
             $('#createStokBtn').click(function() {
+                $('#createStokBtnSpinner').show();
+                $('#createStokBtntBtn').prop('disabled', true);
                 var formData = $('#createStokForm').serialize();
 
                 $.ajax({
@@ -246,10 +254,14 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
+                        $('#createStokBtnSpinner').hide();
+                        $('#createStokBtntBtn').prop('disabled', false);
                         // getAlert(response.message);
                         $('#datatable-stok').DataTable().ajax.reload();
                         getStok();
 
+                        $('#formCreateStokBarcode').val('');
+                        $('#formCreateStokPrice').val('');
                         $('#formCreateProductId').val('');
                         $('#formCreateStokQuantity').val('');
                         $('#formCreateStokExpiredDate').val('');
@@ -258,6 +270,8 @@
                         $('#create').modal('hide');
                     },
                     error: function(xhr) {
+                        $('#createStokBtnSpinner').hide();
+                        $('#createStokBtntBtn').prop('disabled', false);
                         alert('Terjadi kesalahan: ' + xhr.responseText);
                     }
                 });

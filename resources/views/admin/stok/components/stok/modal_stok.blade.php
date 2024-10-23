@@ -41,7 +41,13 @@ i<!-- Modal for Create and Edit -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="saveStokBtn">Save</button>
+                <button type="button" class="btn btn-primary" id="saveStokBtn">
+                    <div class="spinner-border spinner-border-sm text-white" role="status" id="saveStokBtnSpinner"
+                        style="display: none;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    Save
+                </button>
             </div>
         </div>
     </div>
@@ -104,7 +110,13 @@ i<!-- Modal for Create and Edit -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="createStokBtn">Save</button>
+                <button type="button" class="btn btn-primary" id="createStokBtn">
+                    <div class="spinner-border spinner-border-sm text-white" role="status" id="createStokBtnSpinner"
+                        style="display: none;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    Save
+                </button>
             </div>
         </div>
     </div>

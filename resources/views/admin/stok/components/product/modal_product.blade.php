@@ -55,7 +55,13 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="saveProductBtn">Save</button>
+                <button type="button" class="btn btn-primary" id="saveProductBtn">
+                    <div class="spinner-border spinner-border-sm text-white" role="status" id="saveProductBtnSpinner"
+                        style="display: none;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    Save
+                </button>
             </div>
         </div>
     </div>
@@ -109,7 +115,7 @@
                     <div class="mb-3">
                         <label for="formProductUnit" class="form-label">Satuan Produk <span
                                 class="text-danger">*</span></label>
-                        <select class="form-select" id="formProductUnit" name="unit" required>
+                        <select class="form-select" id="formCreateProductUnit" name="unit" required>
                             <option value="Karung">Karung</option>
                             <option value="Karton">Karton</option>
                             <option value="Bal">Bal</option>
@@ -123,7 +129,7 @@
                         <div class="input-group">
                             <input type="number" class="form-control" id="formCreateProductQUantityUnit"
                                 name="quantity_unit" required>
-                            <select class="form-select" id="formProductSubUnit" name="sub_unit" required>
+                            <select class="form-select" id="formCreateProductSubUnit" name="sub_unit" required>
                                 <option value="Pcs">Pcs</option>
                                 <option value="Karton">Karton</option>
                                 <option value="Buah">Buah</option>

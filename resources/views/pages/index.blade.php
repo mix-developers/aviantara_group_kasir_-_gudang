@@ -40,8 +40,8 @@
                             <div class="card-body p-4">
                                 <div class="text-center">
 
-                                    <div><span class="fw-bolder h5">{{ $item->name }} </span><span
-                                            style="font-size: 10px;"
+                                    <div><span class="fw-bolder h5">{{ $item->name }} </span><br><span
+                                            style="font-size: 12px;"
                                             class="badge bg-{{ App\Models\Product::getStok($item->id) <= 0 ? 'danger' : 'primary' }}">{{ App\Models\Product::getStok($item->id) <= 0 ? 'Habis' : 'Tersedia' }}</span>
                                     </div>
                                     <div class="my-2">
@@ -49,8 +49,16 @@
                                             {{ $item->wirehouse->name }}
                                         </small>
                                     </div>
-                                    Stok :
-                                    {{ App\Models\Product::getStok($item->id) }} {{ $item->unit }}
+                                    <div class="my-2 py-1 bg-warning" style="border-radius: 6px;">
+                                        <span
+                                            class="text-black fw-bold">{{ App\Models\ProductPrice::where('id_product', $item->id)->latest()->first()? 'Rp ' .number_format(App\Models\ProductPrice::where('id_product', $item->id)->latest()->first()->price_grosir): 'Belum diberi harga' }}</span>
+                                    </div>
+                                    <span class="fw-bold">
+                                        Stok :
+                                        {{ App\Models\Product::getStok($item->id) }} {{ $item->unit }}
+                                    </span>
+                                    <br style="margin:0;"><small
+                                        style="font-size: 11px;">{{ $item->quantity_unit . ' ' . $item->sub_unit . ' /' . $item->unit }}</small>
                                 </div>
                             </div>
                         </div>

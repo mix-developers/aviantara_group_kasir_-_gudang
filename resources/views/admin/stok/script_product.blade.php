@@ -177,23 +177,30 @@
                 });
             };
             $('#saveProductBtn').click(function() {
+                $('#saveProductBtnSpinner').show();
+                $('#saveProductBtn').prop('disabled', true);
                 var formData = new FormData($('#productForm')[
-                    0]); // Gunakan FormData untuk mengambil data, termasuk file
+                    0]);
                 $.ajax({
                     type: 'POST',
                     url: '/products/store',
                     data: formData,
-                    processData: false, // Jangan proses data, biarkan FormData menghandle
-                    contentType: false, // Matikan contentType agar multipart/form-data diatur otomatis
+                    processData: false,
+                    contentType: false,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
+                        $('#saveProductBtnSpinner').hide();
+                        $('#saveProductBtn').prop('disabled', false);
                         getAlert(response.message);
+                        $('#formProductPhoto').val('');
                         $('#datatable-product').DataTable().ajax.reload();
                         $('#productsModal').modal('hide');
                     },
                     error: function(xhr) {
+                        $('#saveProductBtnSpinner').hide();
+                        $('#saveProductBtn').prop('disabled', false);
                         alert('Terjadi kesalahan: ' + xhr.responseText);
                     }
                 });
@@ -203,13 +210,13 @@
                 $('#createProductBtnSpinner').show();
                 $('#createProductBtn').prop('disabled', true);
                 var formData = new FormData($('#createProductForm')[
-                    0]); // Gunakan FormData untuk mengambil data, termasuk file
+                    0]);
                 $.ajax({
                     type: 'POST',
                     url: '/products/store',
                     data: formData,
-                    processData: false, // Jangan proses data, biarkan FormData menghandle
-                    contentType: false, // Matikan contentType agar multipart/form-data diatur otomatis
+                    processData: false,
+                    contentType: false,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
@@ -220,6 +227,8 @@
                         $('#datatable-product').DataTable().ajax.reload();
                         $('#formCreateProductName').val('');
                         $('#formCreateProductPhoto').val('');
+                        $('#formCreateProductUnit').val('');
+                        $('#formCreateProductSubUnit').val('');
                         $('#formCreateProductBarcode').val('');
                         $('#formCreateProductQUantityUnit').val('');
                         $('#formProductIdWirehouseCreate').val('');
