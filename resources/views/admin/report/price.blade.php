@@ -36,7 +36,7 @@
                     </div>
                 </div>
                 <hr>
-                <div class="card-datatable table-responsive">
+                <div class="card-datatable ">
                     <table id="datatable-price" class="table table-hover table-bordered display table-sm">
                         <thead>
                             <tr>

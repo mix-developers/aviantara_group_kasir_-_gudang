@@ -23,6 +23,11 @@
             <div id="chartContainer" style="height: 500px;"></div>
         </div>
     </div>
+    <div class="my-4 card">
+        <div class="card-body">
+            <div id="chartContainer2" style="height: 500px;"></div>
+        </div>
+    </div>
     <div class="my-4">
         <div class="row">
             <div class="col-md-6">
@@ -72,14 +77,26 @@
                 'color' => 'secondary',
                 'icon' => 'home',
             ])
-        @elseif(Auth::user()->role == 'Gudang')
-            @include('admin.dashboard_component.card1', [
-                'count' => $product,
-                'title' => 'Produk',
-                'subtitle' => 'Total Produk',
-                'color' => 'warning',
-                'icon' => 'layer',
-            ])
+            <hr>
+            @foreach (App\Models\Wirehouse::all() as $item)
+                @include('admin.dashboard_component.card1', [
+                    'count' => App\Models\Product::where('id_wirehouse', $item->id)->count(),
+                    'title' => $item->name,
+                    'subtitle' => 'Total produk',
+                    'color' => 'primary',
+                    'icon' => 'home',
+                ])
+            @endforeach
+            <hr>
+            @foreach (App\Models\PaymentMethod::all() as $item)
+                @include('admin.dashboard_component.card1', [
+                    'count' => App\Models\PaymentMethodItem::where('id_payment_method', $item->id)->sum('paid'),
+                    'title' => $item->method,
+                    'subtitle' => 'Total Pembayaran',
+                    'color' => 'warning',
+                    'icon' => 'credit-card',
+                ])
+            @endforeach
         @endif
 
     </div>
@@ -148,7 +165,7 @@
         <hr>
 
         {{-- penjualan --}}
-        <div class="my-3 d-flex justify-content-between align-items-center">
+        {{-- <div class="my-3 d-flex justify-content-between align-items-center">
             <h4>Data Penjualan Gudang</h4>
             <button type="button" class="btn btn-secondary refresh-stok"><span>
                     <i class="bx bx-sync me-sm-1"> </i>
@@ -224,7 +241,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
     @else
         <div class="my-3 d-flex justify-content-between align-items-center">
             <h4>Data Stok Barang pada kios</h4>

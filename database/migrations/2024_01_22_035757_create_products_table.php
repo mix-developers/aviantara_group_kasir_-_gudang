@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->enum('unit', ['Karung', 'Karton', 'Bal', 'Pak']);
-            $table->string('barcode');
+            $table->string('barcode')->unique();
             $table->integer('quantity_unit');
             $table->string('photo')->nullable();
             $table->timestamps();

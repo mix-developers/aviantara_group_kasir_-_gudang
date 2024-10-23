@@ -62,7 +62,7 @@
                     </div>
                 </div>
                 <hr>
-                <div class="card-datatable table-responsive">
+                <div class="card-datatable">
                     <table id="datatable-report-payment" class="table table-hover table-bordered display">
                         <thead>
                             <tr>
@@ -98,8 +98,8 @@
         $(function() {
             var table = $('#datatable-report-payment').DataTable({
                 processing: true,
-                serverSide: false,
-                responsive: false,
+                serverSide: true,
+                responsive: true,
                 ajax: '{{ url('report/report-payment-datatable') }}',
                 columns: [{
                         data: 'id',

@@ -162,40 +162,12 @@
 
     <!-- Page JS -->
     <script src="{{ asset('backend_theme/') }}/assets/js/dashboards-analytics.js"></script>
-    {{-- <script src="{{ asset('backend_theme/') }}/assets/sweet-alert/sweetalert2.all.min.js"></script>
-    <script src="{{ asset('backend_theme/') }}/assets/sweet-alert/sweetalert2.min.css"></script>
-    <script src="{{ asset('backend_theme/') }}/assets/sweet-alert/sweetalert2.all.js"></script> --}}
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    </script>
+
     <!-- Place this tag in your head or just before your close body tag. -->
-    {{-- <script async defer src="https://buttons.github.io/buttons.js"></script> --}}
     <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 
 
     <script>
-        $(".delete-button").on('click', function(e) {
-            e.preventDefault();
-            let form = $(this).parents('form');
-
-            swal.fire({
-                title: 'Apakah Anda yakin ingin menghapus data ini?',
-                text: 'Data yang dihapus tidak bisa dikembalikan',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Hapus',
-                cancelButtonText: 'Batalkan'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit()
-
-                    swal.fire(
-                        'Dikonfirmasi!',
-                        'Data akan dihapus.',
-                        'success'
-                    )
-                }
-            })
-        })
         $(document).ready(function() {
             $('#datatable').DataTable({
                 // responsive: true,
@@ -243,6 +215,9 @@
     <script>
         flatpickr("input[type=date]");
     </script>
+    @if (Session::has('danger') || Session::has('success'))
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    @endif
     @if (Session::has('danger'))
         <script>
             Swal.fire({

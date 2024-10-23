@@ -64,6 +64,7 @@ Route::middleware(['auth:web', 'checkDisabled'])->group(function () {
     Route::get('/chart-paid', [App\Http\Controllers\HomeController::class, 'getChartPaid']);
     Route::get('/chart-expired', [App\Http\Controllers\HomeController::class, 'getChartExpired']);
     Route::get('/chart-order-all-wirehouse', [App\Http\Controllers\HomeController::class, 'getChartOrderAllWirehouses']);
+    Route::get('/chart-payment-all-wirehouse', [App\Http\Controllers\HomeController::class, 'getChartPaymentAllWirehouses']);
 
     //dashboard
     Route::get('/expired-alert', [HomeController::class, 'expiredAlert']);
