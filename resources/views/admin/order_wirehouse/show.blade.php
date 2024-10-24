@@ -72,6 +72,13 @@
                             <td>:</td>
                             <td>Rp {{ number_format($order->total_fee) }}</td>
                         </tr>
+                        <tr>
+                            <td>Sisa Pembayaran</td>
+                            <td>:</td>
+                            <td class="text-danger fw-bold">Rp
+                                {{ number_format($order->total_fee - App\Models\OrderWirehousePayment::where('id_order_wirehouse', $order->id)->sum('paid')) }}
+                            </td>
+                        </tr>
                     </table>
                 </div>
             </div>
@@ -289,6 +296,24 @@
                     }
                 });
             });
+            window.deletePayment = function(id) {
+                if (confirm('Apakah Anda yakin ingin menghapus pembayaran ini?')) {
+                    $.ajax({
+                        type: 'DELETE',
+                        url: '/payments/delete/' + id,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+                            // getAlert(response.message);
+                            $('#datatable-detail-payment').DataTable().ajax.reload();
+                        },
+                        error: function(xhr) {
+                            alert('Terjadi kesalahan: ' + xhr.responseText);
+                        }
+                    });
+                }
+            };
 
         });
     </script>

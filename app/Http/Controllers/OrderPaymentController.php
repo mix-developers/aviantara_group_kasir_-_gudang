@@ -80,15 +80,15 @@ class OrderPaymentController extends Controller
         $request->validate([
             'id_payment_method' => 'required|string|max:255',
             'id_order_wirehouse' => 'required|string|max:255',
-            'paid' => 'required|max:20',
         ]);
 
         $OrderWirehouse = OrderWirehouse::find($request->input('id_order_wirehouse'));
 
+        $checkPaymentOld = OrderWirehousePayment::where('id_order_wirehouse', $OrderWirehouse->id)->sum('paid');
+
         $PaymentData = [
             'id_payment_method' => $request->input('id_payment_method'),
             'id_order_wirehouse' => $request->input('id_order_wirehouse'),
-            'paid' => $request->input('paid') > $OrderWirehouse->total_fee ? $OrderWirehouse->total_fee : $request->input('paid'),
             'id_user' => Auth::user()->id,
         ];
 
@@ -97,7 +97,12 @@ class OrderPaymentController extends Controller
             if (!$OrderWirehousePayment) {
                 return response()->json(['message' => 'Data tidak ditemukan'], 404);
             }
-
+            if ($checkPaymentOld == 0) {
+                $OrderWirehousePayment['paid'] = $request->input('paid') > $OrderWirehouse->total_fee ? $OrderWirehouse->total_fee : $request->input('paid');
+            } else {
+                $FinalPayment = $OrderWirehouse->total_fee - $checkPaymentOld;
+                $OrderWirehousePayment['paid'] = $request->input('paid') > $FinalPayment ? $FinalPayment : $request->input('paid');
+            }
             $OrderWirehousePayment->update($PaymentData);
             $message = 'Berhasil mengedit data';
         } else {
@@ -107,10 +112,16 @@ class OrderPaymentController extends Controller
             $paymentItems->id_user =  Auth::user()->id;
             $paymentItems->id_order_wirehouse =  $request->input('id_order_wirehouse');
             $paymentItems->id_payment_method = $request->input('id_payment_method');
+            $paymentItems->paid = $request->input('paid') > $OrderWirehouse->total_fee ? $OrderWirehouse->total_fee : $request->input('paid');;
             $paymentItems->description = 'Pembayaran tagihan invoice ' . $invoice;
-            $paymentItems->paid = $request->input('paid') > $OrderWirehouse->total_fee ? $OrderWirehouse->total_fee : $request->input('paid');
-            $paymentItems->save();
 
+            $paymentItems->save();
+            if ($checkPaymentOld == 0) {
+                $PaymentData['paid'] = $request->input('paid') > $OrderWirehouse->total_fee ? $OrderWirehouse->total_fee : $request->input('paid');
+            } else {
+                $FinalPayment = $OrderWirehouse->total_fee - $checkPaymentOld;
+                $PaymentData['paid'] = $request->input('paid') > $FinalPayment ? $FinalPayment : $request->input('paid');
+            }
             OrderWirehousePayment::create($PaymentData);
             $message = 'Berhasil menambah data';
         }
@@ -134,5 +145,17 @@ class OrderPaymentController extends Controller
 
         // return $pdf->download('Invoice ' . $data->no_invoice . '.pdf');
         return view('admin.payment.print.delivery', compact('data', 'items'));
+    }
+    public function destroy($id)
+    {
+        $payment = paymentMethodItem::find($id);
+        $order = OrderWirehousePayment::find($id);
+
+        if (!$payment || !$order) {
+            return response()->json(['message' => 'Data tidak ditemukan'], 404);
+        }
+
+        $payment->delete();
+        $order->delete();
     }
 }

@@ -131,6 +131,7 @@ Route::middleware(['auth:web', 'role:Gudang,Admin,Owner', 'checkDisabled'])->gro
     Route::delete('/payments/delete/{id}',  [OrderPaymentController::class, 'destroy'])->name('payments.delete');
     Route::get('/payment-detail-datatable/{id}', [OrderPaymentController::class, 'getPaymentDetailDataTable']);
     Route::post('/send_bill/{id}', [OrderPaymentController::class, 'send_bill'])->name('send_bill');
+    Route::delete('/payments/delete/{id}', [OrderPaymentController::class, 'destroy'])->name('payments.delete');
     //prices
     Route::get('/prices-datatable', [PriceController::class, 'getPricesDataTable']);
     Route::get('/prices-order-datatable', [PriceController::class, 'getPricesOrderDataTable']);
