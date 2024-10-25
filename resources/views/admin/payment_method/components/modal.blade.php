@@ -36,7 +36,8 @@
                 <form id="createPaymentMethodForm">
                     <div class="mb-3">
                         <label for="formPaymentMethodMethod" class="form-label">metode Pembayaran</label>
-                        <input type="text" class="form-control" id="formPaymentMethodMethod" name="method" required>
+                        <input type="text" class="form-control" id="formCreatePaymentMethodMethod" name="method"
+                            required>
                     </div>
 
                 </form>

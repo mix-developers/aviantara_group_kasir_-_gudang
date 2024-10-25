@@ -37,6 +37,7 @@
                                 <th>ID</th>
                                 <th>Nama</th>
                                 <th>No Hp</th>
+                                <th>NIK</th>
                                 <th>Alamat Rumah</th>
                                 <th>Alamat Usaha</th>
                                 <th>Action</th>
@@ -48,6 +49,7 @@
                                 <th>ID</th>
                                 <th>Nama</th>
                                 <th>No Hp</th>
+                                <th>NIK</th>
                                 <th>Alamat Rumah</th>
                                 <th>Alamat Usaha</th>
                                 <th>Action</th>

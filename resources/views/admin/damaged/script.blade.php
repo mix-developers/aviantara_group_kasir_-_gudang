@@ -85,6 +85,8 @@
                 });
             };
             $('#createDamagedBtn').click(function(e) {
+                $('#createDamagedBtnSpinner').show();
+                $('#createDamagedBtn').prop('disabled', true);
                 e.preventDefault();
 
                 // Ambil semua data dari form
@@ -102,12 +104,16 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
+                        $('#createDamagedBtnSpinner').hidden();
+                        $('#createDamagedBtn').prop('disabled', false);
                         console.log(response);
                         $('#createDamagedForm')[0].reset();
                         $('#create').modal('hide');
                         $('#datatable-damageds').DataTable().ajax.reload();
                     },
                     error: function(xhr, status, error) {
+                        $('#createDamagedBtnSpinner').hidden();
+                        $('#createDamagedBtn').prop('disabled', false);
                         alert('Terjadi kesalahan saat menyimpan data. : ' + xhr.responseText);
                     }
                 });

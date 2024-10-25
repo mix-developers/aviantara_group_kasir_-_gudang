@@ -20,6 +20,10 @@
                             required>
                     </div>
                     <div class="mb-3">
+                        <label for="formCustomerNik" class="form-label">NIK (opsional)</label>
+                        <input type="text" class="form-control" id="formCustomerNik" name="nik" value="0">
+                    </div>
+                    <div class="mb-3">
                         <label for="formCustomerAddressHome" class="form-label">Alamat Rumah</label>
                         <input type="text" class="form-control" id="formCustomerAddressHome" name="address_home"
                             required>
@@ -57,6 +61,11 @@
                         <label for="formCustomerPhone" class="form-label">No Hp</label>
                         <input type="text" class="form-control" id="formCreateCustomerPhone" name="phone"
                             value="+62" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formCustomerNik" class="form-label">NIK (opsional)</label>
+                        <input type="text" class="form-control" id="formCreateCustomerNik" name="nik"
+                            value="0">
                     </div>
                     <div class="mb-3">
                         <label for="formCustomerAddressHome" class="form-label">Alamat Rumah</label>

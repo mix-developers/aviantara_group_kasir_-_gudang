@@ -61,6 +61,7 @@ Route::get('/get-invoice/{invoice}', [OrderWirehouseController::class, 'getInvoi
 Auth::routes(['register' => false, 'reset' => false]);
 Route::middleware(['auth:web', 'checkDisabled'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index']);
+    Route::get('/dashboard2', [App\Http\Controllers\HomeController::class, 'dashboard2']);
     Route::get('/chart-paid', [App\Http\Controllers\HomeController::class, 'getChartPaid']);
     Route::get('/chart-expired', [App\Http\Controllers\HomeController::class, 'getChartExpired']);
     Route::get('/chart-order-all-wirehouse', [App\Http\Controllers\HomeController::class, 'getChartOrderAllWirehouses']);

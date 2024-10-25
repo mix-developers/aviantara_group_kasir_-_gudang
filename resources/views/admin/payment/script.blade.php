@@ -23,6 +23,10 @@
                         name: 'tagihan'
                     },
                     {
+                        data: 'due_date',
+                        name: 'due_date'
+                    },
+                    {
                         data: 'payment',
                         name: 'payment'
                     },
@@ -83,6 +87,8 @@
                 });
             };
             $('#createPaymentBtn').click(function() {
+                $('#createPaymentBtnSpinner').show();
+                $('#createPaymentBtn').prop('disabled', true);
                 var formData = $('#createPaymentForm').serialize();
 
                 $.ajax({
@@ -93,12 +99,16 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
+                        $('#createPaymentBtnSpinner').hide();
+                        $('#createPaymentBtn').prop('disabled', false);
                         $('#datatable-payment').DataTable().ajax.reload();
                         getAlert(response.message);
                         $('#create').modal('hide');
                         $('#paid').val('');
                     },
                     error: function(xhr) {
+                        $('#createPaymentBtnSpinner').hide();
+                        $('#createPaymentBtn').prop('disabled', false);
                         alert('Terjadi kesalahan: ' + xhr.responseText);
                     }
                 });

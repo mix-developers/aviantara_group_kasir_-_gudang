@@ -16,6 +16,7 @@ class OrderPaymentController extends Controller
     public function index()
     {
         $user = Auth::user();
+        $add = '';
         if ($user->role == 'Gudang') {
             $wirehouse = Wirehouse::find($user->id_wirehouse);
             $add = ' : ' . $wirehouse->name;
@@ -39,6 +40,7 @@ class OrderPaymentController extends Controller
             "Hai, " . $bill->customer->name . "\n==================\n" .
             "Tagihan untuk Order #" . $bill->no_invoice . "\n" .
             "Total tagihan sebesar: Rp " . number_format($bill->total_fee, 0, ',', '.') . "\n" .
+            "Jatuh tempo : " . $bill->due_date . "\n" .
             "Biaya tambahan: Rp " . number_format($bill->additional_fee, 0, ',', '.') . "\n" .
             "\n===================\n Daftar produk yang dibeli:\n";
 

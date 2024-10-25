@@ -98,6 +98,7 @@
                     }
                 });
             }
+
             $('.create-new').click(function() {
                 $('#create').modal('show');
                 getWirehouseOptions();
@@ -121,6 +122,7 @@
                         $('#formCustomerName').val('');
                         $('#formCustomerPhone').val('');
                         $('#formCustomerAddressHome').val('');
+                        $('#formCustomerNik').val('');
                         $('#formCustomerAddressCompany').val('');
                         $('#customerSelectionTable').DataTable().ajax.reload();
                         $('#create-customer').modal('hide');
@@ -193,6 +195,7 @@
                         $('#EditInvoice').text(response.no_invoice);
                         $('#formEditCustomerId').val(response.id_customer);
                         $('#formEditDelivery').val(response.delivery);
+                        $('#formEditDueDate').val(response.due_date);
                         $('#formEditDiscount').val(response.discount);
                         $('#formEditAdditionalFee').val(response.additional_fee);
                         // $('#formEditAddressDelivery').val(response.address_delivery);
@@ -235,6 +238,8 @@
                 });
             };
             $('#saveOrderBtn').click(function() {
+                $('#saveOrderBtnSpinner').show();
+                $('#saveOrderBtn').prop('disabled', true);
 
                 var formData = $('#editOrderForm').serialize();
 
@@ -246,6 +251,8 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
+                        $('#saveOrderBtnSpinner').hide();
+                        $('#saveOrderBtn').prop('disabled', false);
                         console.log(response.message);
                         // getAlert(response.message);
 
@@ -253,11 +260,15 @@
                         $('#editModal').modal('hide');
                     },
                     error: function(xhr) {
+                        $('#saveOrderBtnSpinner').hide();
+                        $('#saveOrderBtn').prop('disabled', false);
                         alert('Terjadi kesalahan: ' + xhr.responseText);
                     }
                 });
             });
             $('#createOrderBtn').click(function() {
+                $('#createOrderBtnSpinner').show();
+                $('#createOrderBtn').prop('disabled', true);
                 var formData = $('#createOrderForm').serialize();
 
                 $.ajax({
@@ -268,6 +279,8 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
+                        $('#createOrderBtnSpinner').hide();
+                        $('#createOrderBtn').prop('disabled', false);
                         // getAlert(response.message);
                         $('#tableProductList').empty();
                         $('#totalOrder').text('0');
@@ -275,6 +288,7 @@
                         $('#formCreateAdditionalFee').val();
                         $('#formCreateAddressDelivery').val();
                         $('#formCreateDescription').val();
+                        $('#formCreateDueDate').val();
                         $('#descriptionCreateOrder').empty();
                         $('#createOrderForm')[0].reset();
                         $('#datatable-order-wirehouse').DataTable().ajax.reload();
@@ -317,6 +331,8 @@
                         }
 
                         $('#createPaymentBtn').click(function() {
+                            $('#createPaymentBtnSpinner').show();
+                            $('#createPaymentBtn').prop('disabled', true);
                             var formData = $('#createPaymentForm').serialize();
 
                             $.ajax({
@@ -328,6 +344,9 @@
                                         .attr('content')
                                 },
                                 success: function(response) {
+                                    $('#createPaymentBtnSpinner').hide();
+                                    $('#createPaymentBtn').prop('disabled',
+                                        false);
                                     $('#create-payment').modal('hide');
                                     getAlert('Berhasil membuat pesanan');
                                     $('#paid').val('');
@@ -341,17 +360,19 @@
                                     // alert('Berhasil membuat order');
                                 },
                                 error: function(xhr) {
+                                    $('#createPaymentBtnSpinner').hide();
+                                    $('#createPaymentBtn').prop('disabled',
+                                        false);
                                     alert('Terjadi kesalahan: ' + xhr
                                         .responseText);
                                 }
                             });
                         });
 
-
-
-
                     },
                     error: function(xhr) {
+                        $('#createOrderBtnSpinner').hide();
+                        $('#createOrderBtn').prop('disabled', false);
                         alert('Terjadi kesalahan: ' + xhr.responseText);
                     }
                 });

@@ -30,6 +30,7 @@
                                 <th>No. Invoice</th>
                                 <th>Pelanggan</th>
                                 <th>Tagihan</th>
+                                <th>Jatuh Tempo</th>
                                 <th>Pembayaran</th>
                                 <th>Action</th>
                             </tr>
@@ -41,6 +42,7 @@
                                 <th>No. Invoice</th>
                                 <th>Pelanggan</th>
                                 <th>Tagihan</th>
+                                <th>Jatuh Tempo</th>
                                 <th>Pembayaran</th>
                                 <th>Action</th>
                             </tr>

@@ -79,10 +79,20 @@
                 <td></td>
             </tr>
             <tr>
-                <td colspan="2" class="text-right"><b>NO INVOICE :</b></td>
+                <td colspan=""><b>
+                        @if ($data->due_date != null)
+                            JATUH TEMPO :
+                        @endif
+                    </b></td>
+                <td colspan="" class="text-right"><b>NO INVOICE :</b></td>
             </tr>
             <tr>
-                <td colspan="2" class="text-right">#{{ $data->no_invoice }}</td>
+                <td colspan="" style="color: red">
+                    @if ($data->due_date != null)
+                        {{ $data->due_date }}
+                    @endif
+                </td>
+                <td class="text-right">#{{ $data->no_invoice }}</td>
             </tr>
         </table>
 

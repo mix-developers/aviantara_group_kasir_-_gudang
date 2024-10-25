@@ -26,6 +26,14 @@
             </a>
         </li>
         @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Owner')
+            <li class="menu-item {{ request()->is('dashboard2') ? 'active' : '' }}">
+                <a href="{{ url('/dashboard2') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                    <div data-i18n="Analytics">Dashboard Kios</div>
+                </a>
+            </li>
+        @endif
+        @if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Owner')
             <li class="menu-header small text-uppercase">
                 <span class="menu-header-text">Data Master</span>
             </li>

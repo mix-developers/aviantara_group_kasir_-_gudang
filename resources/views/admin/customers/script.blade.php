@@ -19,6 +19,10 @@
                         data: 'phone',
                         name: 'phone'
                     },
+                    {
+                        data: 'nik',
+                        name: 'nik'
+                    },
 
                     {
                         data: 'address_home',
@@ -49,6 +53,7 @@
                         $('#formCustomerId').val(response.id);
                         $('#formCustomerName').val(response.name);
                         $('#formCustomerPhone').val(response.phone);
+                        $('#formCustomerNik').val(response.nik);
                         $('#formCustomerAddressHome').val(response.address_home);
                         $('#formCustomerAddressCompany').val(response.address_company);
                         $('#customersModal').modal('show');
@@ -95,6 +100,7 @@
                         $('#formCreateCustomerName').val('');
                         $('#formCreateCustomerPhone').val('+62');
                         $('#formCreateCustomerAddressHome').val('');
+                        $('#formCreateCustomerNik').val('');
                         $('#formCreateCustomerAddressCompany').val('');
                         $('#datatable-customers').DataTable().ajax.reload();
                         $('#create').modal('hide');

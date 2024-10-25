@@ -4,9 +4,11 @@
     @include('layouts.backend.alert')
     <div class="my-3">
         {{-- <a href="" class="btn btn-danger"><i class="bx bxs-file-pdf"></i> Export PDF</a> --}}
-        <a href="" class="btn btn-primary mb-3"
-            onclick="window.open('{{ url('/payments/print-delivery', $order->id) }}', 'Print Invoice', 'width=800,height=600')">
-            <i class="bx bxs-truck"></i> Invoice Pengantaran</a>
+        @if ($order->delivery == 1)
+            <a href="" class="btn btn-primary mb-3"
+                onclick="window.open('{{ url('/payments/print-delivery', $order->id) }}', 'Print Invoice', 'width=800,height=600')">
+                <i class="bx bxs-truck"></i> Invoice Pengantaran</a>
+        @endif
         <a href="" class="btn btn-success mb-3"
             onclick="window.open('{{ url('/order_wirehouses/print-invoice', $order->id) }}', 'Print Invoice', 'width=800,height=600')">
             <i class="bx bx-printer"></i> Invoice Pembelian</a>
@@ -47,6 +49,13 @@
                             <td>:</td>
                             <td>{{ $order->no_invoice }}</td>
                         </tr>
+                        @if ($order->due_date != null)
+                            <tr>
+                                <td>Jatuh Tempo</td>
+                                <td>:</td>
+                                <td class="text-danger">{{ $order->due_date }}</td>
+                            </tr>
+                        @endif
                         <tr>
                             <td>Harga Pesanan</td>
                             <td>:</td>
@@ -276,6 +285,8 @@
                 });
             }
             $('#createPaymentBtn').click(function() {
+                $('#createPaymentBtnSpinner').show();
+                $('#createPaymentBtn').prop('disabled', true);
                 var formData = $('#createPaymentForm').serialize();
 
                 $.ajax({
@@ -286,12 +297,16 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
+                        $('#createPaymentBtnSpinner').hide();
+                        $('#createPaymentBtn').prop('disabled', false);
                         alert(response.message);
                         $('#datatable-detail-payment').DataTable().ajax.reload();
                         $('#paid').val('');
                         $('#create').modal('hide');
                     },
                     error: function(xhr) {
+                        $('#createPaymentBtnSpinner').hide();
+                        $('#createPaymentBtn').prop('disabled', false);
                         alert('Terjadi kesalahan: ' + xhr.responseText);
                     }
                 });

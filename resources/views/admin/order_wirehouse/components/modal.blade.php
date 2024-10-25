@@ -58,6 +58,12 @@
                                 <input type="number" class="form-control" id="formEditAdditionalFee"
                                     name="additional_fee" value="0">
                             </div>
+                            <div class="mb-3">
+                                <label for="formEditDueDate" class="form-label">Tanggal Jatuh Tempo <span
+                                        class="text-muted">(jika
+                                        ada)</span></label>
+                                <input type="date" class="form-control" id="formEditDueDate" name="due_date">
+                            </div>
                             <div class="mb-3" style="display: none;" id="hidden2">
                                 <label for="formPaymentMethodMethod" class="form-label">Alamat Pengantaran </label>
                                 <textarea class="form-control" id="formEditAddressDelivery" name="address_delivery">-</textarea>
@@ -75,12 +81,19 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="saveOrderBtn">Save</button>
+                <button type="button" class="btn btn-primary" id="saveOrderBtn">
+                    <div class="spinner-border spinner-border-sm text-white" role="status" id="saveOrderBtnSpinner"
+                        style="display: none;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    Save
+                </button>
             </div>
         </div>
     </div>
 </div>
-<div class="modal fade" id="create" tabindex="-1" aria-labelledby="PaymentMethodsModalLabel" aria-hidden="true">
+<div class="modal fade" id="create" tabindex="-1" aria-labelledby="PaymentMethodsModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -139,6 +152,12 @@
                                         ada)</span></label>
                                 <input type="number" class="form-control" id="formCreateAdditionalFee"
                                     name="additional_fee" value="0">
+                            </div>
+                            <div class="mb-3">
+                                <label for="formCreateDueDate" class="form-label">Tanggal Jatuh Tempo <span
+                                        class="text-muted">(jika
+                                        ada)</span></label>
+                                <input type="date" class="form-control" id="formCreateDueDate" name="due_date">
                             </div>
                             <div class="mb-3" style="display: none;" id="hidden2">
                                 <label for="formPaymentMethodMethod" class="form-label">Alamat Pengantaran </label>
@@ -211,7 +230,13 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="createOrderBtn" disabled>Save</button>
+                <button type="button" class="btn btn-primary" id="createOrderBtn" disabled>
+                    <div class="spinner-border spinner-border-sm text-white" role="status"
+                        id="createOrderBtnSpinner" style="display: none;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    Save
+                </button>
             </div>
         </div>
     </div>
@@ -235,6 +260,11 @@
                         <label for="formCustomerPhone" class="form-label">No Hp</label>
                         <input type="number" class="form-control" id="formCustomerPhone" name="phone" required
                             value="+62">
+                    </div>
+                    <div class="mb-3">
+                        <label for="formCustomer" class="form-label">NIK (opsional)</label>
+                        <input type="number" class="form-control" id="formCustomerNik" name="nik"
+                            value="0">
                     </div>
                     <div class="mb-3">
                         <label for="formCustomerAddressHome" class="form-label">Alamat Rumah</label>
@@ -364,7 +394,13 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="createPaymentBtn">Save</button>
+                <button type="button" class="btn btn-primary" id="createPaymentBtn">
+                    <div class="spinner-border spinner-border-sm text-white" role="status"
+                        id="createPaymentBtnSpinner" style="display: none;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    Save
+                </button>
             </div>
         </div>
     </div>

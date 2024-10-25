@@ -185,6 +185,7 @@ class OrderWirehouseController extends Controller
         $order->delivery = $delivery;
         $order->address_delivery = $request->input('address_delivery');
         $order->description = $request->input('description');
+        $order->due_date = $request->input('due_date') ?? null;
         $order->no_invoice =  'AVI-' . $milliseconds;
 
         if ($order->save()) {
@@ -253,6 +254,7 @@ class OrderWirehouseController extends Controller
         $order->total_fee = $total;
         $order->id_customer = $request->input('id_customer');
         $order->id_wirehouse = $request->input('id_wirehouse');
+        $order->due_date = $request->input('due_date') ?? $order->due_date;
         $order->id_user = Auth::user()->id;
         $order->additional_fee = $additional_fee;
         $order->delivery = $delivery;

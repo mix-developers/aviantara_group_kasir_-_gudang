@@ -39,8 +39,7 @@ class CustomerController extends Controller
     }
     public function getCustomersDataTable()
     {
-        $customers = Customer::select(['id', 'name', 'phone', 'address_home', 'address_company', 'created_at', 'updated_at'])
-            ->orderByDesc('id');
+        $customers = Customer::orderByDesc('id');
 
         return Datatables::of($customers)
             ->addColumn('action', function ($customer) {
@@ -87,6 +86,7 @@ class CustomerController extends Controller
             'phone' => $request->input('phone'),
             'address_home' => $request->input('address_home'),
             'address_company' => $request->input('address_company'),
+            'nik' => $request->input('address_company'),
         ];
 
         if ($request->filled('id')) {

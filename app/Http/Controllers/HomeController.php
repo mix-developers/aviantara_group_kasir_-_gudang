@@ -36,20 +36,35 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $product = Product::query();
-        if (Auth::user()->role == 'Gudang') {
-            $product->where('id_wirehouse', Auth::user()->id_wirehouse);
+        if (Auth::user()->role != 'Kios') {
+
+            $product = Product::query();
+            if (Auth::user()->role == 'Gudang') {
+                $product->where('id_wirehouse', Auth::user()->id_wirehouse);
+            }
+            $product_data = $product->count();
+            $data = [
+                'title' => 'Dashboard',
+                'users' => User::where('role', '!=', 'admin')->where('role', '!=', 'owner')->count(),
+                'customers' => Customer::count(),
+                'product' => $product_data,
+                'shops' => Shop::count(),
+                'wirehouses' => Wirehouse::count(),
+            ];
+            return view('admin.dashboard', $data);
+        } else {
+            $data = [
+                'title' => 'Dashboard',
+            ];
+            return view('admin.dashboard2', $data);
         }
-        $product_data = $product->count();
+    }
+    public function dashboard2()
+    {
         $data = [
             'title' => 'Dashboard',
-            'users' => User::where('role', '!=', 'admin')->where('role', '!=', 'owner')->count(),
-            'customers' => Customer::count(),
-            'product' => $product_data,
-            'shops' => Shop::count(),
-            'wirehouses' => Wirehouse::count(),
         ];
-        return view('admin.dashboard', $data);
+        return view('admin.dashboard2', $data);
     }
     public function getStokExpired()
     {

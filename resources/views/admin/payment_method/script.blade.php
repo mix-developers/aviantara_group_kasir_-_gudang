@@ -80,8 +80,7 @@
                     },
                     success: function(response) {
                         getAlert(response.message);
-                        $('#PaymentMethodsModalLabel').text('Edit PaymentMethod');
-                        $('#formPaymentMethodMethod').val('');
+                        $('#formCreatePaymentMethodMethod').val('');
                         $('#datatable-payment-method').DataTable().ajax.reload();
                         $('#create').modal('hide');
                         getPaymentCard().ajax.reload();

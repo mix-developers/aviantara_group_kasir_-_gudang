@@ -7,7 +7,7 @@
         <hr>
     </div>
     <div class="my-3 text-center">
-        <h4>Selamat datang kembali di <span class="text-primary">Sistem Informasi Managemen Gudang dan
+        <h4>Selamat datang kembali di <span class="text-primary">Sistem Informasi Manajemen Gudang dan
                 Kios</span>
         </h4>
         @if (Auth::user()->role == 'Gudang')
@@ -21,6 +21,7 @@
     <div class="my-4 card">
         <div class="card-body">
             <div id="chartContainer" style="height: 500px;"></div>
+
         </div>
     </div>
     <div class="my-4 card">
@@ -33,7 +34,35 @@
             <div class="col-md-6">
                 <div class="card mb-3">
                     <div class="card-body">
-                        <div id="chartContainerLunas" style="height: 300px; width: 100%;"></div>
+                        <div class="row">
+                            <div class="col-8">
+
+                                <div id="chartContainerLunas" style="height: 300px; width: 100%;"></div>
+                            </div>
+                            <div class="col-4 p-2" style="background-color: #f5f5f9; border-radius:20px;">
+                                <div class="text-center text-dark">
+                                    <strong>Keterangan</strong>
+                                    <p>
+                                    <ul class="list-group ">
+                                        <li class="list-group-item text-dark">
+                                            <b>Lunas :<br>
+                                                <span class="text-primary">Rp 0 </span></b>
+                                        </li>
+                                        <li class="list-group-item text-dark">
+                                            <b>Belum Lunas : <br>
+                                                <span class="text-danger">Rp 0 </span></b>
+                                        </li>
+                                        <li class="list-group-item text-dark">
+                                            <b>Jatuh Tempo :
+                                                <br>
+                                                <span class="text-danger">Rp 0 </span>
+                                            </b>
+                                        </li>
+                                    </ul>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
