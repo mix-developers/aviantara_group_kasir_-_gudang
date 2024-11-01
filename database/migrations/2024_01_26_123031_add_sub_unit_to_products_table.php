@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->enum('sub_unit', ['Pcs', 'Ekor', 'Buah', 'Sacet', 'Botol', 'Gelas', 'Butir', 'Rim', 'Lembar', 'Gross', 'Lusin', 'Kodi', 'Bungkus'])->after('unit')->default('Pcs');
+            $table->enum('sub_unit', ['Pcs', 'Ekor', 'Buah', 'Sacet', 'Botol', 'Gelas', 'Butir', 'Rim', 'Lembar', 'Gross', 'Lusin', 'Kodi', 'Bungkus', 'Kg'])->after('unit')->default('Pcs');
         });
     }
 

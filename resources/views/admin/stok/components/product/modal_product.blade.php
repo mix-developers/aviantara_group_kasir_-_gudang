@@ -121,6 +121,7 @@
                             <option value="Bal">Bal</option>
                             <option value="Pak">Pak</option>
                             <option value="Rak">Rak</option>
+                            <option value="Koli">Koli</option>
                         </select>
                     </div>
                     <div class="mb-3">
@@ -143,6 +144,7 @@
                                 <option value="Gross">Gross</option>
                                 <option value="Lusin">Lusin</option>
                                 <option value="Kodi">Kodi</option>
+                                <option value="Kg">Kg</option>
                             </select>
                         </div>
                     </div>

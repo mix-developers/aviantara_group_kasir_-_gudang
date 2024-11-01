@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->enum('unit', ['Karung', 'Karton', 'Bal', 'Pak']);
+            $table->enum('unit', ['Karung', 'Karton', 'Bal', 'Pak', 'Koli']);
             $table->string('barcode')->unique();
             $table->integer('quantity_unit');
             $table->string('photo')->nullable();

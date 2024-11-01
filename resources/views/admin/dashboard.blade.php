@@ -11,8 +11,11 @@
                 Kios</span>
         </h4>
         @if (Auth::user()->role == 'Gudang')
-            <p class="badge bg-label-danger"><i class="bx bx-error"></i> Harap selalu cek fisik barang kadaluarsa pada gudang
-                dan sistem</p>
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <i class="bx bx-error"></i> Harap selalu cek fisik barang kadaluarsa pada
+                gudang
+                dan sistem
+            </div>
         @endif
     </div>
     <hr>
