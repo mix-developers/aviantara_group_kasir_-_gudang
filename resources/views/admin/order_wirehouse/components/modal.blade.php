@@ -131,14 +131,34 @@
                                 </div>
                                 <small class="text-muted">*Aktifkan jika barang akan diantar ke pelanggan</small>
                             </div>
-                            <div class="mb-3">
-                                <label>Diskon</label>
-                                <div class="input-group">
-                                    <input type="number" class="form-control" value="0" name="discount"
-                                        id="formCreateDiscount">
-                                    <span class="input-group-text">%</span>
+                            <div class="p-2 "
+                                style="background-color:rgba(254, 237, 195, 0.825); border-radius:10px;">
+
+                                <div class="mb-3">
+                                    <label>Pilih Metode Diskon</label>
+                                    <select class="form-select" id="selectOrderDiscount">
+                                        <option value="persen">Persen (%)</option>
+                                        <option value="rupiah">Rupiah (Rp)</option>
+                                    </select>
+                                </div>
+                                {{-- ini persentase --}}
+                                <div class="mb-3" id="divOrderDiscountPersen">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" name="discount"
+                                            id="orderDiscountPersen">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </div>
+                                {{-- ini rupiah --}}
+                                <div class="mb-3" id="divOrderDiscountRupiah" style="display: none;">
+                                    <div class="input-group">
+                                        <span class="input-group-text">Rp</span>
+                                        <input type="number" class="form-control"
+                                            name="discount_rupiah"id="orderDiscountRupiah">
+                                    </div>
                                 </div>
                             </div>
+
                             <div class="mb-3">
                                 <label for="formProductIdWirehouse" class="form-label">Pilih Gudang <span
                                         class="text-danger">*</span></label>
@@ -190,13 +210,7 @@
                                         <input type="hidden" id="total_fee" name="total_fee">
                                     </p>
                                 </div>
-                                <div class="my-2">
-                                    <small class="text-danger"><i class="bx bx-sm bx-info-circle"> </i> Mohon
-                                        perhatikan
-                                        stok
-                                        yang
-                                        tersedia</small>
-                                </div>
+
                                 <div class="my-2">
                                     <div class="table-responsive">
                                         <table class="table table-hover table-sm">
@@ -401,6 +415,46 @@
                     </div>
                     Save
                 </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="discountProduct" tabindex="-1" aria-labelledby="PaymentMethodsModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content bg-primary text-white " style=" border: 2px solid white;">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="card-body text-center">
+                <h3 class="mb-3 fw-bold text-white">Discount : <span id="discountNameProduct"></span></h3>
+                <hr>
+                <div class="mb-3">
+                    <label>Pilih Metode Diskon</label>
+                    <select class="form-select" id="selectMethodDiscount">
+                        <option value="persen">Persen (%)</option>
+                        <option value="rupiah">Rupiah (Rp)</option>
+                    </select>
+                </div>
+                {{-- ini persentase --}}
+                <div class="mb-3" id="discountPersen">
+                    <div class="input-group">
+                        <input type="number" class="form-control" name="discount_persen[]"
+                            id="discountProductPersen" value="0">
+                        <span class="input-group-text">%</span>
+                    </div>
+                </div>
+                {{-- ini rupiah --}}
+                <div class="mb-3" id="discountRupiah" style="display: none;">
+                    <div class="input-group">
+                        <span class="input-group-text">Rp</span>
+                        <input type="number" class="form-control discountProductRupiah" name="discount_rupiah[]"
+                            value="0" id="discountProductRupiah">
+                    </div>
+                </div>
+                <hr>
+                <button type="button" class="btn btn-danger discountBatal">Batalkan</button>
+                <button type="button" class="btn btn-light" id="applyDiscountButton">OK</button>
             </div>
         </div>
     </div>

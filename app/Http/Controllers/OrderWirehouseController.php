@@ -155,6 +155,8 @@ class OrderWirehouseController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->discount_rupiah);
+        // return response()->json($request->all());
         $request->validate([
             'id_customer' => 'required|string|max:255',
             'id_wirehouse' => 'required|string|max:255',
@@ -172,15 +174,26 @@ class OrderWirehouseController extends Controller
         $delivery = $request->input('delivery') == 'on' ? 1 : 0;
         $additional_fee = $request->input('additional_fee');
         $total_fee =  $request->input('total_fee');
-        $discount =  $request->input('discount') > 0 ? $request->input('discount') / 100 : 0;
+        if ($request->input('discount') > 0) {
+            $discount =  $request->input('discount') > 0 ? $request->input('discount') / 100 : 0;
+        } else {
+            $discount =  $request->input('discount_rupiah');
+        }
         $order->id_customer = $request->input('id_customer');
         $order->id_wirehouse = $request->input('id_wirehouse');
         $order->id_user = Auth::user()->id;
-        $order->discount =  $request->input('discount');
+        $order->discount =  $request->input('discount') ?? 0;
+        $order->discount_rupiah =  $request->input('discount_rupiah') ?? 0;
         $order->fee =   $request->input('total_fee');
-        $order->total_fee = $additional_fee > 0
-            ? ($total_fee + $additional_fee) * (1 - $discount)
-            : $total_fee * (1 - $discount);
+        if ($request->input('discount') > 0) {
+            $order->total_fee = $additional_fee > 0
+                ? ($total_fee + $additional_fee) * (1 - $discount)
+                : $total_fee * (1 - $discount);
+        } else {
+            $order->total_fee =   $additional_fee > 0
+                ? ($total_fee + $additional_fee) - $discount
+                : $total_fee - $discount;
+        }
         $order->additional_fee = $request->input('additional_fee');
         $order->delivery = $delivery;
         $order->address_delivery = $request->input('address_delivery');
@@ -194,12 +207,16 @@ class OrderWirehouseController extends Controller
             $prices = $request->price;
             $expired_dates = $request->expired_date;
             $quantitys = $request->quantity;
+            $discount_rupiahs = $request->discount_rupiah;
+            $discount_persens = $request->discount_persen;
 
             foreach ($id_products as $key => $id_product) {
                 $orderItem = new OrderWirehouseItem();
                 $orderItem->id_order_wirehouse = $order->id;
                 $orderItem->id_product = $id_product;
                 $orderItem->price = $prices[$key];
+                $orderItem->discount_rupiah = $discount_rupiahs[$key] ?? 0;
+                $orderItem->discount_persen = $discount_persens[$key] ?? 0;
                 $orderItem->subtotal = $subtotals[$key];
                 $orderItem->expired_date = $expired_dates[$key];
                 $orderItem->quantity = $quantitys[$key];

@@ -102,6 +102,22 @@
             $('.create-new').click(function() {
                 $('#create').modal('show');
                 getWirehouseOptions();
+                // discount
+                $('#selectOrderDiscount').on('change', function() {
+                    const selectedMethodOrderDiscount = $(this).val();
+
+                    if (selectedMethodOrderDiscount === 'persen') {
+                        $('#divOrderDiscountPersen').show();
+                        $('#divOrderDiscountRupiah').hide();
+                        $('#orderDiscountRupiah').val(0);
+                    } else if (selectedMethodOrderDiscount ===
+                        'rupiah') {
+                        $('#divOrderDiscountPersen').hide();
+                        $('#divOrderDiscountRupiah').show();
+                        $('#orderDiscountPersen').val(0);
+                    }
+                });
+                // -------
             });
             $('.create-customer').click(function() {
                 $('#create-customer').modal('show');
@@ -268,6 +284,7 @@
             });
             $('#createOrderBtn').click(function() {
                 $('#createOrderBtnSpinner').show();
+
                 $('#createOrderBtn').prop('disabled', true);
                 var formData = $('#createOrderForm').serialize();
 
@@ -285,6 +302,10 @@
                         $('#tableProductList').empty();
                         $('#totalOrder').text('0');
                         $('#total_fee').val('0');
+                        $('#discountProductPersen').val('0');
+                        $('#discountProductRupiah').val('0');
+                        $('#orderDiscountPersen').val('0');
+                        $('#orderDiscountRupiah').val('0');
                         $('#formCreateAdditionalFee').val();
                         $('#formCreateAddressDelivery').val();
                         $('#formCreateDescription').val();
@@ -530,7 +551,6 @@
                     blurable: true
                 }
             });
-
             $('#productSelectionTable tbody').on('click', 'tr', function(e) {
                 var selectedRowData = $('#productSelectionTable').DataTable().rows('.selected').data();
 
@@ -548,6 +568,12 @@
 
                 if (stok != 0) {
                     $('.selectProduct').off('click').click(function() {
+                        // Cek apakah ID produk sudah ada di tabel
+                        if ($('#tableProductList').find('input[name="id_product[]"][value="' + id +
+                                '"]').length > 0) {
+                            alert('Produk ini sudah ada dalam daftar.');
+                            return;
+                        }
                         $('#productSelectionModal').modal('hide');
                         $('#tableProductList').find('tbody').empty();
 
@@ -565,12 +591,72 @@
                                 price +
                                 '">' +
                                 '<input type="hidden" class="total-val" name="subtotal[]" value="">' +
-                                '</td><td><input type="number" class="form-control form-control-sm quantity" name="quantity[]" value="0"></td><td>' +
+                                '</td><td><input type="number" class="form-control form-control-sm quantity" name="quantity[]" value="0" min="0" max="' +
+                                stok + '"></td><td>' +
                                 '<select name="expired_date[]" class="form-select form-select-sm text-capitalize" id="selectExpired">' +
                                 options +
                                 '</select>' +
-                                '</td><td class="total text-danger">0</td><td><button class="btn text-danger deleteProduct"><i class="text-danger bx bx-trash"></i></button></td></tr>'
+                                '</td><td class="total text-danger">0</td>' +
+                                '<td><div class="d-flex"><button class="btn p-2 text-danger discountProduct"><i class="text-warning bx bx-dollar-circle"></i></button><button class="btn text-danger p-2 deleteProduct"><i class="text-danger bx bx-trash"></i></button></div></td></tr>'
                             );
+                            // Use onchange to handle quantity input after the field loses focus
+                            $('.quantity').last().on('input', function() {
+                                const $this = $(this);
+                                let quantity = parseInt($this.val());
+
+                                if (quantity > stok) {
+                                    alert('Melebihi stok yang tersedia!, maksimal pembelian : ' +
+                                        stok);
+                                    $this.val(
+                                        stok
+                                    );
+                                }
+                            });
+
+                            $('.discountProduct').click(function() {
+                                event.preventDefault();
+                                $('#discountProduct').modal('show');
+
+                                $('#discountNameProduct').text(name);
+                                $('#selectMethodDiscount').on('change', function() {
+                                    const selectedMethod = $(this).val();
+
+                                    if (selectedMethod === 'persen') {
+                                        $('#discountPersen').show();
+                                        $('#discountRupiah').hide();
+                                        $('#discountProductRupiah').val(0);
+                                    } else if (selectedMethod ===
+                                        'rupiah') {
+                                        $('#discountPersen').hide();
+                                        $('#discountRupiah').show();
+                                        $('#discountProductPersen').val(0);
+                                    }
+                                    $currentRow = $(this).closest('tr');
+                                });
+                                $('#applyDiscountButton').click(function() {
+                                    $('#discountProduct').modal('hide');
+                                    updateTotal();
+                                });
+                                $('#discountProductPersen').last()
+                                    .on('input',
+                                        function() {
+                                            const $this = $(this);
+                                            let discount = parseInt(
+                                                $this.val());
+                                            if (discount > 100) {
+                                                alert(
+                                                    'Tidak boleh melebihi 100%');
+                                                $this.val(
+                                                    100
+                                                );
+                                            }
+                                        });
+                                $('.discountBatal').click(function() {
+                                    $('#discountProduct').modal('hide');
+                                    $('#discountProductPersen').val(0);
+                                    $('#discountProductRupiah').val(0);
+                                });
+                            });
 
                             $('.deleteProduct').click(function() {
                                 event.preventDefault();
@@ -591,15 +677,40 @@
             });
 
             function updateTotal() {
-                var total = 0;
+                let total = 0;
+
                 $('#tableProductList tr').each(function() {
-                    var price = parseFloat($(this).find('.price').text().replace(/[^0-9.-]+/g, ""));
-                    var quantity = parseInt($(this).find('.quantity').val()) || 0;
-                    var subtotal = price * quantity;
+                    const price = parseFloat($(this).find('.price').text().replace(/[^0-9.-]+/g, "")) || 0;
+                    const quantity = parseInt($(this).find('.quantity').val()) || 0;
+                    //diskon
+                    let discountValue = 0;
+                    // const discount_rupiah = parseInt($('.discountProductRupiah').val()) || 0;
+                    // const discount_persen = parseInt($('.discountProductPersen').val()) || 0;
+                    // const selectedMethod = $(
+                    //     '#selectMethodDiscount').val();
+                    // if (selectedMethod === 'persen') {
+                    //     const discountPercent = parseInt($(
+                    //         '#discountProductPersen'
+                    //     ).val()) || 0;
+
+                    //     discountValue = (price *
+                    //         discountPercent) / 100;
+                    // } else if (selectedMethod ===
+                    //     'rupiah') {
+                    //     discountValue = parseInt($(
+                    //         '#discountProductRupiah'
+                    //     ).val()) || 0;
+                    // }
+                    //end diskon
+
+                    const subtotal = (price * quantity) - discountValue;
                     total += subtotal;
+
                     $(this).find('.total').text(formatNumberWithDot(subtotal));
-                    $(this).find('.total-val').val(subtotal);
+                    $(this).find('.total-val').val(
+                        subtotal);
                 });
+
                 $('#totalOrder').text(formatNumberWithDot(total));
                 $('#total_fee').val(total);
             }
@@ -624,7 +735,7 @@
                         callback(options);
                     },
                     error: function(xhr, status, error) {
-                        console.error('Terjadi kesalahan: ' + error);
+                        console.error('Terjadi kesalahan expired: ' + error);
                     }
                 });
             }

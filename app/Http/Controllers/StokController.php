@@ -260,7 +260,10 @@ class StokController extends Controller
     }
     public function stokExpiredDate($id)
     {
-        $product = ProductStok::select(['id', 'expired_date'])->where('id_product', $id)->get();
+        $product = ProductStok::select(['expired_date'])
+            ->where('id_product', $id)
+            ->groupBy('expired_date')
+            ->get();
 
         return response()->json($product);
     }

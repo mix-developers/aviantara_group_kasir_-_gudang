@@ -104,6 +104,7 @@
                     <th>Produk</th>
                     <th>Harga</th>
                     <th>Jumlah</th>
+                    <th>Diskon</th>
                     <th>Total</th>
                 </tr>
             </thead>
@@ -114,6 +115,7 @@
                         <td>{{ $item->product->name }}</td>
                         <td>Rp {{ number_format($item->price) }}</td>
                         <td>{{ $item->quantity }}</td>
+                        <td>0</td>
                         <td>Rp {{ number_format($item->subtotal) }}</td>
                     </tr>
                 @endforeach
@@ -126,11 +128,17 @@
                 <td colspan="2" class="text-right">SUB TOTAL : </td>
                 <td class="text-right">Rp {{ number_format($data->fee) }}</td>
             </tr>
-            <tr>
-                <td colspan="2"></td>
-                <td class="text-right">DISKON : </td>
-                <td class="text-right">{{ $data->discount }} %</td>
-            </tr>
+            @if ($data->discount > 0 || $data->discount_rupiah > 0)
+                <tr>
+                    <td colspan="2"></td>
+                    <td class="text-right">DISKON : </td>
+                    @if ($data->discount > 0)
+                        <td class="text-right">{{ $data->discount }} %</td>
+                    @elseif($data->discount_rupiah > 0)
+                        <td class="text-right">Rp {{ number_format($data->discount_rupiah) }}</td>
+                    @endif
+                </tr>
+            @endif
             @if ($data->delivery == 1)
                 <tr>
                     <td colspan="2"></td>
