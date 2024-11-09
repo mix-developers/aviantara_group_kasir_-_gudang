@@ -759,52 +759,6 @@
                                 }
                             });
 
-                            // $('.discountProduct').click(function() {
-                            //     event.preventDefault();
-                            //     $('#discountProduct').modal('show');
-
-                            //     $('#discountNameProduct').text(name);
-                            //     $('#selectMethodDiscount').on('change', function() {
-                            //         const selectedMethod = $(this).val();
-
-                            //         if (selectedMethod === 'persen') {
-                            //             $('#discountPersen').show();
-                            //             $('#discountRupiah').hide();
-                            //             $('#discountProductRupiah').val(0);
-                            //         } else if (selectedMethod ===
-                            //             'rupiah') {
-                            //             $('#discountPersen').hide();
-                            //             $('#discountRupiah').show();
-                            //             $('#discountProductPersen').val(0);
-                            //         }
-                            //         $currentRow = $(this).closest('tr');
-                            //     });
-                            //     $('#applyDiscountButton').click(function() {
-                            //         $('#discountProduct').modal('hide');
-                            //         updateTotal();
-                            //     });
-                            //     $('#discountProductPersen').last()
-                            //         .on('input',
-                            //             function() {
-                            //                 const $this = $(this);
-                            //                 let discount = parseInt(
-                            //                     $this.val());
-                            //                 if (discount > 100) {
-                            //                     alert(
-                            //                         'Tidak boleh melebihi 100%');
-                            //                     $this.val(
-                            //                         100
-                            //                     );
-                            //                 }
-                            //             });
-                            //     $('.discountBatal').click(function() {
-                            //         $('#discountProduct').modal('hide');
-                            //         $('#discountProductPersen').val(0);
-                            //         $('#discountProductRupiah').val(0);
-                            //         updateTotal();
-                            //     });
-                            // });
-
                             $('.deleteProduct').click(function() {
                                 event.preventDefault();
                                 if (confirm(
@@ -820,6 +774,9 @@
 
                         });
                     });
+                } else {
+                    alert('Produk ini sedang kosong');
+                    return;
                 }
             });
 
