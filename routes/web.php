@@ -76,6 +76,8 @@ Route::middleware(['auth:web', 'checkDisabled'])->group(function () {
 });
 Route::middleware(['auth:web', 'role:Gudang,Admin,Owner', 'checkDisabled'])->group(function () {
     Route::get('/paymentMethod/getall', [PaymentMethodController::class, 'getAll'])->name('paymentMethod.getall');
+    Route::get('/order-item-datatable/{id}', [OrderWirehouseController::class, 'getOrderItemsDataTable']);
+    Route::post('/discount-order-items/store', [OrderWirehouseController::class, 'store_discount']);
     //customers managemen
     Route::get('/customers', [CustomerController::class, 'index'])->name('customers');
     Route::get('/customers/getall', [CustomerController::class, 'getAll'])->name('customers.getall');

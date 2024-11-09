@@ -115,7 +115,15 @@
                         <td>{{ $item->product->name }}</td>
                         <td>Rp {{ number_format($item->price) }}</td>
                         <td>{{ $item->quantity }}</td>
-                        <td>0</td>
+                        <td>
+                            @if ($item->discount_persen > 0)
+                                {{ $item->discount_persen }} %
+                            @elseif ($item->discount_rupiah > 0)
+                                Rp {{ number_format($item->discount_rupiah) }}
+                            @else
+                                0
+                            @endif
+                        </td>
                         <td>Rp {{ number_format($item->subtotal) }}</td>
                     </tr>
                 @endforeach
@@ -143,13 +151,13 @@
                 <tr>
                     <td colspan="2"></td>
                     <td class="text-right">PENGANTARAN : </td>
-                    <td class="text-right">{{ $data->additional_fee }} %</td>
+                    <td class="text-right">Rp {{ $data->additional_fee }} %</td>
                 </tr>
             @endif
             <tr>
                 <td colspan="2"></td>
                 <td class="text-right"><b>TOTAL : </b></td>
-                <td class="text-right">{{ number_format($data->total_fee) }}</td>
+                <td class="text-right">Rp {{ number_format($data->total_fee) }}</td>
             </tr>
 
         </table>

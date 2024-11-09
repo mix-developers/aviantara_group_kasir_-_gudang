@@ -241,8 +241,8 @@
                         name: 'quantity'
                     },
                     {
-                        data: 'subtotal',
-                        name: 'subtotal'
+                        data: 'subtotal_text',
+                        name: 'subtotal_text'
                     },
                 ]
             });

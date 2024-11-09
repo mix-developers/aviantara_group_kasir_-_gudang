@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\DataTables;
 use Barryvdh\DomPDF\Facade as PDF;
+use Ramsey\Uuid\Codec\OrderedTimeCodec;
 use Spatie\LaravelIgnition\Solutions\SolutionProviders\RunningLaravelDuskInProductionProvider;
 
 class OrderWirehouseController extends Controller
@@ -91,7 +92,22 @@ class OrderWirehouseController extends Controller
                 return view('admin.payment.components.actions', $data);
             })
             ->addColumn('total_fee_text', function ($OrderWirehouse) {
-                return 'Rp ' . number_format($OrderWirehouse->total_fee);
+                $items = OrderWirehouseItem::where('id_order_wirehouse', $OrderWirehouse->id);
+
+                $total_discount_rupiah = $items->sum('discount_rupiah');
+                $total_discount_persen = $items->sum('discount_persen');
+
+                $total_seharusnya = $items->sum('quantity') * $items->sum('price');
+
+                $total_subtotal = $items->sum('subtotal');
+
+                if ($OrderWirehouse->total_fee == $OrderWirehouse->fee && $total_discount_rupiah == 0 && $total_discount_persen == 0) {
+                    return 'Rp ' . number_format($OrderWirehouse->fee);
+                } elseif ($OrderWirehouse->total_fee != $OrderWirehouse->fee && $total_discount_rupiah > 0 || $total_discount_persen > 0) {
+                    return ' <del class="text-danger">Rp ' . number_format($total_seharusnya) . '</del><br> Rp ' . number_format($OrderWirehouse->total_fee);
+                } else {
+                    return ' <del class="text-danger">Rp ' . number_format($OrderWirehouse->fee) . '</del><br> Rp ' . number_format($OrderWirehouse->total_fee);
+                }
             })
             ->addColumn('tagihan', function ($OrderWirehouse) {
                 $check_payment = OrderWirehousePayment::where('id_order_wirehouse', $OrderWirehouse->id)->sum('paid');
@@ -150,6 +166,14 @@ class OrderWirehouseController extends Controller
     {
         $data = OrderWirehouseItem::where('id_order_wirehouse', $id)->with(['product']);
         return DataTables::of($data)
+            ->addColumn('subtotal_text', function ($data) {
+                if ($data->subtotal == ($data->price * $data->quantity)) {
+                    return  number_format($data->subtotal);
+                } else {
+                    return ' <del class="text-danger">' . number_format($data->price * $data->quantity) . '</del><br>' . number_format($data->subtotal);
+                }
+            })
+            ->rawColumns(['subtotal_text'])
             ->make(true);
     }
 
@@ -364,5 +388,60 @@ class OrderWirehouseController extends Controller
             'order' => $order
         ];
         return view('admin.order_wirehouse.show', $data);
+    }
+    public function getOrderItemsDataTable($id)
+    {
+        $data = OrderWirehouseItem::with('product')->where('id_order_wirehouse', $id);
+
+        return Datatables::of($data)
+            ->addColumn('subtotal_text', function ($data) {
+                if ($data->subtotal == ($data->price * $data->quantity)) {
+                    return  number_format($data->subtotal);
+                } else {
+                    return ' <del class="text-danger">' . number_format($data->price * $data->quantity) . '</del><br>' . number_format($data->subtotal);
+                }
+            })
+            ->rawColumns(['subtotal_text'])
+            ->make(true);
+    }
+    public function store_discount(Request $request)
+    {
+        $id = $request->input('id');
+        $items = OrderWirehouseItem::find($id);
+
+        $discount_persen = $request->input('discount_persen') ?? 0;
+        $discount_rupiah = $request->input('discount_rupiah') ?? 0;
+        $original_price_item = $items->price * $items->quantity;
+
+        if ($discount_persen > 0) {
+            $new_subtotal = $original_price_item * (1 - ($discount_persen / 100));
+        } elseif ($discount_rupiah > 0) {
+            $new_subtotal = $original_price_item - $discount_rupiah;
+        } else {
+            $new_subtotal = $original_price_item;
+        }
+
+        $items->subtotal = $new_subtotal;
+        $items->discount_persen = $discount_persen;
+        $items->discount_rupiah = $discount_rupiah;
+        $items->save();
+
+        $order = OrderWirehouse::find($items->id_order_wirehouse);
+        if ($order->discount > 0) {
+            $order_discounted_fee = OrderWirehouseItem::where('id_order_wirehouse', $items->id_order_wirehouse)->sum('subtotal') * (1 - ($order->discount / 100));
+        } elseif ($order->discount_rupiah > 0) {
+            $order_discounted_fee =  OrderWirehouseItem::where('id_order_wirehouse', $items->id_order_wirehouse)->sum('subtotal') - $discount_rupiah;
+        } else {
+            $order_discounted_fee = OrderWirehouseItem::where('id_order_wirehouse', $items->id_order_wirehouse)->sum('subtotal');
+        }
+        // Update the order's total fee
+        $order->total_fee = $order_discounted_fee;
+        $order->fee = OrderWirehouseItem::where('id_order_wirehouse', $items->id_order_wirehouse)->sum('subtotal');
+        $order->save();
+
+        return response()->json([
+            'message' => 'Discount applied successfully',
+            'new_total' => $order_discounted_fee
+        ]);
     }
 }

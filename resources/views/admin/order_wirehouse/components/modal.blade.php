@@ -243,6 +243,7 @@
                 </form>
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="resetOrderBtn">Reset Form</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" id="createOrderBtn" disabled>
                     <div class="spinner-border spinner-border-sm text-white" role="status"
@@ -371,6 +372,21 @@
                         <h1 class="text-danger">Rp <span id="payment-tagihan">0</span> </h1>
                     </div>
                     <hr>
+                    <div class="table-responsive p-2 " style="background-color: rgba(255, 242, 208, 0.794);">
+                        <table id="orderListTable" class="table table-hover display table-sm">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nama Produk</th>
+                                    <th style="width:100px;">Jumlah</th>
+                                    <th>Kadaluarsa</th>
+                                    <th>Sub Total</th>
+                                    <th style="width: 10px;"></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <hr>
                     <input type="hidden" name="id_order_wirehouse" id="idOrderWirehouse">
                     <div class="mb-3" id="selectPaymentMethod">
                         <div class="form-check form-check-inline mt-3"></div>
@@ -427,34 +443,45 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="card-body text-center">
-                <h3 class="mb-3 fw-bold text-white">Discount : <span id="discountNameProduct"></span></h3>
-                <hr>
-                <div class="mb-3">
-                    <label>Pilih Metode Diskon</label>
-                    <select class="form-select" id="selectMethodDiscount">
-                        <option value="persen">Persen (%)</option>
-                        <option value="rupiah">Rupiah (Rp)</option>
-                    </select>
-                </div>
-                {{-- ini persentase --}}
-                <div class="mb-3" id="discountPersen">
-                    <div class="input-group">
-                        <input type="number" class="form-control" name="discount_persen[]"
-                            id="discountProductPersen" value="0">
-                        <span class="input-group-text">%</span>
+                <form id="discountForm">
+                    <input type="hidden" id="discountProductId" name="id">
+                    <input type="hidden" id="hargaSemula" name="harga_semula">
+                    <input type="hidden" id="hargaSemulaItem" name="harga_semula_item">
+                    <h3 class="mb-3 fw-bold text-white">Discount : <span id="discountNameProduct"></span></h3>
+                    <hr>
+                    <div class="mb-3">
+                        <label>Pilih Metode Diskon</label>
+                        <select class="form-select" id="selectMethodDiscount">
+                            <option value="persen">Persen (%)</option>
+                            <option value="rupiah">Rupiah (Rp)</option>
+                        </select>
                     </div>
-                </div>
-                {{-- ini rupiah --}}
-                <div class="mb-3" id="discountRupiah" style="display: none;">
-                    <div class="input-group">
-                        <span class="input-group-text">Rp</span>
-                        <input type="number" class="form-control discountProductRupiah" name="discount_rupiah[]"
-                            value="0" id="discountProductRupiah">
+                    {{-- ini persentase --}}
+                    <div class="mb-3" id="discountPersen">
+                        <div class="input-group">
+                            <input type="number" class="form-control" name="discount_persen"
+                                id="discountProductPersen" value="0">
+                            <span class="input-group-text">%</span>
+                        </div>
                     </div>
-                </div>
+                    {{-- ini rupiah --}}
+                    <div class="mb-3" id="discountRupiah" style="display: none;">
+                        <div class="input-group">
+                            <span class="input-group-text">Rp</span>
+                            <input type="number" class="form-control discountProductRupiah" name="discount_rupiah"
+                                value="0" id="discountProductRupiah">
+                        </div>
+                    </div>
+                </form>
                 <hr>
                 <button type="button" class="btn btn-danger discountBatal">Batalkan</button>
-                <button type="button" class="btn btn-light" id="applyDiscountButton">OK</button>
+                <button type="button" class="btn btn-light" id="applyDiscountButton">
+                    <div class="spinner-border spinner-border-sm text-prmary" role="status"
+                        id="applyDiscountButtonSpinner" style="display: none;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    OK
+                </button>
             </div>
         </div>
     </div>
