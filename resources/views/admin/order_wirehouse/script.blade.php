@@ -710,10 +710,13 @@
                 } else {
                     $('#createOrderBtn').prop('disabled', false);
                 }
+                if (stok == 0) {
+                    alert('Produk ini sedang kosong');
+                    return;
+                }
 
                 if (stok != 0) {
                     $('.selectProduct').off('click').click(function() {
-                        // Cek apakah ID produk sudah ada di tabel
                         if ($('#tableProductList').find('input[name="id_product[]"][value="' + id +
                                 '"]').length > 0) {
                             alert('Produk ini sudah ada dalam daftar.');
@@ -774,9 +777,6 @@
 
                         });
                     });
-                } else {
-                    alert('Produk ini sedang kosong');
-                    return;
                 }
             });
 

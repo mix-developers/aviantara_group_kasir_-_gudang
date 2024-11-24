@@ -36,8 +36,12 @@ class HomeController extends Controller
      */
     public function index()
     {
-        if (Auth::user()->role != 'Kios') {
-
+        if (Auth::user()->role == 'Kasir') {
+            $data = [
+                'title' => 'Dashboard',
+            ];
+            return view('admin.dashboard2', $data);
+        } else {
             $product = Product::query();
             if (Auth::user()->role == 'Gudang') {
                 $product->where('id_wirehouse', Auth::user()->id_wirehouse);
@@ -52,11 +56,6 @@ class HomeController extends Controller
                 'wirehouses' => Wirehouse::count(),
             ];
             return view('admin.dashboard', $data);
-        } else {
-            $data = [
-                'title' => 'Dashboard',
-            ];
-            return view('admin.dashboard2', $data);
         }
     }
     public function dashboard2()

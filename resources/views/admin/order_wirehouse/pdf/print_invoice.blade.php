@@ -7,33 +7,50 @@
     <meta http-equiv="Content-Type" content="charset=utf-8" />
     <link rel="stylesheet" href="{{ asset('css/') }}/pdf/bootstrap.min.css" media="all" />
     <style>
+        @page {
+            size: 8.5in 5.5in;
+            /* Ukuran kertas NCR (Half Letter) */
+            margin: 0.5in;
+            /* Margin untuk kertas */
+        }
+
         body {
             font-family: Arial, sans-serif;
-            font-size: 20px;
+            font-size: 12px;
+            /* Font kecil agar muat di kertas NCR */
         }
 
         hr {
             margin: 1px;
-
             border: none;
             border-top: 2px solid #000;
-        }
-
-        tr {
-            margin: 0 !important;
-            padding: 0 !important;
         }
 
         .table-custom {
             border-collapse: collapse;
             width: 100%;
+            font-size: 11px;
+            /* Penyesuaian font untuk tabel */
         }
 
         .table-custom tr,
         .table-custom th,
         .table-custom td {
-            padding-left: 5px;
+            padding: 4px;
+            /* Penyesuaian padding agar tabel lebih ringkas */
             border: 1px solid black;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .fw-bold {
+            font-weight: bold;
         }
 
         @media print {
@@ -43,28 +60,27 @@
         }
     </style>
     <link href="{{ public_path('img/logo.png') }}" rel="icon" type="image/png">
-    {{-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"> --}}
 </head>
 
 <body>
-    <main class="px-4">
-        <table style=" width:100%; margin-bottom:10px;">
+    <main>
+        <table style="width:100%; margin-bottom:10px;">
             <tr>
                 <td style="width: 30%" class="text-center fw-bold">
-                    <h1 style="font-size: 80px;"><b>INVOICE</b></h1>
+                    <h1 style="font-size: 40px;"><b>INVOICE</b></h1>
                 </td>
-                <td class="text-right px-4" style="width: 50%">
+                <td class="text-right" style="width: 50%">
                     <b>
-                        <p class="m-0" style="font-size: 24px;"><b>AVIANTARA GROUP</b></p>
-                        <i style="font-size: 14px;">Jalan Husen palela</i>
+                        <p class="m-0" style="font-size: 14px;"><b>AVIANTARA GROUP</b></p>
+                        <i style="font-size: 12px;">Jalan Husen Palela</i>
                     </b>
                 </td>
                 <td style="width: 20%">
-                    <img style="width: 150px;" src="{{ asset('img/') }}/logo.png">
+                    <img style="width: 100px;" src="{{ asset('img/') }}/logo.png">
                 </td>
             </tr>
         </table>
-        <hr class="mb-4">
+        <hr>
         <table style="width:100%; border:0;">
             <tr>
                 <td><b>KEPADA :</b></td>
@@ -79,15 +95,15 @@
                 <td></td>
             </tr>
             <tr>
-                <td colspan=""><b>
+                <td><b>
                         @if ($data->due_date != null)
                             JATUH TEMPO :
                         @endif
                     </b></td>
-                <td colspan="" class="text-right"><b>NO INVOICE :</b></td>
+                <td class="text-right"><b>NO INVOICE :</b></td>
             </tr>
             <tr>
-                <td colspan="" style="color: red">
+                <td style="color: red">
                     @if ($data->due_date != null)
                         {{ $data->due_date }}
                     @endif
@@ -163,7 +179,6 @@
         </table>
     </main>
     <script>
-        // Jalankan perintah print saat halaman selesai dimuat
         window.onload = function() {
             window.print();
         };

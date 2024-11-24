@@ -12,46 +12,33 @@
                 <form id="stokForm">
                     <input type="hidden" id="formStokId" name="id">
                     <input type="hidden" id="formUserId" name="id_user">
+                    <input type="hidden" id="formKiosId" name="id_kios" value="{{ Auth::user()->id_shop }}">
                     <input type="hidden" id="formIdProduk" name="id_product_add">
-                    
-                    <div class="mb-3">
-                        <label for="formNamaProduk" class="form-label">Nama Kios</label>
-                        <input type="text" class="form-control" id="formNamaKios" name="id_kios" required readonly>
-                    </div>
+
 
                     <div class="mb-3">
                         <label for="formBarcode" class="form-label">Barcode</label>
                         <input type="text" class="form-control" id="formBarcode" name="barcode" required>
                     </div>
 
-                   
+
                     <div class="mb-3">
                         <label for="formNamaProduk" class="form-label">Nama Produk</label>
-                        <input type="text" class="form-control" id="formNamaProduk" name="nama_product" required readonly>
+                        <input type="text" class="form-control" id="formNamaProduk" name="nama_product" required
+                            readonly>
                     </div>
-                    <div class="mb-3">
-                        <label for="formStokTipe" class="form-label">Tipe</label>
-                        {{-- <input type="text" class="form-control" id="formStokTipe" name="type" required> --}}
-                        <select class="form-control" id="formStokTipe" name="type">
-                            <!-- Opsi combobox akan ditambahkan secara dinamis menggunakan JavaScript -->
-                            <option value="Masuk">Masuk</option>
-                            <option value="Keluar">Keluar</option>
-                        </select>
-                    </div>
+
                     <div class="mb-3">
                         <label for="formStokQty" class="form-label">Qty</label>
-                        <input type="number" class="form-control" id="formStokQty" name="qty"
-                            required>
+                        <input type="number" class="form-control" id="formStokQty" name="qty" required>
                     </div>
                     <div class="mb-3">
                         <label for="formStokPrice" class="form-label">Harga</label>
-                        <input type="number" class="form-control" id="formStokPrice" name="price"
-                            required>
+                        <input type="number" class="form-control" id="formStokPrice" name="price" required>
                     </div>
                     <div class="mb-3">
                         <label for="formStokExpired" class="form-label">Tanggal Kadaluarsa</label>
-                        <input type="date" class="form-control" id="formStokExpired" name="expired_date"
-                            required>
+                        <input type="date" class="form-control" id="formStokExpired" name="expired_date" required>
                     </div>
 
                 </form>
@@ -81,7 +68,7 @@
                 <form id="editStokForm">
                     <input type="hidden" id="editStokId" name="id">
                     <input type="hidden" id="formUserId" name="id_user">
-                     <input type="hidden" id="editIdProduk" name="id_product">
+                    <input type="hidden" id="editIdProduk" name="id_product">
 
                     <div class="mb-3">
                         <label for="editNamaKios" class="form-label">Nama Kios</label>
@@ -106,13 +93,11 @@
                     </div>
                     <div class="mb-3">
                         <label for="editStokQty" class="form-label">Qty</label>
-                        <input type="number" class="form-control" id="editStokQty" name="qty"
-                            required>
+                        <input type="number" class="form-control" id="editStokQty" name="qty" required>
                     </div>
                     <div class="mb-3">
                         <label for="editStokPrice" class="form-label">Harga</label>
-                        <input type="number" class="form-control" id="editStokPrice" name="price"
-                            required>
+                        <input type="number" class="form-control" id="editStokPrice" name="price" required>
                     </div>
                     <div class="mb-3">
                         <label for="editStokExpired" class="form-label">Tanggal Kadaluarsa</label>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kios;
 use App\Models\Product;
 use App\Models\StokKios;
 use App\Models\ProductStok;
@@ -17,8 +18,8 @@ class StokKiosController extends Controller
      */
     public function index()
     {
-        //
-        return view('admin.kios_stok.index', ['title' => 'Stok Kios']);
+        $kios = Kios::find(Auth::user()->id_shop);
+        return view('admin.kios_stok.index', ['title' => 'Stok Kios', 'kios' => $kios]);
     }
 
     public function getShop($id_shop)

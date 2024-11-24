@@ -7,6 +7,13 @@
     <meta http-equiv="Content-Type" content="charset=utf-8" />
     <link rel="stylesheet" href="{{ asset('css/') }}/pdf/bootstrap.min.css" media="all" />
     <style>
+        @page {
+            size: 8.5in 5.5in;
+            /* Ukuran kertas NCR (Half Letter) */
+            margin: 0.5in;
+            /* Margin untuk kertas */
+        }
+
         body {
             font-family: Arial, sans-serif;
             font-size: 20px;
@@ -19,9 +26,15 @@
             border-top: 2px solid #000;
         }
 
-        .table-custom tr {
+        /* .table-custom tr {
             margin: 0 !important;
             padding: 0 !important;
+        } */
+        .table-custom {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 11px;
+            /* Penyesuaian font untuk tabel */
         }
 
         .table-custom {
