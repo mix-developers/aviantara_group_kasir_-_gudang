@@ -9,15 +9,12 @@
     <style>
         @page {
             size: 8.5in 5.5in;
-            /* Ukuran kertas NCR (Half Letter) */
             margin: 0.5in;
-            /* Margin untuk kertas */
         }
 
         body {
             font-family: Arial, sans-serif;
             font-size: 12px;
-            /* Font kecil agar muat di kertas NCR */
         }
 
         hr {
@@ -30,14 +27,12 @@
             border-collapse: collapse;
             width: 100%;
             font-size: 11px;
-            /* Penyesuaian font untuk tabel */
         }
 
         .table-custom tr,
         .table-custom th,
         .table-custom td {
             padding: 4px;
-            /* Penyesuaian padding agar tabel lebih ringkas */
             border: 1px solid black;
         }
 
@@ -53,84 +48,108 @@
             font-weight: bold;
         }
 
+        .page-break {
+            page-break-after: always;
+        }
+
         @media print {
             .no-print {
                 display: none;
             }
+
+            .page-break {
+                page-break-after: always;
+            }
         }
     </style>
-    <link href="{{ public_path('img/logo.png') }}" rel="icon" type="image/png">
+    <link href="{{ public_path('img/logo_black.png') }}" rel="icon" type="image/png">
 </head>
 
 <body>
     <main>
-        <table style="width:100%; margin-bottom:10px;">
-            <tr>
-                <td style="width: 30%" class="text-center fw-bold">
-                    <h1 style="font-size: 40px;"><b>INVOICE</b></h1>
-                </td>
-                <td class="text-right" style="width: 50%">
-                    <b>
-                        <p class="m-0" style="font-size: 14px;"><b>AVIANTARA GROUP</b></p>
-                        <i style="font-size: 12px;">Jalan Husen Palela</i>
-                    </b>
-                </td>
-                <td style="width: 20%">
-                    <img style="width: 100px;" src="{{ asset('img/') }}/logo.png">
-                </td>
-            </tr>
-        </table>
-        <hr>
-        <table style="width:100%; border:0;">
-            <tr>
-                <td><b>KEPADA :</b></td>
-                <td class="text-right"><b>TANGGAL :</b></td>
-            </tr>
-            <tr>
-                <td>{{ $data->customer->name }}</td>
-                <td class="text-right">{{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }}</td>
-            </tr>
-            <tr>
-                <td>{{ $data->customer->phone }}</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><b>
-                        @if ($data->due_date != null)
-                            JATUH TEMPO :
-                        @endif
-                    </b></td>
-                <td class="text-right"><b>NO INVOICE :</b></td>
-            </tr>
-            <tr>
-                <td style="color: red">
-                    @if ($data->due_date != null)
-                        {{ $data->due_date }}
-                    @endif
-                </td>
-                <td class="text-right">#{{ $data->no_invoice }}</td>
-            </tr>
-        </table>
-
-        <br>
-        <table class="table-custom">
-            <thead>
+        <div>
+            <!-- Header -->
+            <table style="width:100%; margin-bottom:10px;">
                 <tr>
-                    <th>No</th>
-                    <th>Produk</th>
-                    <th>Harga</th>
-                    <th>Jumlah</th>
-                    <th>Diskon</th>
-                    <th>Total</th>
+                    <td style="width: 30%" class=" fw-bold">
+                        <h1 style="font-size: 40px;"><b>INVOICE</b></h1>
+                    </td>
+                    <td class="text-right" style="width: 50%">
+                        <b>
+                            <p class="m-0" style="font-size: 14px;"><b>AVIANTARA GROUP</b></p>
+                            <i style="font-size: 12px;">Jalan Husen Palela</i>
+                        </b>
+                    </td>
+                    <td style="width: 20%">
+                        <img style="width: 100px; padding:5px;" src="{{ asset('img/') }}/logo.png">
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach ($items as $item)
+            </table>
+            <hr>
+
+            <!-- Info -->
+            <table style="width:100%; border:0;">
+                <tr>
+                    <td><b>KEPADA :</b></td>
+                    <td class="text-right"><b>TANGGAL :</b></td>
+                </tr>
+                <tr>
+                    <td>{{ $data->customer->name }}</td>
+                    <td class="text-right">{{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }}</td>
+                </tr>
+                <tr>
+                    <td>{{ $data->customer->phone }}</td>
+                    <td class="text-right"><b>NO INVOICE :</b></td>
+                </tr>
+                <tr>
+                    <td style="color: red">
+                        Jatuh tempo :
+                        @if ($data->due_date != null)
+                            {{ $data->due_date }}
+                        @endif
+                    </td>
+                    <td class="text-right">#{{ $data->no_invoice }}</td>
+                </tr>
+            </table>
+            <br>
+
+            <!-- Items -->
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th>NO.</th>
+                        <th>BARANG</th>
+                        <th>HARGA</th>
+                        <th>QTY</th>
+                        <th>DISKON</th>
+                        <th>JUMLAH</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php $counter = 0; @endphp
+                    @foreach ($items as $item)
+                        @if ($counter % 15 == 0 && $counter > 0)
+                </tbody>
+            </table>
+            <div class="page-break"></div>
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th>NO.</th>
+                        <th>BARANG</th>
+                        <th>HARGA</th>
+                        <th>QTY</th>
+                        <th>DISKON</th>
+                        <th>JUMLAH</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @endif
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $item->product->name }}</td>
                         <td>Rp {{ number_format($item->price) }}</td>
-                        <td>{{ $item->quantity }}</td>
+                        <td>{{ $item->quantity }} {{ $item->product->unit }}</td>
                         <td>
                             @if ($item->discount_persen > 0)
                                 {{ $item->discount_persen }} %
@@ -142,9 +161,13 @@
                         </td>
                         <td>Rp {{ number_format($item->subtotal) }}</td>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                    @php $counter++; @endphp
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Summary -->
         <br>
         <table style="width:100%; border:0;">
             <tr>
@@ -167,7 +190,7 @@
                 <tr>
                     <td colspan="2"></td>
                     <td class="text-right">PENGANTARAN : </td>
-                    <td class="text-right">Rp {{ $data->additional_fee }} %</td>
+                    <td class="text-right">Rp {{ $data->additional_fee }} </td>
                 </tr>
             @endif
             <tr>
@@ -175,7 +198,22 @@
                 <td class="text-right"><b>TOTAL : </b></td>
                 <td class="text-right">Rp {{ number_format($data->total_fee) }}</td>
             </tr>
-
+        </table>
+        <br>
+        <table style="width:100%; border:0; font-size:12px;">
+            <tr style="padding-bottom:100px;" class="text-center">
+                <td>PETUGAS : </td>
+                <td></td>
+                <td>PENERIMA : </td>
+            </tr>
+            <tr>
+                <td colspan="3" style="height: 30px;"></td>
+            </tr>
+            <tr class="text-center">
+                <td><b>{{ Auth::user()->name }}</b></td>
+                <td></td>
+                <td>................</td>
+            </tr>
         </table>
     </main>
     <script>
