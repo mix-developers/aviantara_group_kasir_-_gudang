@@ -528,6 +528,40 @@
                                 }
                             });
                         });
+                        $('#createPaymentBtnNoPrint').click(function() {
+                            $('#createPaymentBtnNoPrintSpinner').show();
+                            $('#createPaymentBtnNoPrint').prop('disabled', true);
+                            var formData = $('#createPaymentForm').serialize();
+
+                            $.ajax({
+                                type: 'POST',
+                                url: '/payments/store',
+                                data: formData,
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
+                                        .attr('content')
+                                },
+                                success: function(response) {
+                                    $('#createPaymentBtnNoPrintSpinner')
+                                        .hide();
+                                    $('#createPaymentBtnNoPrint').prop(
+                                        'disabled',
+                                        false);
+                                    $('#create-payment').modal('hide');
+                                    getAlert('Berhasil membuat pesanan');
+                                    $('#paid').val('');
+
+                                    // alert('Berhasil membuat order');
+                                },
+                                error: function(xhr) {
+                                    $('#createPaymentBtnSpinner').hide();
+                                    $('#createPaymentBtn').prop('disabled',
+                                        false);
+                                    alert('Terjadi kesalahan: ' + xhr
+                                        .responseText);
+                                }
+                            });
+                        });
 
                     },
                     error: function(xhr) {

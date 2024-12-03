@@ -20,7 +20,6 @@
                                 </span>
                                 Refresh
                             </button>
-
                         </div>
                     </div>
                 </div>

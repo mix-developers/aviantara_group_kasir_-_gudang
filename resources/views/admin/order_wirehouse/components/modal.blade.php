@@ -429,8 +429,18 @@
                         id="createPaymentBtnSpinner" style="display: none;">
                         <span class="visually-hidden">Loading...</span>
                     </div>
-                    Save
+                    Save and Print
                 </button>
+                <button type="button" class="btn btn-warning" id="createPaymentBtnNoPrint">
+                    <div class="spinner-border spinner-border-sm text-white" role="status"
+                        id="createPaymentBtnNoPrintSpinner" style="display: none;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    Save Only
+                </button>
+                <br>
+                <small class="text-danger" style="font-size: 8px;">*Save Only : Menyimpan tanpa print | Save and Print
+                    : Penyimpan dan print nota/invoice</small>
             </div>
         </div>
     </div>

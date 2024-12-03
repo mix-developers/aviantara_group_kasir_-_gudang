@@ -14,7 +14,7 @@
 
         body {
             font-family: Arial, sans-serif;
-            font-size: 12px;
+            font-size: 13px;
         }
 
         hr {
@@ -26,7 +26,7 @@
         .table-custom {
             border-collapse: collapse;
             width: 100%;
-            font-size: 11px;
+            font-size: 13px;
         }
 
         .table-custom tr,
@@ -200,7 +200,7 @@
             </tr>
         </table>
         <br>
-        <table style="width:100%; border:0; font-size:12px;">
+        <table style="width:100%; border:0; font-size:13px;">
             <tr style="padding-bottom:100px;" class="text-center">
                 <td>PETUGAS : </td>
                 <td></td>
