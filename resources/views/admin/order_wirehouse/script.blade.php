@@ -1,5 +1,7 @@
 @push('js')
-    @include('admin.order_wirehouse.script_retail')
+    @if (env('APP_DEBUG') == true)
+        @include('admin.order_wirehouse.script_retail')
+    @endif
     <script>
         var dataTable;
         $(function() {
