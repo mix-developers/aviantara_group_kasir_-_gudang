@@ -62,8 +62,15 @@
             <b>Tanggal : </b>
             {{ date('d F Y') }}
 
+            <hr>
+
+            @php
+                $groupedData = $data->groupBy('payment_method_id'); // Kelompokkan berdasarkan metode pembayaran
+                $grandTotal = 0;
+            @endphp
+
         <table class="table-custom">
-            <thead style="background-color: rgb(224, 116, 0); color:white; " class="text-center">
+            <thead style="background-color: rgb(224, 116, 0); color:white;" class="text-center">
                 <tr>
                     <th>No</th>
                     <th>Tanggal</th>
@@ -75,29 +82,49 @@
             </thead>
             <tbody>
                 @php
-                    $data = $data->sortBy(function ($item) {
-                        return $item->user->name;
-                    });
-                    $totalPaid = 0;
+                    $rowNumber = 1; // Untuk menjaga penomoran di seluruh tabel
                 @endphp
-                @foreach ($data as $item)
-                    <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td>{{ $item->created_at->format('d-m-Y') }}</td>
-                        <td>{{ $item->payment_method->method }}</td>
-                        <td> Rp {{ number_format($item->paid) }}</td>
-                        <td>{{ $item->description }}</td>
-                        <td>{{ $item->user->name }}</td>
-                    </tr>
-                    @php
-                        $totalPaid += $item->paid;
-                    @endphp
-                @endforeach
-                <tr style="background-color: rgb(224, 116, 0); color:white; ">
-                    <td colspan="3">TOTAL</td>
-                    <td colspan="3"><b style="font-size:20px;">Rp {{ number_format($totalPaid) }}</b></td>
-                </tr>
 
+                @foreach ($groupedData as $paymentMethodId => $items)
+                    {{-- Header per Metode Pembayaran --}}
+                    <tr>
+                        <td colspan="6" style="background-color: #f0f0f0; font-weight: bold;">
+                            Metode Pembayaran: {{ $items->first()->payment_method->method }}
+                        </td>
+                    </tr>
+
+                    {{-- Data untuk tiap item --}}
+                    @php
+                        $totalPaid = 0;
+                    @endphp
+                    @foreach ($items as $item)
+                        <tr>
+                            <td>{{ $rowNumber++ }}</td>
+                            <td>{{ $item->created_at->format('d-m-Y') }}</td>
+                            <td>{{ $item->payment_method->method }}</td>
+                            <td>Rp {{ number_format($item->paid) }}</td>
+                            <td>{{ $item->description }}</td>
+                            <td>{{ $item->user->name }}</td>
+                        </tr>
+                        @php
+                            $totalPaid += $item->paid;
+                            $grandTotal += $item->paid;
+                        @endphp
+                    @endforeach
+
+                    {{-- Total per Metode Pembayaran --}}
+                    <tr style="background-color: rgb(224, 116, 0); color:white;">
+                        <td colspan="3" style="text-align: right;">TOTAL
+                            {{ $items->first()->payment_method->method }}</td>
+                        <td colspan="3"><b>Rp {{ number_format($totalPaid) }}</b></td>
+                    </tr>
+                @endforeach
+
+                {{-- Grand Total --}}
+                <tr style="background-color: black; color:white;">
+                    <td colspan="3" style="text-align: right;">GRAND TOTAL</td>
+                    <td colspan="3"><b>Rp {{ number_format($grandTotal) }}</b></td>
+                </tr>
             </tbody>
         </table>
         <br>
