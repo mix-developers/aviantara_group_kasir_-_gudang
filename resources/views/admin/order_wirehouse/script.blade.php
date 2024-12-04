@@ -1,4 +1,5 @@
 @push('js')
+    @include('admin.order_wirehouse.script_retail')
     <script>
         var dataTable;
         $(function() {

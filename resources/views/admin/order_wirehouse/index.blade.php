@@ -25,6 +25,15 @@
                                     <span class="d-none d-sm-inline-block">Tambah Pesanan</span>
                                 </span>
                             </button>
+                            @if (env('APP_DEBUG') == true)
+                                <button class="btn  create-new-retail btn-warning" type="button" data-bs-toggle="modal"
+                                    data-bs-target="#create_retail">
+                                    <span>
+                                        <i class="bx bx-plus me-sm-1"> </i>
+                                        <span class="d-none d-sm-inline-block">Tambah Pesanan Eceran</span>
+                                    </span>
+                                </button>
+                            @endif
                         </div>
                     </div>
                 </div>

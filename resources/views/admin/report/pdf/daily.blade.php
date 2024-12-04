@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Laporan Pendapatan</title>
+    <title>Laporan Harian</title>
     <meta http-equiv="Content-Type" content="charset=utf-8" />
     <link rel="stylesheet" href="{{ public_path('css') }}/pdf/bootstrap.min.css" media="all" />
     <style>
@@ -57,13 +57,10 @@
             </tr>
         </table>
         <hr>
-
         <p>
-            <b>Laporan : </b> Pendapatan<br>
-            <b>Metode : </b> {{ $metode }}<br>
-            <b>Periode : </b>
-            {{ date('d-m-Y', strtotime($from_date)) . ' sampai ' . date('d-m-Y', strtotime($to_date)) }}
-        </p>
+            <b>Laporan Harian: </b>{{ App\Models\Wirehouse::find(Auth::user()->id_wirehouse)->name }}<br>
+            <b>Tanggal : </b>
+            {{ date('d F Y') }}
 
         <table class="table-custom">
             <thead style="background-color: rgb(224, 116, 0); color:white; " class="text-center">
@@ -103,8 +100,24 @@
 
             </tbody>
         </table>
-
-
+        <br>
+        <table style="width: 100%;">
+            @php
+                $groupedData = $data->groupBy('id_user'); // Kelompokkan data berdasarkan user_id
+            @endphp
+            <tr>
+                @foreach ($groupedData as $userId => $items)
+                    <td colspan="6" style="text-align: center; padding-top: 20px;">
+                        <strong>{{ $items->first()->user->name }}</strong>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <small style="font-style: italic;">(....................................)</small>
+                    </td>
+                @endforeach
+            </tr>
+        </table>
 
     </main>
 

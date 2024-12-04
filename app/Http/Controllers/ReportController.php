@@ -105,6 +105,13 @@ class ReportController extends Controller
         ];
         return view('admin.report.income', $data);
     }
+    public function reportDaily()
+    {
+        $data = [
+            'title' => 'Laporan Harian Gudang',
+        ];
+        return view('admin.report.wirehouse_daily', $data);
+    }
     public function pdf_income(Request $request)
     {
         $paymentMethodItem = paymentMethodItem::orderByDesc('id')
@@ -133,13 +140,33 @@ class ReportController extends Controller
         } else {
             $metode = 'Semua';
         }
+        if (Auth::user()->role == 'Gudang') {
+            $paymentMethodItem->whereBetween('created_at', [Carbon::today()->startOfDay(), Carbon::today()->endOfDay()])
+                ->where('paid', '>', 0);
+        }
         $data = $paymentMethodItem->get();
 
         $pdf =  \PDF::loadView('admin.report.pdf.income', [
             'data' => $data,
-            'from_date' => $fromDate,
-            'to_date' => $toDate,
+            'from_date' => $fromDate ?? now(),
+            'to_date' => $toDate ?? now(),
             'metode' => $metode
+        ])->setPaper('a4', 'potrait');
+
+        return $pdf->stream('Laporan Pendapatan ' . date('Y-m-d H:i') . '.pdf');
+    }
+    public function pdf_daily(Request $request)
+    {
+        $paymentMethodItem = paymentMethodItem::orderByDesc('id')
+            ->with(['payment_method', 'user']);
+
+        $paymentMethodItem->whereBetween('created_at', [Carbon::today()->startOfDay(), Carbon::today()->endOfDay()])
+            ->where('paid', '>', 0);
+
+        $data = $paymentMethodItem->get();
+
+        $pdf =  \PDF::loadView('admin.report.pdf.daily', [
+            'data' => $data,
         ])->setPaper('a4', 'potrait');
 
         return $pdf->stream('Laporan Pendapatan ' . date('Y-m-d H:i') . '.pdf');

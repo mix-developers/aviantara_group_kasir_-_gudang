@@ -92,6 +92,170 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="create_retail" tabindex="-1" aria-labelledby="PaymentMethodsModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="border: solid rgb(255, 200, 0) 5px;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="PaymentMethodsModalLabel">Tambah Pesanan Eceran</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Form for Create and Edit -->
+                <form id="createOrderForm">
+                    <div class="mb-3">
+                        <button type="button" class="btn btn-primary select-customer mb-3"><i
+                                class="bx bx-check"></i>
+                            Pilih
+                            Pelanggan</button>
+                        <button type="button" class="btn btn-warning create-customer mb-3"><i
+                                class="bx bx-plus"></i>
+                            Tambah
+                            Pelanggan</button>
+                    </div>
+                    <div class="row">
+                        {{-- order identity --}}
+                        <div class="col-lg-4 ">
+                            <div class="mb-3" id="descriptionCreateOrder">
+                                <div class="alert alert-danger alert-dismissible my-4" role="alert">
+                                    <span>*Silahkan pilih pelanggan terlebih dahulu</span>
+                                </div>
+                            </div>
+                            <input type="hidden" name="id_customer" id="formCreateCustomerId" name="id_customer">
+                            <div class="mb-3">
+                                <div class="form-check form-switch  ">
+                                    <input class="form-check-input" type="checkbox" id="formCreateDelivery"
+                                        name="delivery">
+                                    <label class="form-check-label" for="formCreateDelivery">Pengantaran
+                                    </label>
+                                </div>
+                                <small class="text-muted">*Aktifkan jika barang akan diantar ke pelanggan</small>
+                            </div>
+                            <div class="p-2 "
+                                style="background-color:rgba(254, 237, 195, 0.825); border-radius:10px;">
+
+                                <div class="mb-3">
+                                    <label>Pilih Metode Diskon</label>
+                                    <select class="form-select" id="selectOrderDiscount">
+                                        <option value="persen">Persen (%)</option>
+                                        <option value="rupiah">Rupiah (Rp)</option>
+                                    </select>
+                                </div>
+                                {{-- ini persentase --}}
+                                <div class="mb-3" id="divOrderDiscountPersen">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" name="discount"
+                                            id="orderDiscountPersen">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </div>
+                                {{-- ini rupiah --}}
+                                <div class="mb-3" id="divOrderDiscountRupiah" style="display: none;">
+                                    <div class="input-group">
+                                        <span class="input-group-text">Rp</span>
+                                        <input type="number" class="form-control"
+                                            name="discount_rupiah"id="orderDiscountRupiah">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="formProductIdWirehouse" class="form-label">Pilih Gudang <span
+                                        class="text-danger">*</span></label>
+                                <select class="form-select" id="formProductIdWirehouseCreate" name="id_wirehouse"
+                                    required>
+                                </select>
+                            </div>
+                            <div class="mb-3" style="display: none;" id="hidden1">
+                                <label for="formPaymentMethodMethod" class="form-label">Biaya Tambahan <span
+                                        class="text-muted">(jika
+                                        ada)</span></label>
+                                <input type="number" class="form-control" id="formCreateAdditionalFee"
+                                    name="additional_fee" value="0">
+                            </div>
+                            <div class="mb-3">
+                                <label for="formCreateDueDate" class="form-label">Tanggal Jatuh Tempo <span
+                                        class="text-muted">(jika
+                                        ada)</span></label>
+                                <input type="date" class="form-control" id="formCreateDueDate" name="due_date">
+                            </div>
+                            <div class="mb-3" style="display: none;" id="hidden2">
+                                <label for="formPaymentMethodMethod" class="form-label">Alamat Pengantaran </label>
+                                <textarea class="form-control" id="formCreateAddressDelivery" name="address_delivery">-</textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="formPaymentMethodMethod" class="form-label">Keterangan <span
+                                        class="text-muted">(jika
+                                        ada)</span></label>
+                                <textarea class="form-control" id="formCreateDescription" name="description">-</textarea>
+                            </div>
+                        </div>
+                        {{-- order items --}}
+                        <div class="col-lg-8">
+                            <div class="p-3 border" style="border-radius: 10px;">
+                                <div class="mb-3">
+                                    <h4>Data Pembelian</h4>
+                                </div>
+                                <div class="d-flex justify-content-between mb-3">
+                                    <button type="button" class="btn btn-primary  select-product"><i
+                                            class="bx bx-plus"></i>
+                                        <span class="d-none d-sm-inline-block">
+                                            Tambah Produk
+                                        </span>
+                                    </button>
+                                    <p class="">
+                                        Total :<br>
+                                        <span class="h3">Rp <span id="totalOrder"
+                                                class="text-danger">0</span></span>
+                                        <input type="hidden" id="total_fee" name="total_fee">
+                                    </p>
+                                </div>
+
+                                <div class="my-2">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nama Produk</th>
+                                                    <th style="width:100px;">Jumlah</th>
+                                                    <th>Kadaluarsa</th>
+                                                    <th>Sub Total</th>
+                                                    <th style="width: 10px;"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tableProductList">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                {{-- <div class="form-group my-2" id="form-container">
+                                    <div class="d-flex">
+                                        <input type="text" name="title[]" placeholder="Judul"
+                                            class="form-control mx-2" style="width: 200px;">
+                                        <textarea name="description[]" placeholder="Isi" class="form-control mx-2" rows="1"></textarea>
+                                        <button type="button" class="btn btn-primary add-button"><i
+                                                class="bx bx-plus"></i></button>
+                                    </div>
+                                </div> --}}
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="resetOrderBtn">Reset Form</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="createOrderBtn" disabled>
+                    <div class="spinner-border spinner-border-sm text-white" role="status"
+                        id="createOrderBtnSpinner" style="display: none;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="modal fade" id="create" tabindex="-1" aria-labelledby="PaymentMethodsModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-xl">

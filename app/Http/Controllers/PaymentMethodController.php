@@ -7,6 +7,7 @@ use App\Models\PaymentMethod;
 use App\Models\paymentMethodItem;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -95,6 +96,9 @@ class PaymentMethodController extends Controller
         if ($request->has('method')  && $request->input('method') !== 'all') {
             $paymentMethodItem->where('id_payment_method', $request->input('method'));
         }
+        if (Auth::user()->role == 'Gudang') {
+            $paymentMethodItem->whereBetween('created_at', [Carbon::today()->startOfDay(), Carbon::today()->endOfDay()]);
+        }
         return Datatables::of($paymentMethodItem)
             ->addColumn('date', function ($paymentMethodItem) {
                 return $paymentMethodItem->created_at->format('d F Y');
@@ -178,6 +182,9 @@ class PaymentMethodController extends Controller
                     $data->where('id_wirehouse', $wirehouseId);
                 });
             }
+        }
+        if (Auth::user()->role == 'Gudang') {
+            $data->whereBetween('created_at', [Carbon::today()->startOfDay(), Carbon::today()->endOfDay()]);
         }
         $totalPaid = $data->sum('paid');
         return response()->json(['total' => $totalPaid]);

@@ -163,6 +163,12 @@
                     <div data-i18n="Analytics">Pembayaran & Tagihan</div>
                 </a>
             </li>
+            <li class="menu-item {{ request()->is('report/report-daily') ? 'active' : '' }}">
+                <a href="{{ url('/report/report-daily') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-file"></i>
+                    <div data-i18n="Analytics">Laporan Harian</div>
+                </a>
+            </li>
         @elseif (Auth::user()->role == 'Kasir' && Auth::user()->id_shop != null)
             <li class="menu-header small text-uppercase">
                 <span class="menu-header-text">Transaksi Kios</span>

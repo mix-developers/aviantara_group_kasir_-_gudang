@@ -223,7 +223,11 @@ class OrderWirehouseController extends Controller
         $order->address_delivery = $request->input('address_delivery');
         $order->description = $request->input('description');
         $order->due_date = $request->input('due_date') ?? null;
-        $order->no_invoice =  'AVI-' . $milliseconds;
+        do {
+            $no_invoice = 'AVI-' . $milliseconds . '-' . rand(1000, 9999);
+        } while (OrderWirehouse::where('no_invoice', $no_invoice)->exists());
+
+        $order->no_invoice = $no_invoice;
 
         if ($order->save()) {
             $id_products = $request->id_product;
