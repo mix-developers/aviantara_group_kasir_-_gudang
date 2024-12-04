@@ -65,7 +65,7 @@
             <hr>
 
             @php
-                $groupedData = $data->groupBy('payment_methods.id'); // Kelompokkan berdasarkan metode pembayaran
+                $groupedData = $data->groupBy('payment_method.id'); // Kelompokkan berdasarkan metode pembayaran
                 $grandTotal = 0;
             @endphp
 
