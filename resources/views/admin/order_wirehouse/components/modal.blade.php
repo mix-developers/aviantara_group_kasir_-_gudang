@@ -92,7 +92,7 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="create_retail" tabindex="-1" aria-labelledby="PaymentMethodsModalLabel"
+{{-- <div class="modal fade" id="create_retail" tabindex="-1" aria-labelledby="PaymentMethodsModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content" style="border: solid rgb(255, 200, 0) 5px;">
@@ -114,7 +114,7 @@
                             Pelanggan</button>
                     </div>
                     <div class="row">
-                        {{-- order identity --}}
+
                         <div class="col-lg-4 ">
                             <div class="mb-3" id="descriptionCreateOrder">
                                 <div class="alert alert-danger alert-dismissible my-4" role="alert">
@@ -141,7 +141,7 @@
                                         <option value="rupiah">Rupiah (Rp)</option>
                                     </select>
                                 </div>
-                                {{-- ini persentase --}}
+
                                 <div class="mb-3" id="divOrderDiscountPersen">
                                     <div class="input-group">
                                         <input type="number" class="form-control" name="discount"
@@ -149,7 +149,7 @@
                                         <span class="input-group-text">%</span>
                                     </div>
                                 </div>
-                                {{-- ini rupiah --}}
+
                                 <div class="mb-3" id="divOrderDiscountRupiah" style="display: none;">
                                     <div class="input-group">
                                         <span class="input-group-text">Rp</span>
@@ -190,7 +190,6 @@
                                 <textarea class="form-control" id="formCreateDescription" name="description">-</textarea>
                             </div>
                         </div>
-                        {{-- order items --}}
                         <div class="col-lg-8">
                             <div class="p-3 border" style="border-radius: 10px;">
                                 <div class="mb-3">
@@ -228,15 +227,7 @@
                                         </table>
                                     </div>
                                 </div>
-                                {{-- <div class="form-group my-2" id="form-container">
-                                    <div class="d-flex">
-                                        <input type="text" name="title[]" placeholder="Judul"
-                                            class="form-control mx-2" style="width: 200px;">
-                                        <textarea name="description[]" placeholder="Isi" class="form-control mx-2" rows="1"></textarea>
-                                        <button type="button" class="btn btn-primary add-button"><i
-                                                class="bx bx-plus"></i></button>
-                                    </div>
-                                </div> --}}
+
                             </div>
                         </div>
                     </div>
@@ -255,7 +246,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 <div class="modal fade" id="create" tabindex="-1" aria-labelledby="PaymentMethodsModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-xl">
