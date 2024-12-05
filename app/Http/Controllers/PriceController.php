@@ -178,6 +178,12 @@ class PriceController extends Controller
 
                 return $price;
             })
+            ->addColumn('price_retail', function ($product) {
+                $price_grosir = ProductPrice::where('id_product', $product->id)->orderByDesc('id')->first();
+                $price = $price_grosir != null ? $price_grosir->price_grosir / $product->quantity_unit : 0;
+
+                return $price;
+            })
             ->addColumn('percentese_fee', function ($product) {
                 $price_grosir = ProductPrice::where('id_product', $product->id)->orderByDesc('id')->first();
                 $grosir = $price_grosir != null ? $price_grosir->price_grosir : 0;
@@ -227,11 +233,16 @@ class PriceController extends Controller
 
                 return $stok;
             })
+            ->addColumn('stok_retail', function ($product) {
+                $stok = Product::getStok($product->id);
+
+                return $stok * $product->quantity_unit;
+            })
             ->addColumn('action', function ($product) {
                 return view('admin.price.components.actions', compact('product'));
             })
 
-            ->rawColumns(['action', 'grosir', 'wirehouse', 'percentese_fee', 'stok', 'price_origin', 'price_fee', 'percentese_fee_text'])
+            ->rawColumns(['action', 'grosir', 'wirehouse', 'percentese_fee', 'stok', 'stok_retail', 'price_origin', 'price_fee', 'percentese_fee_text', 'price_retail'])
             ->make(true);
     }
     public function store(Request $request)

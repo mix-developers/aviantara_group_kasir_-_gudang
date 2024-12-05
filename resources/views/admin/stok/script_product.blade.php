@@ -27,6 +27,10 @@
                         name: 'stok'
                     },
                     {
+                        data: 'stok_retail',
+                        name: 'stok_retail'
+                    },
+                    {
                         data: 'expired',
                         name: 'expired'
                     },

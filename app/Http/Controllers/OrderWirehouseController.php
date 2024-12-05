@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\OrderWirehouse;
 use App\Models\OrderWirehouseItem;
 use App\Models\OrderWirehousePayment;
+use App\Models\OrderWirehouseRetailItem;
 use App\Models\paymentMethodItem;
 use App\Models\Product;
 use App\Models\ProductStok;
@@ -165,6 +166,9 @@ class OrderWirehouseController extends Controller
     public function getOrderWirehouseItemDataTable($id)
     {
         $data = OrderWirehouseItem::where('id_order_wirehouse', $id)->with(['product']);
+        if ($data->count() <= 0) {
+            $data = OrderWirehouseRetailItem::where('id_order_wirehouse', $id)->with(['product']);
+        }
         return DataTables::of($data)
             ->addColumn('subtotal_text', function ($data) {
                 if ($data->subtotal == ($data->price * $data->quantity)) {
@@ -205,6 +209,7 @@ class OrderWirehouseController extends Controller
         }
         $order->id_customer = $request->input('id_customer');
         $order->id_wirehouse = $request->input('id_wirehouse');
+        $order->purchase_type = $request->input('purchase_type') ?? 'Wholesale';
         $order->id_user = Auth::user()->id;
         $order->discount =  $request->input('discount') ?? 0;
         $order->discount_rupiah =  $request->input('discount_rupiah') ?? 0;
@@ -237,29 +242,76 @@ class OrderWirehouseController extends Controller
             $quantitys = $request->quantity;
             $discount_rupiahs = $request->discount_rupiah;
             $discount_persens = $request->discount_persen;
+            if ($request->input('purchase_type') == 'Retail') {
+                foreach ($id_products as $key => $id_product) {
+                    $orderItem = new OrderWirehouseRetailItem();
+                    $orderItem->id_order_wirehouse = $order->id;
+                    $orderItem->id_product = $id_product;
+                    $orderItem->price = $prices[$key];
+                    $orderItem->discount_rupiah = $discount_rupiahs[$key] ?? 0;
+                    $orderItem->discount_persen = $discount_persens[$key] ?? 0;
+                    $orderItem->subtotal = $subtotals[$key];
+                    $orderItem->expired_date = $expired_dates[$key];
+                    $orderItem->quantity = $quantitys[$key];
+                    $orderItem->save();
+                }
+                foreach ($id_products as $key => $id_product) {
+                    // Mendapatkan quantity_unit produk
+                    $checkProductUnit = Product::find($id_product)->quantity_unit;
 
-            foreach ($id_products as $key => $id_product) {
-                $orderItem = new OrderWirehouseItem();
-                $orderItem->id_order_wirehouse = $order->id;
-                $orderItem->id_product = $id_product;
-                $orderItem->price = $prices[$key];
-                $orderItem->discount_rupiah = $discount_rupiahs[$key] ?? 0;
-                $orderItem->discount_persen = $discount_persens[$key] ?? 0;
-                $orderItem->subtotal = $subtotals[$key];
-                $orderItem->expired_date = $expired_dates[$key];
-                $orderItem->quantity = $quantitys[$key];
-                $orderItem->save();
-            }
-            foreach ($id_products as $key => $id_product) {
-                $ProductStokOut = new ProductStok();
-                $ProductStokOut->id_product = $id_product;
-                $ProductStokOut->id_user = Auth::user()->id;
-                $ProductStokOut->type = 'Keluar';
-                $ProductStokOut->price_origin = 0;
-                $ProductStokOut->description = 'Penjualan Gudang';
-                $ProductStokOut->expired_date = $expired_dates[$key];
-                $ProductStokOut->quantity = $quantitys[$key];
-                $ProductStokOut->save();
+                    // Mendapatkan jumlah retail sebelumnya
+                    $checkRetailBefore = OrderWirehouseRetailItem::where('id_product', $id_product)->sum('quantity');
+                    $quantityRetail = floor($checkRetailBefore / $checkProductUnit); // Jumlah retail yang sudah terhitung dalam unit penuh
+                    $remainingRetail = $checkRetailBefore % $checkProductUnit; // Sisa retail yang belum menjadi unit penuh
+
+                    // Kurangi sisa retail dari quantity saat ini
+                    $adjustedQuantity = $quantitys[$key] - $remainingRetail;
+
+                    // Membuat instance ProductStok
+                    $ProductStokOut = new ProductStok();
+                    $ProductStokOut->id_product = $id_product;
+                    $ProductStokOut->id_user = Auth::user()->id;
+                    $ProductStokOut->type = 'Keluar';
+                    $ProductStokOut->price_origin = 0;
+                    $ProductStokOut->description = 'Penjualan Gudang';
+                    $ProductStokOut->expired_date = $expired_dates[$key];
+
+                    // Menentukan quantity berdasarkan jumlah unit pada produk
+                    if ($adjustedQuantity <= $checkProductUnit && $adjustedQuantity > 0) {
+                        $ProductStokOut->quantity = 1;
+                    } elseif ($adjustedQuantity > 0) {
+                        $ProductStokOut->quantity = ceil($adjustedQuantity / $checkProductUnit);
+                    } else {
+                        $ProductStokOut->quantity = 0; // Jika sisa lebih besar dari quantity, maka tidak ada stok keluar
+                    }
+                    if ($ProductStokOut->quantity > 0) {
+                        $ProductStokOut->save();
+                    }
+                }
+            } else {
+                foreach ($id_products as $key => $id_product) {
+                    $orderItem = new OrderWirehouseItem();
+                    $orderItem->id_order_wirehouse = $order->id;
+                    $orderItem->id_product = $id_product;
+                    $orderItem->price = $prices[$key];
+                    $orderItem->discount_rupiah = $discount_rupiahs[$key] ?? 0;
+                    $orderItem->discount_persen = $discount_persens[$key] ?? 0;
+                    $orderItem->subtotal = $subtotals[$key];
+                    $orderItem->expired_date = $expired_dates[$key];
+                    $orderItem->quantity = $quantitys[$key];
+                    $orderItem->save();
+                }
+                foreach ($id_products as $key => $id_product) {
+                    $ProductStokOut = new ProductStok();
+                    $ProductStokOut->id_product = $id_product;
+                    $ProductStokOut->id_user = Auth::user()->id;
+                    $ProductStokOut->type = 'Keluar';
+                    $ProductStokOut->price_origin = 0;
+                    $ProductStokOut->description = 'Penjualan Gudang';
+                    $ProductStokOut->expired_date = $expired_dates[$key];
+                    $ProductStokOut->quantity = $quantitys[$key];
+                    $ProductStokOut->save();
+                }
             }
         }
 
@@ -276,37 +328,46 @@ class OrderWirehouseController extends Controller
         ]);
 
         $order = OrderWirehouse::find($request->input('id'));
-        $sub_total_item = OrderWirehouseItem::where('id_order_wirehouse', $order->id)->sum('subtotal');
-        $additional_fee = $request->input('additional_fee');
-        $discount = $request->input('discount');
+        // $sub_total_item = OrderWirehouseItem::where('id_order_wirehouse', $order->id)->sum('subtotal');
+        // $additional_fee = $request->input('additional_fee');
+        // $discount = $request->input('discount');
 
-        if ($discount > 0) {
-            $nilai_discount = $discount / 100;
-            if ($additional_fee != 0) {
-                $total = ($sub_total_item + $additional_fee) * (1 - $nilai_discount);
-                $fee = $sub_total_item;
-            } else {
-                $total =  $sub_total_item * (1 - $nilai_discount);
-                $fee = $sub_total_item;
-            }
-        } else {
-            $total = $sub_total_item + $additional_fee;
-            $fee = $sub_total_item;
-        }
+        // if ($discount > 0) {
+        //     $nilai_discount = $discount / 100;
+        //     if ($additional_fee != 0) {
+        //         $total = ($sub_total_item + $additional_fee) * (1 - $nilai_discount);
+        //         $fee = $sub_total_item;
+        //     } else {
+        //         $total =  $sub_total_item * (1 - $nilai_discount);
+        //         $fee = $sub_total_item;
+        //     }
+        // } else {
+        //     $total = $sub_total_item + $additional_fee;
+        //     $fee = $sub_total_item;
+        // }
 
+        // $delivery = $request->input('delivery') == 'on' ? 1 : 0;
+
+        // $order->total_fee = $total;
+        // $order->id_customer = $request->input('id_customer');
+        // $order->id_wirehouse = $request->input('id_wirehouse');
+        // $order->due_date = $request->input('due_date') ?? $order->due_date;
+        // $order->id_user = Auth::user()->id;
+        // $order->additional_fee = $additional_fee;
+        // $order->delivery = $delivery;
+        // $order->discount = $discount;
+        // $order->fee =  $fee;
+        // $order->address_delivery = $request->input('address_delivery');
+        // $order->description = $request->input('description');
         $delivery = $request->input('delivery') == 'on' ? 1 : 0;
-
-        $order->total_fee = $total;
-        $order->id_customer = $request->input('id_customer');
-        $order->id_wirehouse = $request->input('id_wirehouse');
-        $order->due_date = $request->input('due_date') ?? $order->due_date;
-        $order->id_user = Auth::user()->id;
-        $order->additional_fee = $additional_fee;
+        $order->purchase_type = $request->input('purchase_type') ?? 'Wholesale';
+        $order->discount =  $request->input('discount') ?? 0;
+        $order->discount_rupiah =  $request->input('discount_rupiah') ?? 0;
+        $order->additional_fee = $request->input('additional_fee');
         $order->delivery = $delivery;
-        $order->discount = $discount;
-        $order->fee =  $fee;
         $order->address_delivery = $request->input('address_delivery');
         $order->description = $request->input('description');
+        $order->due_date = $request->input('due_date') ?? null;
 
         if ($order->save()) {
             $message = 'Berhasil Memperbarui data';
@@ -341,24 +402,72 @@ class OrderWirehouseController extends Controller
     public function destroy($id)
     {
         $data = OrderWirehouse::find($id);
-        $OrderWirehouseItem = OrderWirehouseItem::where('id_order_wirehouse', $id);
+        if ($data->purchase_type == 'Wholesale') {
 
-        foreach ($OrderWirehouseItem->get() as $item) {
-            $ProductStokPrice = ProductStok::where('id_product', $item->id_product)->where('type', 'Masuk')->where('price_origin', '>', 0)->latest()->first();
-            //masukkan kembali stok
-            $ProductStokOut = new ProductStok();
-            $ProductStokOut->id_product = $item->id_product;
-            $ProductStokOut->id_user = Auth::user()->id;
-            $ProductStokOut->type = 'Masuk';
-            $ProductStokOut->sub_type = 'kembali';
-            $ProductStokOut->price_origin = $ProductStokPrice->price_origin;
-            $ProductStokOut->description = 'Pengembalian stok gudang';
-            $ProductStokOut->expired_date = $item->expired_date;
-            $ProductStokOut->quantity = $item->quantity;
-            $ProductStokOut->save();
+            $OrderWirehouseItem = OrderWirehouseItem::where('id_order_wirehouse', $id);
+
+            foreach ($OrderWirehouseItem->get() as $item) {
+                $ProductStokPrice = ProductStok::where('id_product', $item->id_product)->where('type', 'Masuk')->where('price_origin', '>', 0)->latest()->first();
+                //masukkan kembali stok
+                $ProductStokOut = new ProductStok();
+                $ProductStokOut->id_product = $item->id_product;
+                $ProductStokOut->id_user = Auth::user()->id;
+                $ProductStokOut->type = 'Masuk';
+                $ProductStokOut->sub_type = 'kembali';
+                $ProductStokOut->price_origin = $ProductStokPrice->price_origin;
+                $ProductStokOut->description = 'Pengembalian stok gudang';
+                $ProductStokOut->expired_date = $item->expired_date;
+                $ProductStokOut->quantity = $item->quantity;
+                $ProductStokOut->save();
+            }
+
+            $OrderWirehouseItem->delete();
+        } else {
+            $OrderWirehouseRetailItem = OrderWirehouseRetailItem::where('id_order_wirehouse', $id);
+
+            foreach ($OrderWirehouseRetailItem->get() as $item) {
+                // Mendapatkan quantity_unit produk
+                $checkProductUnit = Product::find($item->id_product)->quantity_unit;
+
+                // Mendapatkan harga stok masuk terbaru
+                $ProductStokPrice = ProductStok::where('id_product', $item->id_product)
+                    ->where('type', 'Masuk')
+                    ->where('price_origin', '>', 0)
+                    ->latest()
+                    ->first();
+
+                // Mendapatkan sisa retail sebelumnya
+                $checkRetailBefore = OrderWirehouseRetailItem::where('id_product', $item->id_product)->sum('quantity');
+                $remainingRetail = $checkRetailBefore % $checkProductUnit; // Sisa retail sebelumnya yang belum mencapai unit penuh
+
+                // Gabungkan sisa retail sebelumnya dengan quantity item
+                $totalQuantity = $remainingRetail + $item->quantity;
+
+                // Menentukan jumlah unit penuh
+                $unitFull = floor($totalQuantity / $checkProductUnit); // Unit penuh yang bisa dihasilkan
+                $remainingAfterFull = $totalQuantity % $checkProductUnit; // Sisa setelah unit penuh dihitung
+
+                // Membuat instance ProductStok
+                $ProductStokOut = new ProductStok();
+                $ProductStokOut->id_product = $item->id_product;
+                $ProductStokOut->id_user = Auth::user()->id;
+                $ProductStokOut->type = 'Masuk';
+                $ProductStokOut->sub_type = 'kembali'; // Menandakan pengembalian stok
+                $ProductStokOut->price_origin = $ProductStokPrice ? $ProductStokPrice->price_origin : 0; // Cegah null
+                $ProductStokOut->description = 'Pengembalian stok gudang';
+                $ProductStokOut->expired_date = $item->expired_date;
+
+                // Set quantity berdasarkan jumlah unit penuh yang bisa dihasilkan
+                $ProductStokOut->quantity = $unitFull;
+
+                // Simpan hanya jika quantity lebih dari 0
+                if ($ProductStokOut->quantity > 0) {
+                    $ProductStokOut->save();
+                }
+            }
+
+            $OrderWirehouseRetailItem->delete();
         }
-
-        $OrderWirehouseItem->delete();
 
         OrderWirehousePayment::where('id_order_wirehouse', $id)->delete();
         paymentMethodItem::where('id_order_wirehouse', $id)->delete();
@@ -375,14 +484,18 @@ class OrderWirehouseController extends Controller
     {
         $data = OrderWirehouse::where('id', $id)->with(['customer', 'product'])->first();
         $items = OrderWirehouseItem::where('id_order_wirehouse', $id)->get();
-
+        $retail = false;
+        if ($items->count() <= 0) {
+            $items = OrderWirehouseRetailItem::where('id_order_wirehouse', $id)->get();
+            $retail = true;
+        }
         // $pdf =  \PDF::loadView('admin.order_wirehouse.pdf.print_invoice', [
         //     'data' => $data,
         //     'item' => $item
         // ])->setPaper('a4', 'potrait');
 
         // return $pdf->download('Invoice ' . $data->no_invoice . '.pdf');
-        return view('admin.order_wirehouse.pdf.print_invoice', compact('data', 'items'));
+        return view('admin.order_wirehouse.pdf.print_invoice', compact('data', 'items', 'retail'));
     }
     public function invoice($invoice)
     {
@@ -395,7 +508,13 @@ class OrderWirehouseController extends Controller
     }
     public function getOrderItemsDataTable($id)
     {
-        $data = OrderWirehouseItem::with('product')->where('id_order_wirehouse', $id);
+        $orderWirehouse = OrderWirehouse::find($id);
+        if ($orderWirehouse->purchase_type == 'Retail') {
+            $data = OrderWirehouseRetailItem::with('product')->where('id_order_wirehouse', $id);
+        } else {
+
+            $data = OrderWirehouseItem::with('product')->where('id_order_wirehouse', $id);
+        }
 
         return Datatables::of($data)
             ->addColumn('subtotal_text', function ($data) {
@@ -411,8 +530,18 @@ class OrderWirehouseController extends Controller
     public function store_discount(Request $request)
     {
         $id = $request->input('id');
-        $items = OrderWirehouseItem::find($id);
 
+        // Cari item di tabel OrderWirehouseItem terlebih dahulu
+        $items = OrderWirehouseItem::find($id);
+        $is_retail_item = false;
+
+        // Jika tidak ditemukan, cari di tabel OrderWirehouseRetailItem
+        if (!$items) {
+            $items = OrderWirehouseRetailItem::find($id);
+            $is_retail_item = true;
+        }
+
+        // Hitung diskon
         $discount_persen = $request->input('discount_persen') ?? 0;
         $discount_rupiah = $request->input('discount_rupiah') ?? 0;
         $original_price_item = $items->price * $items->quantity;
@@ -425,22 +554,33 @@ class OrderWirehouseController extends Controller
             $new_subtotal = $original_price_item;
         }
 
+        // Update subtotal dan diskon pada item
         $items->subtotal = $new_subtotal;
         $items->discount_persen = $discount_persen;
         $items->discount_rupiah = $discount_rupiah;
         $items->save();
 
-        $order = OrderWirehouse::find($items->id_order_wirehouse);
+        // Ambil ID order berdasarkan jenis item (gudang atau retail)
+        $order_id =  $items->id_order_wirehouse;
+
+        // Perbarui total fee pada order
+        $order =  OrderWirehouse::find($order_id);
+
+
+        $subtotal_sum = $is_retail_item
+            ? OrderWirehouseRetailItem::where('id_order_wirehouse', $order_id)->sum('subtotal')
+            : OrderWirehouseItem::where('id_order_wirehouse', $order_id)->sum('subtotal');
+
         if ($order->discount > 0) {
-            $order_discounted_fee = OrderWirehouseItem::where('id_order_wirehouse', $items->id_order_wirehouse)->sum('subtotal') * (1 - ($order->discount / 100));
+            $order_discounted_fee = $subtotal_sum * (1 - ($order->discount / 100));
         } elseif ($order->discount_rupiah > 0) {
-            $order_discounted_fee =  OrderWirehouseItem::where('id_order_wirehouse', $items->id_order_wirehouse)->sum('subtotal') - $discount_rupiah;
+            $order_discounted_fee = $subtotal_sum - $order->discount_rupiah;
         } else {
-            $order_discounted_fee = OrderWirehouseItem::where('id_order_wirehouse', $items->id_order_wirehouse)->sum('subtotal');
+            $order_discounted_fee = $subtotal_sum;
         }
-        // Update the order's total fee
+
         $order->total_fee = $order_discounted_fee;
-        $order->fee = OrderWirehouseItem::where('id_order_wirehouse', $items->id_order_wirehouse)->sum('subtotal');
+        $order->fee = $subtotal_sum;
         $order->save();
 
         return response()->json([

@@ -30,4 +30,8 @@ class OrderWirehouse extends Model
     {
         return $this->hasMany(OrderWirehouseItem::class, 'id_order_wirehouse');
     }
+    public function order_wirehouse_retail_item()
+    {
+        return $this->hasMany(OrderWirehouseRetailItem::class, 'id_order_wirehouse');
+    }
 }

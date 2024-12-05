@@ -54,6 +54,7 @@
                                 <th>Nama</th>
                                 <th>Gudang</th>
                                 <th>Stok</th>
+                                <th>Stok Satuan</th>
                                 <th>Kadaluarsa</th>
                                 <th>Action</th>
                             </tr>
@@ -65,6 +66,7 @@
                                 <th>Nama</th>
                                 <th>Gudang</th>
                                 <th>Stok</th>
+                                <th>Stok Satuan</th>
                                 <th>Kadaluarsa</th>
                                 <th>Action</th>
                             </tr>

@@ -105,7 +105,7 @@ class PaymentMethodController extends Controller
             })
             ->addColumn('invoice', function ($paymentMethodItem) {
                 $invoice = $paymentMethodItem->order_wirehouses->no_invoice;
-                return  '<a href="' . url('/payments/invoice', $invoice) . '">' . $invoice . '</a>';
+                return  '<a href="' . url('/order_wirehouses/invoice', $invoice) . '">' . $invoice . '</a>';
             })
             ->rawColumns(['date', 'invoice'])
             ->make(true);

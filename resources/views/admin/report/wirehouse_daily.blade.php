@@ -61,7 +61,7 @@
         $(function() {
             var table = $('#datatable-report-payment').DataTable({
                 processing: true,
-                serverSide: true,
+                serverSide: false,
                 responsive: true,
                 ajax: '{{ url('report/report-payment-datatable') }}',
                 columns: [{

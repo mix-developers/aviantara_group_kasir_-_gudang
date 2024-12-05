@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\OrderWirehouse;
 use App\Models\OrderWirehouseItem;
 use App\Models\OrderWirehousePayment;
+use App\Models\OrderWirehouseRetailItem;
 use App\Models\paymentMethodItem;
 use App\Models\Wirehouse;
 use Illuminate\Http\Request;
@@ -139,7 +140,9 @@ class OrderPaymentController extends Controller
     {
         $data = OrderWirehouse::where('id', $id)->with(['customer', 'product'])->first();
         $items = OrderWirehouseItem::where('id_order_wirehouse', $id)->get();
-
+        if ($items->count() <= 0) {
+            $items = OrderWirehouseRetailItem::where('id_order_wirehouse', $id)->get();
+        }
         // $pdf =  \PDF::loadView('admin.order_wirehouse.pdf.print_invoice', [
         //     'data' => $data,
         //     'item' => $item

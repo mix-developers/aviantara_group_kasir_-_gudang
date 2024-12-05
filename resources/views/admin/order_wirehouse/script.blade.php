@@ -1,7 +1,7 @@
 @push('js')
-    {{-- @if (env('APP_DEBUG') == true)
-        @include('admin.order_wirehouse.script_retail')
-    @endif --}}
+    {{-- @if (env('APP_DEBUG') == true) --}}
+    @include('admin.order_wirehouse.script_retail')
+    {{-- @endif --}}
     <script>
         var dataTable;
         $(function() {
@@ -10,6 +10,9 @@
                 serverSide: true,
                 responsive: true,
                 ajax: '{{ url('order-wirehouses-datatable') }}',
+                order: [
+                    [0, 'desc']
+                ],
                 columns: [{
                         data: 'id',
                         name: 'id'
@@ -160,6 +163,7 @@
                     success: function(data) {
                         $('#formProductIdWirehouse').empty();
                         $('#formProductIdWirehouseCreate').empty();
+                        $('#formProductIdWirehouseCreate_').empty();
 
                         $('#selectWirehouse').empty();
                         $('#selectWirehouse').append(
@@ -180,6 +184,14 @@
                                 wirehouse.name + ' - ' + wirehouse.address +
                                 '</option>');
 
+                        });
+                        $.each(data, function(index, wirehouse) {
+                            $('#formProductIdWirehouseCreate_retail').append(
+                                '<option value="' +
+                                wirehouse.id +
+                                '" >' +
+                                wirehouse.name + ' - ' + wirehouse.address +
+                                '</option>');
                         });
 
                         $.each(data, function(index, wirehouse) {
@@ -204,6 +216,7 @@
                 $('#datatable-order-wirehouse').DataTable().ajax.reload();
             });
             window.editOrder = function(id) {
+                $('#editModal').modal('show');
                 $.ajax({
                     type: 'GET',
                     url: '/order_wirehouses/edit/' + id,
@@ -235,10 +248,10 @@
                         $('#formEditDelivery').change(function() {
                             if ($(this).is(':checked')) {
                                 $(this).val(
-                                    '1'); // Mengatur nilai 1 jika checkbox dicentang
+                                    '1');
                             } else {
                                 $(this).val(
-                                    '0'); // Mengatur nilai 0 jika checkbox tidak dicentang
+                                    '0');
                             }
                         });
                         $('#formEditDelivery').change(function() {
@@ -249,7 +262,7 @@
                             }
                         });
 
-                        $('#editModal').modal('show');
+
                     },
                     error: function(xhr) {
                         alert('Terjadi kesalahan: ' + xhr.responseText);
@@ -272,8 +285,8 @@
                     success: function(response) {
                         $('#saveOrderBtnSpinner').hide();
                         $('#saveOrderBtn').prop('disabled', false);
-                        console.log(response.message);
-                        // getAlert(response.message);
+                        // console.log(response.message);
+                        getAlert(response.message);
 
                         $('#datatable-order-wirehouse').DataTable().ajax.reload();
                         $('#editModal').modal('hide');
@@ -386,16 +399,20 @@
                                     success: function(response) {
                                         $('#applyDiscountButtonSpinner')
                                             .hide();
-                                        $('#applyDiscountButton').prop(
-                                            'disabled', false);
-                                        $('#orderListTable').DataTable()
+                                        $('#applyDiscountButton')
+                                            .prop(
+                                                'disabled', false);
+                                        $('#orderListTable')
+                                            .DataTable()
                                             .ajax.reload();
-                                        $('#discountProduct').modal(
-                                            'hide');
+                                        $('#discountProduct')
+                                            .modal(
+                                                'hide');
                                         total_tagihan = response
                                             .new_total;
-                                        $('#payment-tagihan').text(
-                                            total_tagihan);
+                                        $('#payment-tagihan')
+                                            .text(
+                                                total_tagihan);
 
                                     },
                                     error: function(xhr, status, error) {
@@ -484,6 +501,7 @@
                                             '</label></div>');
 
                                     });
+
 
                                 },
                                 error: function(xhr, status, error) {

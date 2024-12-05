@@ -6,6 +6,9 @@
                 serverSide: false,
                 responsive: true,
                 ajax: '{{ url('order-wirehouses-datatable') }}',
+                order: [
+                    [0, 'desc']
+                ],
                 columns: [{
                         data: 'id',
                         name: 'id'

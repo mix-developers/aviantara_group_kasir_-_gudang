@@ -149,7 +149,7 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $item->product->name }}</td>
                         <td>Rp {{ number_format($item->price) }}</td>
-                        <td>{{ $item->quantity }} {{ $item->product->unit }}</td>
+                        <td>{{ $item->quantity }} {{ $retail ? $item->product->sub_unit : $item->product->unit }}</td>
                         <td>
                             @if ($item->discount_persen > 0)
                                 {{ $item->discount_persen }} %
@@ -203,7 +203,11 @@
         <table style="width:100%; border:0; font-size:13px;">
             <tr style="padding-bottom:100px;" class="text-center">
                 <td>PETUGAS : </td>
-                <td></td>
+                <td>
+                    @if ($data->delivery == 1)
+                        Supir
+                    @endif
+                </td>
                 <td>PENERIMA : </td>
             </tr>
             <tr>
@@ -211,7 +215,11 @@
             </tr>
             <tr class="text-center">
                 <td><b>{{ Auth::user()->name }}</b></td>
-                <td></td>
+                <td>
+                    @if ($data->delivery == 1)
+                        ................
+                    @endif
+                </td>
                 <td>................</td>
             </tr>
         </table>

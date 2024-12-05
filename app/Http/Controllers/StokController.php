@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\OrderWirehouseRetailItem;
 use App\Models\Product;
 use App\Models\ProductDamaged;
 use App\Models\ProductPrice;
@@ -105,6 +106,11 @@ class StokController extends Controller
             ->addColumn('stok', function ($product) {
                 return view('admin.stok.components.product.stok', compact('product'));
             })
+            ->addColumn('stok_retail', function ($product) {
+                $totaOrderRetail = OrderWirehouseRetailItem::where('id_product', $product->id)->sum('quantity');
+                $sisaRetail = $totaOrderRetail % $product->quantity_unit;
+                return $sisaRetail . ' ' . $product->sub_unit;
+            })
             ->addColumn('expired', function ($product) {
                 $stok = ProductStok::where('id_product', $product->id);
 
@@ -149,7 +155,7 @@ class StokController extends Controller
                 return $expiredHtml;
             })
 
-            ->rawColumns(['produk', 'action', 'wirehouse', 'stok', 'expired'])
+            ->rawColumns(['produk', 'action', 'wirehouse', 'stok', 'expired', 'stok_retail'])
             ->make(true);
     }
     public function getStoksDataTable(Request $request)
