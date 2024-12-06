@@ -184,7 +184,10 @@
             <tbody>
                 @php
 
-                    $order_wirehouses = App\Models\OrderWirehouse::all();
+                    $order_wirehouses = App\Models\OrderWirehouse::where(
+                        'id_wirehouse',
+                        Auth::user()->id_wirehouse,
+                    )->get();
                     $totalRemainingBalance = 0;
                 @endphp
                 @foreach ($order_wirehouses as $OrderWirehouse)
