@@ -91,13 +91,14 @@ class PaymentMethodController extends Controller
                 });
             }
         }
-        if (Auth::user() == 'Gudang') {
-            $paymentMethodItem->whereHas('order_wirehouse', function ($paymentMethodItem) use ($wirehouseId) {
-                $paymentMethodItem->where('id_wirehouse', Auth::user()->id_wirehouse);
+        if (Auth::user()->role == 'Gudang') {
+            $userWirehouseId = Auth::user()->id_wirehouse; // Ambil nilai id_wirehouse dari pengguna
+            $paymentMethodItem->whereExists(function ($query) use ($userWirehouseId) {
+                $query->select(DB::raw(1))
+                    ->from('order_wirehouses')
+                    ->where('order_wirehouses.id_wirehouse', $userWirehouseId);
             });
         }
-
-
         if ($request->has('method')  && $request->input('method') !== 'all') {
             $paymentMethodItem->where('id_payment_method', $request->input('method'));
         }

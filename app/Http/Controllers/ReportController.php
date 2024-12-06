@@ -165,13 +165,13 @@ class ReportController extends Controller
             ->where('paid', '>', 0);
 
         if (Auth::user()->role == 'Gudang') {
-            $paymentMethodItem->whereExists(function ($query) {
+            $userWirehouseId = Auth::user()->id_wirehouse; // Ambil nilai id_wirehouse dari pengguna
+            $paymentMethodItem->whereExists(function ($query) use ($userWirehouseId) {
                 $query->select(DB::raw(1))
                     ->from('order_wirehouses')
-                    ->where('order_wirehouses.id_wirehouse', '=', Auth::user()->id_wirehouse);
+                    ->where('order_wirehouses.id_wirehouse', $userWirehouseId);
             });
         }
-
         $data = $paymentMethodItem->get();
 
         $pdf =  \PDF::loadView('admin.report.pdf.daily', [
