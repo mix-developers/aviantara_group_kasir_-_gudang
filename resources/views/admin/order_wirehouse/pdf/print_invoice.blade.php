@@ -9,7 +9,7 @@
     <style>
         @page {
             size: 8.5in 5.5in portrait;
-            margin: 0.8in;
+            margin: 0.6in;
         }
 
         body {
@@ -51,6 +51,11 @@
         .page-break {
             page-break-after: always;
         }
+
+        .no-break {
+            page-break-inside: avoid;
+        }
+
 
         @media print {
             .no-print {
@@ -169,60 +174,62 @@
 
         <!-- Summary -->
         <br>
-        <table style="width:100%; border:0;">
-            <tr>
-                <td><b>PEMBAYARAN :</b></td>
-                <td colspan="2" class="text-right">SUB TOTAL : </td>
-                <td class="text-right">Rp {{ number_format($data->fee) }}</td>
-            </tr>
-            @if ($data->discount > 0 || $data->discount_rupiah > 0)
+        <div class="no-break">
+            <table style="width:100%; border:0;">
+                <tr>
+                    <td><b>PEMBAYARAN :</b></td>
+                    <td colspan="2" class="text-right">SUB TOTAL : </td>
+                    <td class="text-right">Rp {{ number_format($data->fee) }}</td>
+                </tr>
+                @if ($data->discount > 0 || $data->discount_rupiah > 0)
+                    <tr>
+                        <td colspan="2"></td>
+                        <td class="text-right">DISKON : </td>
+                        @if ($data->discount > 0)
+                            <td class="text-right">{{ $data->discount }} %</td>
+                        @elseif($data->discount_rupiah > 0)
+                            <td class="text-right">Rp {{ number_format($data->discount_rupiah) }}</td>
+                        @endif
+                    </tr>
+                @endif
+                @if ($data->delivery == 1)
+                    <tr>
+                        <td colspan="2"></td>
+                        <td class="text-right">PENGANTARAN : </td>
+                        <td class="text-right">Rp {{ $data->additional_fee }} </td>
+                    </tr>
+                @endif
                 <tr>
                     <td colspan="2"></td>
-                    <td class="text-right">DISKON : </td>
-                    @if ($data->discount > 0)
-                        <td class="text-right">{{ $data->discount }} %</td>
-                    @elseif($data->discount_rupiah > 0)
-                        <td class="text-right">Rp {{ number_format($data->discount_rupiah) }}</td>
-                    @endif
+                    <td class="text-right"><b>TOTAL : </b></td>
+                    <td class="text-right">Rp {{ number_format($data->total_fee) }}</td>
                 </tr>
-            @endif
-            @if ($data->delivery == 1)
+            </table>
+            <br>
+            <table style="width:100%; border:0; font-size:13px;">
+                <tr style="padding-bottom:100px;" class="text-center">
+                    <td>PETUGAS : </td>
+                    <td>
+                        @if ($data->delivery == 1)
+                            Supir
+                        @endif
+                    </td>
+                    <td>PENERIMA : </td>
+                </tr>
                 <tr>
-                    <td colspan="2"></td>
-                    <td class="text-right">PENGANTARAN : </td>
-                    <td class="text-right">Rp {{ $data->additional_fee }} </td>
+                    <td colspan="3" style="height: 30px;"></td>
                 </tr>
-            @endif
-            <tr>
-                <td colspan="2"></td>
-                <td class="text-right"><b>TOTAL : </b></td>
-                <td class="text-right">Rp {{ number_format($data->total_fee) }}</td>
-            </tr>
-        </table>
-        <br>
-        <table style="width:100%; border:0; font-size:13px;">
-            <tr style="padding-bottom:100px;" class="text-center">
-                <td>PETUGAS : </td>
-                <td>
-                    @if ($data->delivery == 1)
-                        Supir
-                    @endif
-                </td>
-                <td>PENERIMA : </td>
-            </tr>
-            <tr>
-                <td colspan="3" style="height: 30px;"></td>
-            </tr>
-            <tr class="text-center">
-                <td><b>{{ Auth::user()->name }}</b></td>
-                <td>
-                    @if ($data->delivery == 1)
-                        ................
-                    @endif
-                </td>
-                <td>................</td>
-            </tr>
-        </table>
+                <tr class="text-center">
+                    <td><b>{{ Auth::user()->name }}</b></td>
+                    <td>
+                        @if ($data->delivery == 1)
+                            ................
+                        @endif
+                    </td>
+                    <td>................</td>
+                </tr>
+            </table>
+        </div>
     </main>
     <script>
         window.onload = function() {

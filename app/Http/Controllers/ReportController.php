@@ -168,7 +168,7 @@ class ReportController extends Controller
             $paymentMethodItem->whereExists(function ($query) {
                 $query->select(DB::raw(1))
                     ->from('order_wirehouses')
-                    ->whereColumn('order_wirehouses.id_wirehouse', Auth::user()->id_wirehouse);
+                    ->where('order_wirehouses.id_wirehouse', '=', Auth::user()->id_wirehouse);
             });
         }
 

@@ -9,7 +9,7 @@
     <style>
         @page {
             size: 8.5in 5.5in portrait;
-            margin: 0.8in;
+            margin: 0.6in;
         }
 
         body {
@@ -156,7 +156,6 @@
             </table>
         </div>
         <hr>
-        <br>
 
         <!-- Delivery Address -->
         <div style="font-size:14px;">
