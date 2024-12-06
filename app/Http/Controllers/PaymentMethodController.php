@@ -92,10 +92,11 @@ class PaymentMethodController extends Controller
             }
         }
         if (Auth::user()->role == 'Gudang') {
-            $userWirehouseId = Auth::user()->id_wirehouse; // Ambil nilai id_wirehouse dari pengguna
+            $userWirehouseId = Auth::user()->id_wirehouse;
             $paymentMethodItem->whereExists(function ($query) use ($userWirehouseId) {
                 $query->select(DB::raw(1))
                     ->from('order_wirehouses')
+                    ->whereColumn('order_wirehouses.id', 'payment_method_items.id_order_wirehouse')
                     ->where('order_wirehouses.id_wirehouse', $userWirehouseId);
             });
         }
