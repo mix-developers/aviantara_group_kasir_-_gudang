@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Mockery\Generator\Method;
 
 class ReportController extends Controller
@@ -162,6 +163,14 @@ class ReportController extends Controller
 
         $paymentMethodItem->whereBetween('created_at', [Carbon::today()->startOfDay(), Carbon::today()->endOfDay()])
             ->where('paid', '>', 0);
+
+        if (Auth::user()->role == 'Gudang') {
+            $paymentMethodItem->whereExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('order_wirehouses')
+                    ->whereColumn('order_wirehouses.id_wirehouse', Auth::user()->id_wirehouse);
+            });
+        }
 
         $data = $paymentMethodItem->get();
 

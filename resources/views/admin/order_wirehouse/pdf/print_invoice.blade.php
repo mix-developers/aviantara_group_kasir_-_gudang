@@ -8,8 +8,8 @@
     <link rel="stylesheet" href="{{ asset('css/') }}/pdf/bootstrap.min.css" media="all" />
     <style>
         @page {
-            size: 8.5in 5.5in;
-            margin: 0.5in;
+            size: 8.5in 5.5in portrait;
+            margin: 0.8in;
         }
 
         body {
