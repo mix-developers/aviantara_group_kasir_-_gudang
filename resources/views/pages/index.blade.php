@@ -1,79 +1,110 @@
 @extends('layouts.frontend.app')
+
 @push('css')
 @endpush
+
 @section('content')
-    <section style="margin: 50px 0 50px 0;">
+    <section style="margin: 50px 0 0 0;">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-8">
-                    <form action="{{ url('/search') }}" method="GET" enctype="multipart/form-data">
-
+                    <form id="search-form" action="{{ url('/search') }}" method="GET" enctype="multipart/form-data">
                         <div class="input-group shadow-lg">
                             <input type="text" class="form-control form-control-lg rounded-start" name="search"
-                                placeholder="Cari Produk..." aria-label="Cari Produk" value="{{ request('search') }}"
-                                autofocus>
-                            <select class="form-control form-control-lg" name="wirehouse">
-                                <option value="-" @if (request('wirehouse') == '-') selected @endif>Semua Gudang
-                                </option>
-                                @foreach (App\Models\Wirehouse::all() as $item)
-                                    <option value="{{ $item->id }}" @if (request('wirehouse') == $item->id) selected @endif>
-                                        {{ $item->name }} - {{ $item->address }}</option>
-                                @endforeach
-                            </select>
-                            <button class="btn btn-primary px-4" type="submit"><i class="bi bi-search"></i> Cari</button>
+                                id="search-input" placeholder="Cari Produk..." aria-label="Cari Produk"
+                                value="{{ request('search') }}" autofocus>
+                            <button class="btn btn-primary px-4" type="submit" id="search-button"><i
+                                    class="bi bi-search"></i> Cari</button>
                         </div>
                     </form>
                 </div>
             </div>
     </section>
-    <section cla3s="py-5">
+
+    <section class="pb-5">
         <div class="container px-4 px-lg-5 mt-5">
             <div class="text-center mb-4">
                 <h2>Produk Gudang</h2>
             </div>
-            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-                @foreach ($product as $item)
-                    <div class="col mb-5">
-                        <div class="card h-100 shadow-sm"><img class="card-img-top"
-                                src="{{ $item->photo != null ? Storage::url($item->photo) : asset('img/default.webp') }}"
-                                alt="..." style="width: 100%; height:200px; object-fit:cover;" />
-                            <div class="card-body p-4">
-                                <div class="text-center">
-
-                                    <div><span class="fw-bolder h5">{{ $item->name }} </span><br><span
-                                            style="font-size: 12px;"
-                                            class="badge bg-{{ App\Models\Product::getStok($item->id) <= 0 ? 'danger' : 'primary' }}">{{ App\Models\Product::getStok($item->id) <= 0 ? 'Habis' : 'Tersedia' }}</span>
-                                    </div>
-                                    <div class="my-2">
-                                        <small class="text-secondary">
-                                            {{ $item->wirehouse->name }}
-                                        </small>
-                                    </div>
-                                    <div class="my-2 py-1 bg-warning" style="border-radius: 6px;">
-                                        <span
-                                            class="text-black fw-bold">{{ App\Models\ProductPrice::where('id_product', $item->id)->latest()->first()? 'Rp ' .number_format(App\Models\ProductPrice::where('id_product', $item->id)->latest()->first()->price_grosir): 'Belum diberi harga' }}</span>
-                                    </div>
-                                    <span class="fw-bold">
-                                        Stok :
-                                        {{ App\Models\Product::getStok($item->id) }} {{ $item->unit }}
-                                    </span>
-                                    <br style="margin:0;"><small
-                                        style="font-size: 11px;">{{ $item->quantity_unit . ' ' . $item->sub_unit . ' /' . $item->unit }}</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-                @if ($product->count() <= 0)
-                    <div class="col-12">
-                        <div class="text-center my-4 fw-bold " style="color: grey;">
-                            Mohon maaf, Produk belum tersedia..
-                        </div>
-                    </div>
-                @endif
+            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center" id="product-list">
+                <!-- Konten produk akan dimuat melalui AJAX -->
             </div>
-            <div class="mt-3 d-flex justify-content-center">{{ $product->links('vendor.pagination.bootstrap-4') }}
+            <div class="mt-3 d-flex justify-content-center" id="pagination-product">
+                <!-- Pagination akan dimuat melalui AJAX -->
+            </div>
+        </div>
+    </section>
+    <section class="mt-5 bg-light py-2">
+        <div class="container px-4 px-lg-5 mt-5">
+            <div class="text-center mb-4">
+                <h2> Produk Terlaris</h2>
+            </div>
+            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center"
+                id="top-selling-products-container">
+                <!-- Top 5 best-selling products will be loaded via AJAX -->
             </div>
         </div>
     </section>
 @endsection
+
+@push('js')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            function fetchProducts(page = 1, search = '', wirehouse = '-') {
+                $.ajax({
+                    url: '/get-products?page=' + page,
+                    method: 'GET',
+                    data: {
+                        search: search,
+                        wirehouse: wirehouse
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        console.log(response); // Check the structure of the response
+                        $('#product-list').html(response.html); // Update the products
+                        $('#pagination-product').html(response.pagination); // Update the pagination
+                    }
+                });
+            }
+
+            function fetchTopSellingProducts() {
+                $.ajax({
+                    url: '/get-top-selling-products', // The route to fetch top-selling products
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        // Append the HTML content received from the backend into the container
+                        $('#top-selling-products-container').html(response.html);
+                    }
+                });
+            }
+
+            // Handle the pagination click event
+            $(document).on('click', '.page-link', function(e) {
+                e.preventDefault();
+                var page = $(this).attr('href').split('page=')[1];
+                var search = $('#search-input').val(); // Get search input value
+                var wirehouse = $('#wirehouse-select').val(); // Get selected wirehouse
+                fetchProducts(page, search, wirehouse); // Fetch products with search and wirehouse params
+            });
+
+            // Handle form submit for search
+            $('#search-form').submit(function(e) {
+                e.preventDefault(); // Prevent the form from submitting normally
+                var search = $('#search-input').val();
+                var wirehouse = $('#wirehouse-select').val();
+                fetchProducts(1, search, wirehouse); // Fetch products for the first page with search params
+            });
+
+            // Load the first page on page load with search params
+            var search = $('#search-input').val();
+            var wirehouse = $('#wirehouse-select').val();
+            fetchProducts(1, search, wirehouse);
+
+            fetchTopSellingProducts();
+        });
+
+        //top selling
+    </script>
+@endpush

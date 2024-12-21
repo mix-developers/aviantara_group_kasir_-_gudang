@@ -20,8 +20,10 @@ use App\Http\Controllers\OrderWirehouseController;
 use App\Http\Controllers\ProductDamagedController;
 use App\Http\Controllers\ReportController;
 use App\Models\OrderWirehouse;
+use App\Models\OrderWirehouseItem;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +40,48 @@ Route::get('/', function () {
     return view('pages/index', [
         'product' => Product::paginate(12)
     ]);
+});
+Route::get('/get-top-selling-products', function (Request $request) {
+    // Get the top 5 best-selling products
+    $topSellingProducts = OrderWirehouseItem::select('order_wirehouse_items.id_product', DB::raw('count(*) as sales_count'))
+        ->join('products', 'order_wirehouse_items.id_product', '=', 'products.id')
+        ->groupBy('order_wirehouse_items.id_product')
+        ->orderBy('sales_count', 'desc')
+        ->take(8)
+        ->get();
+
+    // Optionally, you can load more details like product price, image, etc.
+    $topSellingProducts->load('product'); // Eager load the product details if necessary
+
+    // Return the HTML of the top-selling products view
+    return response()->json([
+        'html' => view('pages.top-selling-products', compact('topSellingProducts'))->render(),
+    ]);
+});
+Route::get('/get-products', function (Request $request) {
+    // Retrieve the search query and wirehouse filter from the request
+    $search = $request->input('search');
+    $wirehouseId = $request->input('wirehouse');
+
+    // Start building the query
+    $query = Product::with('wirehouse'); // Adding relation if necessary
+
+    // Apply search filter if a search query is provided
+    if ($search) {
+        $query->where('name', 'like', '%' . $search . '%'); // Adjust 'name' field as needed
+    }
+
+    // Paginate the results
+    $products = $query->paginate(8); // Adjust number per page as needed
+
+    if ($request->ajax()) {
+        return response()->json([
+            'html' => view('pages.product-list', compact('products'))->render(),
+            'pagination' => (string) $products->links('vendor.pagination.bootstrap-4') // Return pagination HTML
+        ]);
+    }
+
+    return view('pages.index', compact('products'));
 });
 Route::get('/search', function (Request $request) {
     $search = $request->input('search');
