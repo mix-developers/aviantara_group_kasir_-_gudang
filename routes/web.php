@@ -24,6 +24,7 @@ use App\Models\OrderWirehouseItem;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade as PDF;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +41,11 @@ Route::get('/', function () {
     return view('pages/index', [
         'product' => Product::paginate(12)
     ]);
+});
+Route::get('/download_all_product', function () {
+    return \PDF::loadView('pages.pdf.all_product')
+        ->setPaper('a4', 'portrait') // Orientasi portrait
+        ->download('HARGA PRODUK AVIANTARA Berlaku ' . date('F Y') . '__' . date('dmyhis') . '.pdf'); // Nama file
 });
 Route::get('/get-top-selling-products', function (Request $request) {
     // Get the top 5 best-selling products

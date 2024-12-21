@@ -15,6 +15,9 @@
                                 value="{{ request('search') }}" autofocus>
                             <button class="btn btn-primary px-4" type="submit" id="search-button"><i
                                     class="bi bi-search"></i> Cari</button>
+                            <a href="{{ url('/download_all_product') }}" target="__blank" class="btn btn-danger px-4"><i
+                                    class="bi bi-file-pdf"></i>
+                                PDF</a>
                         </div>
                     </form>
                 </div>
