@@ -69,14 +69,14 @@
                 <table class="table-custom mb-3">
                     <thead style="color:white; " class="text-center">
                         <tr style="background-color: rgb(224, 116, 0); ">
-                            <th colspan="5">{{ $wirehouseItem->name }}</th>
+                            <th colspan="4">{{ $wirehouseItem->name }}</th>
                         </tr>
                         <tr style="background-color: rgb(1, 177, 10); ">
                             <th style="width:10px;">NO</th>
                             <th>NAMA</th>
                             <th>ISI</th>
                             <th>HARGA GROSIR</th>
-                            <th>HARGA SATUAN</th>
+                            {{-- <th>HARGA SATUAN</th> --}}
                         </tr>
                     </thead>
                     <tbody>
@@ -90,9 +90,9 @@
                                 <td>
                                     {{ App\Models\ProductPrice::where('id_product', $item->id)->latest()->first()? 'Rp ' .number_format(App\Models\ProductPrice::where('id_product', $item->id)->latest()->first()->price_grosir): 'Belum diberi harga' }}
                                 </td>
-                                <td>
+                                {{-- <td>
                                     {{ App\Models\ProductPrice::where('id_product', $item->id)->latest()->first()? 'Rp ' .number_format(App\Models\ProductPrice::where('id_product', $item->id)->latest()->first()->price_grosir / $item->quantity_unit): 'Belum diberi harga' }}
-                                </td>
+                                </td> --}}
                             </tr>
                         @endforeach
                     </tbody>
