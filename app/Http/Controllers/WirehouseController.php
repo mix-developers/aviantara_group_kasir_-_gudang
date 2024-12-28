@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Opname;
+use App\Models\OpnameSchedule;
 use App\Models\Product;
 use App\Models\User;
 use App\Models\Wirehouse;
@@ -73,7 +75,27 @@ class WirehouseController extends Controller
             ->addColumn('action', function ($wirehouse) {
                 return view('admin.wirehouse.components.actions', compact('wirehouse'));
             })
-            ->rawColumns(['action', 'wirehouse'])
+            ->addColumn('action_opname', function ($wirehouse) {
+                $shceduleBtn = '<button class="btn btn-sm btn-warning" onclick="schedule(' . $wirehouse->id . ')">Jadwalkan</button>';
+                $viewBtn = '<a class="btn btn-sm btn-primary" href="opname-wirehouse/' . $wirehouse->id . '">Lihat</a>';
+                return Auth::user()->role == 'Admin' ? $shceduleBtn . ' ' . $viewBtn : $viewBtn;
+            })
+            ->addColumn('last_opname', function ($wirehouse) {
+                return Opname::where('id_wirehouse', $wirehouse->id)
+                    ->latest()
+                    ->first()
+                    ?->created_at?->format('d F Y') ?? '<span class="text-danger">Belum Pernah</span>';
+            })
+            ->addColumn('schedule', function ($wirehouse) {
+                $latestSchedule = OpnameSchedule::where('id_wirehouse', $wirehouse->id)
+                    ->latest()
+                    ->first();
+
+                return $latestSchedule && $latestSchedule->date_schedule
+                    ? 'Tanggal : ' . $latestSchedule->date_schedule
+                    : '<span class="text-danger">Belum Dijadwalkan</span>';
+            })
+            ->rawColumns(['action', 'wirehouse', 'action_opname', 'last_opname', 'schedule'])
             ->make(true);
     }
     public function store(Request $request)

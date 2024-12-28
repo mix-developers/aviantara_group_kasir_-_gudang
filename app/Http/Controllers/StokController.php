@@ -106,6 +106,9 @@ class StokController extends Controller
             ->addColumn('stok', function ($product) {
                 return view('admin.stok.components.product.stok', compact('product'));
             })
+            ->addColumn('stok_text', function ($product) {
+                return Product::getStok($product->id);
+            })
             ->addColumn('stok_retail', function ($product) {
                 $totaOrderRetail = OrderWirehouseRetailItem::where('id_product', $product->id)->sum('quantity');
                 $sisaRetail = $totaOrderRetail % $product->quantity_unit;
@@ -155,7 +158,7 @@ class StokController extends Controller
                 return $expiredHtml;
             })
 
-            ->rawColumns(['produk', 'action', 'wirehouse', 'stok', 'expired', 'stok_retail'])
+            ->rawColumns(['produk', 'action', 'wirehouse', 'stok', 'expired', 'stok_retail', 'stok_text'])
             ->make(true);
     }
     public function getStoksDataTable(Request $request)

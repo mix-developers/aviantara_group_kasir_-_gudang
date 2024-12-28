@@ -135,6 +135,25 @@
         <!-- Overlay -->
         <div class="layout-overlay layout-menu-toggle"></div>
     </div>
+    <!-- alert opname -->
+    <div class="modal fade" id="autoPopup" tabindex="-1" aria-labelledby="popupTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content bg-danger text-white">
+                <div class="modal-header">
+                    <h5 class="modal-title text-white" id="popupTitle">Pengingat Opname</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Segera lakukan opname!!</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                        Tutup
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- / Layout wrapper -->
 
 
@@ -165,7 +184,31 @@
 
     <!-- Place this tag in your head or just before your close body tag. -->
     <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const myModal = new bootstrap.Modal(document.getElementById('autoPopup'));
 
+            @php
+                // Periksa apakah pengguna memiliki role "Gudang"
+                if (Auth::user()->role == 'Gudang') {
+                    $checkSchedule = \App\Models\OpnameSchedule::where('id_wirehouse', Auth::user()->id_wirehouse)->first();
+                } else {
+                    $checkSchedule = null;
+                }
+            @endphp
+
+            // Kirim hasil pemeriksaan ke JavaScript
+            const isOpnameToday =
+                {{ isset($checkSchedule) && intval($checkSchedule->date_schedule) === intval(date('d')) ? 'true' : 'false' }};
+
+            // alert(isOpnameToday);
+            // Jika jadwal opname sesuai, tampilkan popup
+            if (isOpnameToday) {
+                myModal.show();
+
+            }
+        });
+    </script>
 
     <script>
         $(document).ready(function() {

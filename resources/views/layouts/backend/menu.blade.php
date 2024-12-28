@@ -87,6 +87,15 @@
                 </a>
             </li>
             <li class="menu-header small text-uppercase">
+                <span class="menu-header-text">Opnema Stok</span>
+            </li>
+            <li class="menu-item {{ request()->is('opname-wirehouse*') ? 'active' : '' }}">
+                <a href="{{ url('/opname-wirehouse') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-folder"></i>
+                    <div data-i18n="Analytics">Opname Gudang <span class="badge bg-danger">Soon</span></div>
+                </a>
+            </li>
+            <li class="menu-header small text-uppercase">
                 <span class="menu-header-text">Laporan</span>
             </li>
             <li class="menu-item {{ request()->is('report/price') ? 'active' : '' }}">
@@ -104,7 +113,13 @@
             <li class="menu-item {{ request()->is('report/stok-wirehouse') ? 'active' : '' }}">
                 <a href="{{ url('/report/stok-wirehouse') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-folder"></i>
-                    <div data-i18n="Analytics">Stok Gudang</div>
+                    <div data-i18n="Analytics">Riwayat Stok</div>
+                </a>
+            </li>
+            <li class="menu-item {{ request()->is('report/stok-product-wirehouse') ? 'active' : '' }}">
+                <a href="{{ url('/report/stok-product-wirehouse') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-folder"></i>
+                    <div data-i18n="Analytics">Stok Produk Gudang</div>
                 </a>
             </li>
 

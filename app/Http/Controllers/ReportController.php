@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\OrderWirehouse;
+use App\Models\OrderWirehouseRetailItem;
 use App\Models\PaymentMethod;
 use App\Models\paymentMethodItem;
 use App\Models\Product;
@@ -16,13 +17,111 @@ use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Mockery\Generator\Method;
+use Yajra\DataTables\Facades\DataTables;
 
 class ReportController extends Controller
 {
+    public function stok_product_wirehouse()
+    {
+        $data = [
+            'title' => 'Laporan Stok Produk Gudang',
+        ];
+        return view('admin.report.stok_product_wirehouse', $data);
+    }
+    public function pdf_product_wirehouse(Request $request)
+    {
+        $query = Product::orderByDesc('id');
+
+
+        $user = User::with(['wirehouse'])->where('id', Auth::id())->first();
+        if (Auth::user()->role == 'Gudang' && $user->wirehouse) {
+            $query->where('id_wirehouse', $user->id_wirehouse);
+        }
+
+        if ($request->has('wirehouse')) {
+            $wirehouseId = $request->input('wirehouse');
+            if ($wirehouseId !== '-') {
+                $query->where('id_wirehouse', $wirehouseId);
+            }
+        }
+        if ($request->has('from-date') && $request->has('to-date')) {
+            $fromDate = $request->input('from-date');
+            $toDate = $request->input('to-date');
+            if ($fromDate != '' && $toDate != '') {
+                $fromDate = Carbon::parse($fromDate)->startOfDay()->toDateTimeString();
+                $toDate = Carbon::parse($toDate)->endOfDay()->toDateTimeString();
+
+                // Join with the product_stoks table and filter by date range
+                $query->whereHas('product_stoks', function ($q) use ($fromDate, $toDate) {
+                    $q->whereBetween('created_at', [$fromDate, $toDate]);
+                });
+            }
+        }
+
+        $data = $query->get();
+        $pdf =  \PDF::loadView('admin.report.pdf.stok_product_wirehouse', [
+            'data' => $data,
+            'from_date' => $fromDate ?? '',
+            'to_date' => $toDate ?? '',
+            'wirehouse' => Wirehouse::find($wirehouseId)->name ?? 'Semua',
+        ])->setPaper('a4', 'landscape');
+
+        return $pdf->stream('Laporan Stok Produk Gudang ' . date('Y-m-d H:i') . '.pdf');
+    }
+    public function getProductsReportDataTable(Request $request)
+    {
+        $query = Product::orderByDesc('id');
+
+
+        $user = User::with(['wirehouse'])->where('id', Auth::id())->first();
+        if (Auth::user()->role == 'Gudang' && $user->wirehouse) {
+            $query->where('id_wirehouse', $user->id_wirehouse);
+        }
+
+        if ($request->has('wirehouse')) {
+            $wirehouseId = $request->input('wirehouse');
+            if ($wirehouseId !== '-') {
+                $query->where('id_wirehouse', $wirehouseId);
+            }
+        }
+        if ($request->has('from-date') && $request->has('to-date')) {
+            $fromDate = $request->input('from-date');
+            $toDate = $request->input('to-date');
+            if ($fromDate != '' && $toDate != '') {
+                $fromDate = Carbon::parse($fromDate)->startOfDay()->toDateTimeString();
+                $toDate = Carbon::parse($toDate)->endOfDay()->toDateTimeString();
+
+                // Join with the product_stoks table and filter by date range
+                $query->whereHas('product_stoks', function ($q) use ($fromDate, $toDate) {
+                    $q->whereBetween('created_at', [$fromDate, $toDate]);
+                });
+            }
+        }
+
+        $products = $query;
+
+        return DataTables::of($products)
+
+            ->addColumn('wirehouse', function ($product) {
+                return '<strong>' . $product->wirehouse->name . '</strong><br><span class="text-muted">' . $product->wirehouse->address . '</span>';
+            })
+            ->addColumn('stok_retail', function ($product) {
+                $totaOrderRetail = OrderWirehouseRetailItem::where('id_product', $product->id)->sum('quantity');
+                $sisaRetail = $totaOrderRetail % $product->quantity_unit;
+                return $sisaRetail . ' ' . $product->sub_unit;
+            })
+            ->addColumn('stok', function ($product) {
+                $stok_product = Product::getStok($product->id);
+                return $stok_product . ' ' . $product->unit;
+            })
+
+            ->rawColumns(['wirehouse', 'stok', 'stok_retail'])
+            ->make(true);
+    }
     public function stok_wirehouse()
     {
         $data = [
-            'title' => 'Laporan Stok Gudang',
+            'title' => 'Laporan Riwayat Stok Gudang',
         ];
         return view('admin.report.stok_wirehouse', $data);
     }

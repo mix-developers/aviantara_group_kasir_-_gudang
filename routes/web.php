@@ -11,6 +11,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PriceController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\OpnameController;
 use App\Http\Controllers\StokKiosController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\WirehouseController;
@@ -117,6 +118,12 @@ Route::middleware(['auth:web', 'checkDisabled'])->group(function () {
     Route::get('/chart-order-all-wirehouse', [App\Http\Controllers\HomeController::class, 'getChartOrderAllWirehouses']);
     Route::get('/chart-payment-all-wirehouse', [App\Http\Controllers\HomeController::class, 'getChartPaymentAllWirehouses']);
 
+    //opname
+    // web.php
+    Route::get('/data/months', [OpnameController::class, 'getMonths'])->name('data.months');
+    Route::get('/opname-wirehouse', [OpnameController::class, 'index'])->name('opname-wirehouse');
+    Route::get('/opname-wirehouse/{id}', [OpnameController::class, 'wirehouse_opname'])->name('opname-wirehouse');
+    Route::post('/opname-wirehouse-schedule/store', [OpnameController::class, 'store'])->name('opname-wirehouse-schedule.store');
     //dashboard
     Route::get('/expired-alert', [HomeController::class, 'expiredAlert']);
     Route::get('/get-stok-card', [HomeController::class, 'getStokCard']);
@@ -212,6 +219,9 @@ Route::middleware(['auth:web', 'role:Admin,Owner', 'checkDisabled'])->group(func
 
     //report managemen
     Route::get('/report/stok-wirehouse', [ReportController::class, 'stok_wirehouse'])->name('report.stok-wirehouse');
+    Route::get('/report/stok-product-wirehouse', [ReportController::class, 'stok_product_wirehouse'])->name('report.stok-product-wirehouse');
+    Route::get('/report/stok-product-wirehouse-datatable', [ReportController::class, 'getProductsReportDataTable']);
+    Route::get('/report/pdf-stok-product-wirehouse', [ReportController::class, 'pdf_product_wirehouse'])->name('report.pdf-stok-product-wirehouse');
     Route::get('/report/pdf-stok-wirehouse', [ReportController::class, 'pdf_stok_wirehouse'])->name('report.pdf-stok-wirehouse');
     // Route::get('/report/report-payment-datatable', [PaymentMethodController::class, 'getReportPaymentsDataTable']);
     Route::get('/report/price', [ReportController::class, 'price'])->name('report.price');
