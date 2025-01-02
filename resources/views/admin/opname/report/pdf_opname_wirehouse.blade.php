@@ -140,8 +140,9 @@
                                 ->where('month', $month)
                                 ->where('year', $year)
                                 ->first();
-                            echo optional($opnameItem)->created_at->format('d F Y, H:i') ?? '-';
                         @endphp
+
+                        {{ optional($opnameItem)->created_at ? $opnameItem->created_at->format('d F Y, H:i') : '-' }}
                     </td>
                 </tr>
                 <tr>
@@ -153,8 +154,9 @@
                                 ->where('year', $year)
                                 ->latest()
                                 ->first();
-                            echo optional($opnameItem)->updated_at->format('d F Y, H:i') ?? '-';
                         @endphp
+
+                        {{ optional($opnameItem)->updated_at ? $opnameItem->updated_at->format('d F Y, H:i') : '-' }}
                     </td>
                 </tr>
                 <tr>
