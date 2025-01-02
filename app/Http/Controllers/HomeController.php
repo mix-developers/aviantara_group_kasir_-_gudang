@@ -9,6 +9,7 @@ use App\Models\PaymentMethod;
 use App\Models\paymentMethodItem;
 use App\Models\Product;
 use App\Models\ProductDamaged;
+use App\Models\ProductPrice;
 use App\Models\ProductStok;
 use App\Models\Shop;
 use App\Models\User;

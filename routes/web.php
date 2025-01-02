@@ -118,12 +118,7 @@ Route::middleware(['auth:web', 'checkDisabled'])->group(function () {
     Route::get('/chart-order-all-wirehouse', [App\Http\Controllers\HomeController::class, 'getChartOrderAllWirehouses']);
     Route::get('/chart-payment-all-wirehouse', [App\Http\Controllers\HomeController::class, 'getChartPaymentAllWirehouses']);
 
-    //opname
-    // web.php
-    Route::get('/data/months', [OpnameController::class, 'getMonths'])->name('data.months');
-    Route::get('/opname-wirehouse', [OpnameController::class, 'index'])->name('opname-wirehouse');
-    Route::get('/opname-wirehouse/{id}', [OpnameController::class, 'wirehouse_opname'])->name('opname-wirehouse');
-    Route::post('/opname-wirehouse-schedule/store', [OpnameController::class, 'store'])->name('opname-wirehouse-schedule.store');
+
     //dashboard
     Route::get('/expired-alert', [HomeController::class, 'expiredAlert']);
     Route::get('/get-stok-card', [HomeController::class, 'getStokCard']);
@@ -132,6 +127,13 @@ Route::middleware(['auth:web', 'checkDisabled'])->group(function () {
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 });
 Route::middleware(['auth:web', 'role:Gudang,Admin,Owner', 'checkDisabled'])->group(function () {
+    //opname
+    Route::get('/data/months', [OpnameController::class, 'getMonths'])->name('data.months');
+    // Route::get('/opname-wirehouse', [OpnameController::class, 'index'])->name('opname-wirehouse');
+    Route::get('/opname-wirehouse/{id}', [OpnameController::class, 'wirehouse_opname'])->name('opname-wirehouse');
+    Route::post('/opname-wirehouse-schedule/store', [OpnameController::class, 'store'])->name('opname-wirehouse-schedule.store');
+    Route::post('/opname-wirehouse-item/store', [OpnameController::class, 'storeOpnameItem'])->name('opname-wirehouse-item.store');
+    Route::get('/opname-wirehouse-item/pdf/{month}/{year}/{wirehouse}', [OpnameController::class, 'pdf_wirehouse'])->name('opname-wirehouse-item.pdf');
     //report
     Route::get('/report/pdf-daily', [ReportController::class, 'pdf_daily'])->name('report.pdf-daily');
     // Route::get('/report/pdf-income', [ReportController::class, 'pdf_income'])->name('report.pdf-income');
@@ -216,7 +218,8 @@ Route::middleware(['auth:web', 'role:Gudang', 'checkDisabled'])->group(function 
     Route::get('/report/report-daily', [ReportController::class, 'reportDaily'])->name('report.report-daily');
 });
 Route::middleware(['auth:web', 'role:Admin,Owner', 'checkDisabled'])->group(function () {
-
+    //opname
+    Route::get('/opname-wirehouse', [OpnameController::class, 'index'])->name('opname-wirehouse');
     //report managemen
     Route::get('/report/stok-wirehouse', [ReportController::class, 'stok_wirehouse'])->name('report.stok-wirehouse');
     Route::get('/report/stok-product-wirehouse', [ReportController::class, 'stok_product_wirehouse'])->name('report.stok-product-wirehouse');

@@ -18,4 +18,23 @@ class ProductStok extends Model
     {
         return $this->belongsTo(User::class, 'id_user');
     }
+    static function getAllStok($month, $year)
+    {
+        $date = \Carbon\Carbon::create($year, $month, 1);
+
+        $stok_masuk = ProductStok::where('created_at', '<', $date)
+            ->where('type', 'Masuk')
+            ->sum('quantity');
+
+        $stok_keluar = ProductStok::where('created_at', '<', $date)
+            ->where('type', 'Keluar')
+            ->sum('quantity');
+
+        $rusak = ProductDamaged::where('created_at', '<', $date)
+            ->sum('quantity_unit');
+
+        $stok = $stok_masuk - $stok_keluar - $rusak;
+
+        return $stok;
+    }
 }

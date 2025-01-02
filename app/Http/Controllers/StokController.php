@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Opname;
+use App\Models\OpnameItem;
 use App\Models\OrderWirehouseRetailItem;
 use App\Models\Product;
 use App\Models\ProductDamaged;
@@ -109,10 +111,32 @@ class StokController extends Controller
             ->addColumn('stok_text', function ($product) {
                 return Product::getStok($product->id);
             })
+            ->addColumn('opname_qty', function ($product) {
+                return OpnameItem::QtyReal(Carbon::now()->month, Carbon::now()->year, $product->id);
+            })
+            ->addColumn('opname_qty_retail', function ($product) {
+                return OpnameItem::QtyRealRetail(Carbon::now()->month, Carbon::now()->year, $product->id);
+            })
+            ->addColumn('opname_description', function ($product) {
+                return OpnameItem::description(Carbon::now()->month, Carbon::now()->year, $product->id);
+            })
+            ->addColumn('opname_selisih', function ($product) {
+                $selisih =  OpnameItem::selisih(Carbon::now()->month, Carbon::now()->year, $product->id);
+                return '<span class="badge bg-label-' . ($selisih == 0 ? 'success' : 'danger') . '">' . $selisih . '</span>';
+            })
+            ->addColumn('opname_selisih_retail', function ($product) {
+                $selisih =  OpnameItem::selisihRetail(Carbon::now()->month, Carbon::now()->year, $product->id);
+                return '<span class="badge bg-label-' . ($selisih == 0 ? 'success' : 'danger') . '">' . $selisih . '</span>';
+            })
             ->addColumn('stok_retail', function ($product) {
                 $totaOrderRetail = OrderWirehouseRetailItem::where('id_product', $product->id)->sum('quantity');
                 $sisaRetail = $totaOrderRetail % $product->quantity_unit;
                 return $sisaRetail . ' ' . $product->sub_unit;
+            })
+            ->addColumn('stok_text_retail', function ($product) {
+                $totaOrderRetail = OrderWirehouseRetailItem::where('id_product', $product->id)->sum('quantity');
+                $sisaRetail = $totaOrderRetail % $product->quantity_unit;
+                return $sisaRetail;
             })
             ->addColumn('expired', function ($product) {
                 $stok = ProductStok::where('id_product', $product->id);
@@ -158,7 +182,7 @@ class StokController extends Controller
                 return $expiredHtml;
             })
 
-            ->rawColumns(['produk', 'action', 'wirehouse', 'stok', 'expired', 'stok_retail', 'stok_text'])
+            ->rawColumns(['produk', 'action', 'wirehouse', 'stok', 'expired', 'stok_retail', 'stok_text', 'stok_text_retail', 'opname_qty', 'opname_qty_retail', 'opname_description', 'opname_selisih', 'opname_selisih_retail', 'expired'])
             ->make(true);
     }
     public function getStoksDataTable(Request $request)

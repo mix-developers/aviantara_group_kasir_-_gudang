@@ -12,14 +12,43 @@ class Product extends Model
 
     protected $guarded = [];
 
-    static function getStok($id)
+    static function getStok($id, $bulan = null, $tahun = null)
     {
-        $stok_masuk =  ProductStok::where('id_product', $id)->select('quantity')->where('type', 'Masuk')->sum('quantity');
-        $stok_keluar =  ProductStok::where('id_product', $id)->select('quantity')->where('type', 'Keluar')->sum('quantity');
-        $rusak =  ProductDamaged::where('id_product', $id)->sum('quantity_unit');
+        $stokMasukQuery = ProductStok::where('id_product', $id)->where('type', 'Masuk');
+        $stokKeluarQuery = ProductStok::where('id_product', $id)->where('type', 'Keluar');
+        $rusakQuery = ProductDamaged::where('id_product', $id);
 
-        $total_stok = $stok_masuk - $stok_keluar - $rusak;
-        return $total_stok;
+        if ($bulan && $tahun) {
+            $tanggal = \Carbon\Carbon::create($tahun, $bulan, 1)->startOfMonth()->subDay();
+
+            $stokMasukQuery->whereDate('created_at', '<=', $tanggal);
+            $stokKeluarQuery->whereDate('created_at', '<=', $tanggal);
+            $rusakQuery->whereDate('created_at', '<=', $tanggal);
+        }
+
+        $stokMasuk = $stokMasukQuery->sum('quantity');
+        $stokKeluar = $stokKeluarQuery->sum('quantity');
+        $rusak = $rusakQuery->sum('quantity_unit');
+
+        $totalStok = $stokMasuk - $stokKeluar - $rusak;
+
+        return $totalStok;
+    }
+    static function getStokRetail($productId, $bulan = null, $tahun = null)
+    {
+        $product = Product::find($productId);
+
+        $totalOrderRetailQuery = OrderWirehouseRetailItem::where('id_product', $productId);
+
+        if ($bulan && $tahun) {
+            $tanggal = \Carbon\Carbon::create($tahun, $bulan, 1)->endOfMonth();
+            $totalOrderRetailQuery->whereDate('created_at', '<=', $tanggal);
+        }
+        $totalOrderRetail = $totalOrderRetailQuery->sum('quantity');
+
+        $sisa = $totalOrderRetail % $product->quantity_unit;
+
+        return $sisa;
     }
 
     public function wirehouse(): BelongsTo
@@ -33,5 +62,49 @@ class Product extends Model
     public function product_prices()
     {
         return $this->hasMany(ProductPrice::class, 'id_product');
+    }
+    static function estimateIncomeWirehouse($id_wirehouse, $bulan = null, $tahun = null)
+    {
+
+        $products = self::where('id_wirehouse', $id_wirehouse)->get();
+
+        $totalPendapatan = 0;
+
+        foreach ($products as $item) {
+
+            $harga = ProductPrice::where('id_product', $item->id)
+                ->orderBy('id', 'DESC')
+                ->first();
+
+            $stok = Product::getStok($item->id, $bulan, $tahun);
+
+            $pendapatanPerProduk = ($harga->price_grosir ?? 0) * $stok;
+
+            $totalPendapatan += $pendapatanPerProduk;
+        }
+
+        return $totalPendapatan;
+    }
+    static function estimateIncomeRetailWirehouse($id_wirehouse, $bulan = null, $tahun = null)
+    {
+
+        $products = self::where('id_wirehouse', $id_wirehouse)->get();
+
+        $totalPendapatan = 0;
+
+        foreach ($products as $item) {
+
+            $harga = ProductPrice::where('id_product', $item->id)
+                ->orderBy('id', 'DESC')
+                ->first();
+
+            $stok = OrderWirehouseRetailItem::where('id_product', $item->id);
+            $priceGrosir = $harga->price_grosir ?? 0;
+            $pendapatanPerProduk = ($priceGrosir / $item->quantity_unit) * $stok->sum('quantity');
+
+            $totalPendapatan += $pendapatanPerProduk;
+        }
+
+        return $totalPendapatan;
     }
 }

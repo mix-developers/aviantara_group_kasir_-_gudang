@@ -92,7 +92,7 @@
             <li class="menu-item {{ request()->is('opname-wirehouse*') ? 'active' : '' }}">
                 <a href="{{ url('/opname-wirehouse') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-folder"></i>
-                    <div data-i18n="Analytics">Opname Gudang <span class="badge bg-danger">Soon</span></div>
+                    <div data-i18n="Analytics">Gudang <span class="badge bg-danger">New</span></div>
                 </a>
             </li>
             <li class="menu-header small text-uppercase">
@@ -161,6 +161,15 @@
                 <a href="{{ url('/damageds') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-trash"></i>
                     <div data-i18n="Analytics">Stok Rusak</div>
+                </a>
+            </li>
+            <li class="menu-header small text-uppercase">
+                <span class="menu-header-text">Opnema Stok</span>
+            </li>
+            <li class="menu-item {{ request()->is('opname-wirehouse*') ? 'active' : '' }}">
+                <a href="{{ url('/opname-wirehouse', Auth::user()->id_wirehouse) }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-folder"></i>
+                    <div data-i18n="Analytics">Opname <span class="badge bg-danger">New</span></div>
                 </a>
             </li>
             <li class="menu-header small text-uppercase">
