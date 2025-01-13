@@ -118,6 +118,7 @@
                                 <th>Produk</th>
                                 <th>Jumlah</th>
                                 <th>Total</th>
+                                <th style="width: 10px;"></th>
                             </tr>
                         </thead>
 
@@ -127,6 +128,7 @@
                                 <th>Produk</th>
                                 <th>Jumlah</th>
                                 <th>Total</th>
+                                <th style="width: 10px;"></th>
                             </tr>
                         </tfoot>
                     </table>
@@ -190,6 +192,58 @@
 
     </div>
     @include('admin.payment.components.modal')
+    <div class="modal fade" id="discountProduct" tabindex="-1" aria-labelledby="PaymentMethodsModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content bg-primary text-white " style=" border: 2px solid white;">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="card-body text-center">
+                    <form id="discountForm">
+                        <input type="hidden" id="discountProductId" name="id">
+                        <input type="hidden" id="hargaSemula" name="harga_semula">
+                        <input type="hidden" id="hargaSemulaItem" name="harga_semula_item">
+                        <h3 class="mb-3 fw-bold text-white">Discount : <span id="discountNameProduct"></span>
+                        </h3>
+                        <hr>
+                        <div class="mb-3">
+                            <label>Pilih Metode Diskon</label>
+                            <select class="form-select" id="selectMethodDiscount">
+                                <option value="persen">Persen (%)</option>
+                                <option value="rupiah">Rupiah (Rp)</option>
+                            </select>
+                        </div>
+                        {{-- ini persentase --}}
+                        <div class="mb-3" id="discountPersen">
+                            <div class="input-group">
+                                <input type="number" class="form-control" name="discount_persen" id="discountProductPersen"
+                                    value="0">
+                                <span class="input-group-text">%</span>
+                            </div>
+                        </div>
+                        {{-- ini rupiah --}}
+                        <div class="mb-3" id="discountRupiah" style="display: none;">
+                            <div class="input-group">
+                                <span class="input-group-text">Rp</span>
+                                <input type="number" class="form-control discountProductRupiah" name="discount_rupiah"
+                                    value="0" id="discountProductRupiah">
+                            </div>
+                        </div>
+                    </form>
+                    <hr>
+                    <button type="button" class="btn btn-danger discountBatal">Batalkan</button>
+                    <button type="button" class="btn btn-light" id="applyDiscountButton">
+                        <div class="spinner-border spinner-border-sm text-prmary" role="status"
+                            id="applyDiscountButtonSpinner" style="display: none;">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        OK
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @push('js')
     <script>
@@ -244,6 +298,19 @@
                         data: 'subtotal_text',
                         name: 'subtotal_text'
                     },
+                    {
+                        data: null,
+                        name: 'button',
+                        orderable: false,
+                        searchable: false,
+                        render: function(data, type, row) {
+                            return `
+                                            <button type="button" class="btn text-primary btn-sm " onclick="diskonItem(${row.id}, '${row.product.name}', '${row.subtotal}')">
+                                                <i class="bx bx-dollar-circle"></i> Diskon
+                                            </button>
+                                        `;
+                        }
+                    },
                 ]
             });
 
@@ -259,6 +326,82 @@
                 getPaymentMethodOptions();
 
             });
+            window.diskonItem = function(id, productName, subtotal) {
+                $('#discountProduct').modal('show');
+                $('#selectMethodDiscount').on('change', function() {
+                    const selectedMethod = $(this).val();
+
+                    if (selectedMethod === 'persen') {
+                        $('#discountPersen').show();
+                        $('#discountRupiah').hide();
+                        $('#discountProductRupiah').val(0);
+                    } else if (selectedMethod ===
+                        'rupiah') {
+                        $('#discountPersen').hide();
+                        $('#discountRupiah').show();
+                        $('#discountProductPersen').val(0);
+                    }
+                    $currentRow = $(this).closest('tr');
+                });
+                $('#discountProductId').val(id);
+                $('#hargaSemulaItem').val(subtotal);
+                $('#discountNameProduct').text(productName);
+
+                $('.discountBatal').click(function() {
+                    $('#discountProduct').modal('hide');
+                    // alert('batal');
+
+                });
+                $('#applyDiscountButton').click(function() {
+                    $('#applyDiscountButtonSpinner').show();
+                    $('#applyDiscountButton').prop('disabled', true);
+                    // alert('aply');
+                    var formData = $('#discountForm').serialize();
+                    $.ajax({
+                        type: 'POST',
+                        url: '/discount-order-items/store',
+                        data: formData,
+                        headers: {
+                            'X-CSRF-TOKEN': $(
+                                    'meta[name="csrf-token"]')
+                                .attr('content')
+                        },
+                        success: function(response) {
+                            $('#applyDiscountButtonSpinner')
+                                .hide();
+                            $('#applyDiscountButton')
+                                .prop(
+                                    'disabled', false);
+                            $('#datatable-order-item')
+                                .DataTable()
+                                .ajax.reload();
+                            $('#discountProduct')
+                                .modal(
+                                    'hide');
+                            total_tagihan = response
+                                .new_total;
+                            $('#payment-tagihan')
+                                .text(
+                                    total_tagihan);
+
+                        },
+                        error: function(xhr, status, error) {
+                            $('#applyDiscountButtonSpinner')
+                                .hide();
+                            $('#applyDiscountButton').prop(
+                                'disabled', false);
+                            console.error(
+                                'Terjadi kesalahan: ' +
+                                error);
+                            $('#discountProduct').modal(
+                                'hide');
+
+                        }
+                    });
+
+                });
+
+            };
 
             function getPaymentMethodOptions() {
                 $.ajax({

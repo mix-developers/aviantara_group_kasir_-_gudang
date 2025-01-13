@@ -225,13 +225,18 @@
                                 $.each(data, function(index, method) {
                                     $('#selectPaymentMethodRetail')
                                         .append(
-                                            ' <div class="form-check form-check-inline mt-3"><input  class="form-check-input" type="radio" name="id_payment_method" value="' +
+                                            '<div class="form-check form-check-inline mt-3">' +
+                                            '<input class="form-check-input" type="radio" name="id_payment_method" value="' +
                                             method.id +
-                                            '" >' +
+                                            '"' +
+                                            (index === 0 ? ' checked' :
+                                                '') +
+                                            // Opsi awal dipilih berdasarkan kondisi
+                                            '>' +
                                             '</input><label class="form-check-label">' +
                                             method.method +
-                                            '</label></div>');
-
+                                            '</label></div>'
+                                        );
                                 });
 
                             },
@@ -271,7 +276,7 @@
                                     'hide');
                                 getAlert(
                                     'Berhasil membuat pesanan eceran'
-                                    );
+                                );
                                 $('#paid').val('');
 
 
@@ -316,11 +321,12 @@
                                 // alert('Berhasil membuat order');
                             },
                             error: function(xhr) {
-                                $('#createPaymentBtnSpinner_retail')
+                                $('#createPaymentBtnNoPrintSpinner_retail')
                                     .hide();
-                                $('#createPaymentBtn_retail').prop(
-                                    'disabled',
-                                    false);
+                                $('#createPaymentBtnNoPrint_retail')
+                                    .prop(
+                                        'disabled',
+                                        false);
                                 alert('Terjadi kesalahan: ' + xhr
                                     .responseText);
                             }

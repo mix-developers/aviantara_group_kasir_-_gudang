@@ -19,8 +19,12 @@ class TransaksiController extends Controller
     public function index()
     {
         //
-        return view('admin.transaksi.index', ['title' => 'Transaksi']);
-
+        return view('admin.shop_orders.index', ['title' => 'Transaksi Kios']);
+    }
+    public function cashier()
+    {
+        //
+        return view('admin.shop_orders.cashier', ['title' => 'Transaksi Kios']);
     }
 
     public function getAll()
@@ -46,7 +50,7 @@ class TransaksiController extends Controller
         }
     }
 
-    
+
 
     /**
      * Store a newly created resource in storage.
@@ -76,9 +80,9 @@ class TransaksiController extends Controller
 
         foreach ($request->products as $product) {
             $stok_kios = StokKios::where('id', $product['product_id'])->first();
-            if($stok_kios->qty < $product['quantity']){
+            if ($stok_kios->qty < $product['quantity']) {
                 return response()->json(['success' => false, 'message' => 'Stok Tidak Cukup', 'nama_produk' => $stok_kios->product->name]);
-            }else{
+            } else {
                 Transaksi::create([
                     'user_id' => Auth::user()->id,
                     'stok_id' => $product['product_id'],
@@ -89,8 +93,8 @@ class TransaksiController extends Controller
                     'harga' => $product['price'],
                     'total' => $request->total_price,
                 ]);
-                    $stok_kios->qty = $stok_kios->qty - $product['quantity'];
-                    $stok_kios->update();
+                $stok_kios->qty = $stok_kios->qty - $product['quantity'];
+                $stok_kios->update();
             }
         }
 
@@ -101,5 +105,4 @@ class TransaksiController extends Controller
     {
         return strtoupper(Str::random(8));
     }
-
 }

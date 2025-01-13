@@ -93,10 +93,9 @@
 
 <body id="content-fullscreen">
     <!-- Layout wrapper -->
-    <div class="layout-wrapper layout-content-navbar">
+    <div class="layout-wrapper layout-content-navbar layout-without-menu">
         <div class="layout-container">
             <!-- Menu -->
-            @include('layouts.backend.menu')
 
             <!-- / Menu -->
 
@@ -113,14 +112,9 @@
                     <!-- Content -->
 
                     <div class="container-xxl flex-grow-1 container-p-y">
-                        @include('layouts.backend.breadcrumbs')
                         @yield('content')
                     </div>
                     <!-- / Content -->
-
-                    <!-- Footer -->
-                    @include('layouts.backend.footer')
-                    <!-- / Footer -->
 
                     <div class="content-backdrop fade"></div>
                 </div>
@@ -132,26 +126,7 @@
         <!-- Overlay -->
         <div class="layout-overlay layout-menu-toggle"></div>
     </div>
-    <!-- alert opname -->
-    <div class="modal fade" id="autoPopup" tabindex="-1" aria-labelledby="popupTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-sm">
-            <div class="modal-content bg-danger text-white">
-                <div class="modal-header">
-                    <h5 class="modal-title text-white" id="popupTitle">Pengingat Opname</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Segera lakukan opname!!</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">
-                        Tutup
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- / Layout wrapper -->
+
 
 
     <!-- Core JS -->

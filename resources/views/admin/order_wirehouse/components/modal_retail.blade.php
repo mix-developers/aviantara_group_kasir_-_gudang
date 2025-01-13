@@ -246,7 +246,8 @@
                         <div class="input-group input-group-merge">
                             <span class="input-group-text" id="formCreateStokUnit">Rp</span>
                             <input type="number" class="form-control" id="paid-retail" name="paid"
-                                onchange="calculateChangeRetail()" oninput="calculateChangeRetail()">
+                                value="0" min="0" onchange="calculateChangeRetail()"
+                                oninput="calculateChangeRetail()">
                         </div>
                     </div>
                     <hr>

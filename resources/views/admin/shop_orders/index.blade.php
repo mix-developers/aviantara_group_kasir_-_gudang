@@ -15,7 +15,8 @@
                         <h3 id="totalPrice"><strong>0</strong></h3>
                         <input type="hidden" id="totalPriceInput" name="total_price">
                     </div>
-                    <input type="text" id="barcodeInput" name="barcode" placeholder="Scan barcode" class="form-control" style="width: 200px" autofocus="true">
+                    <input type="text" id="barcodeInput" name="barcode" placeholder="Scan barcode" class="form-control"
+                        style="width: 200px" autofocus="true">
                     <br>
                     <form id="transactionForm">
                         <table id="cartTable" class="table table-hover table-bordered display">
@@ -33,9 +34,10 @@
 
                         </table>
                         <br>
-                        <h3>Bayar</h3><h3 id="bayarTampil">0</h3>
-                        <input type="number" id="bayar" name="bayar" class="form-control bayar" 
-                            min="1" required style="width: 200px"> 
+                        <h3>Bayar</h3>
+                        <h3 id="bayarTampil">0</h3>
+                        <input type="number" id="bayar" name="bayar" class="form-control bayar" min="1"
+                            required style="width: 200px">
                         <br>
                         <h3>Kembalian</h3>
                         <h3 id="kembalian">0</h3>
@@ -80,6 +82,6 @@
             </div>
         </div>
     </div>
-    @include('admin.transaksi.modal')
+    @include('admin.shop_orders.modal')
 @endsection
-@include('admin.transaksi.script')
+@include('admin.shop_orders.script')

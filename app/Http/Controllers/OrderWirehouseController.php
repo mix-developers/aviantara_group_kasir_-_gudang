@@ -177,7 +177,7 @@ class OrderWirehouseController extends Controller
                     return ' <del class="text-danger">' . number_format($data->price * $data->quantity) . '</del><br>' . number_format($data->subtotal);
                 }
             })
-            ->rawColumns(['subtotal_text'])
+            ->rawColumns(['subtotal_text','discount'])
             ->make(true);
     }
 

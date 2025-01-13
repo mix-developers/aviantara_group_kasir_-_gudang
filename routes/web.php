@@ -289,6 +289,7 @@ Route::middleware(['auth:web', 'role:Kasir', 'checkDisabled'])->group(function (
     Route::get('/kios_stok/search',  [StokKiosController::class, 'search'])->name('kios_stok.search');
     //transaction managemenet
     Route::get('/transaksi-kios', [TransaksiController::class, 'index'])->name('transkasi-kios');
+    Route::get('/transaksi-kios/cashier', [TransaksiController::class, 'cashier'])->name('transkasi-kios.cashier');
     Route::get('/transaksi/getall', [TransaksiController::class, 'getAll'])->name('transkasi.getall');
     Route::get('/transaksi/scan', [TransaksiController::class, 'scanBarcode'])->name('transkasi.scan');
     Route::post('/transaksi/store', [TransaksiController::class, 'store'])->name('transkasi.store');

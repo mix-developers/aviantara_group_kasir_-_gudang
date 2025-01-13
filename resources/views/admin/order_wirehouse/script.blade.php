@@ -493,13 +493,18 @@
                                     $('#selectPaymentMethod').empty();
                                     $.each(data, function(index, method) {
                                         $('#selectPaymentMethod').append(
-                                            ' <div class="form-check form-check-inline mt-3"><input  class="form-check-input" type="radio" name="id_payment_method" value="' +
+                                            '<div class="form-check form-check-inline mt-3">' +
+                                            '<input class="form-check-input" type="radio" name="id_payment_method" value="' +
                                             method.id +
-                                            '" >' +
+                                            '"' +
+                                            (index === 0 ? ' checked' :
+                                                '') +
+                                            // Menambahkan atribut 'checked' untuk pilihan pertama
+                                            '>' +
                                             '</input><label class="form-check-label">' +
                                             method.method +
-                                            '</label></div>');
-
+                                            '</label></div>'
+                                        );
                                     });
 
 
@@ -575,8 +580,10 @@
                                     // alert('Berhasil membuat order');
                                 },
                                 error: function(xhr) {
-                                    $('#createPaymentBtnSpinner').hide();
-                                    $('#createPaymentBtn').prop('disabled',
+                                    $('#createPaymentBtnNoPrintSpinner')
+                                        .hide();
+                                    $('#createPaymentBtnNoPrint').prop(
+                                        'disabled',
                                         false);
                                     alert('Terjadi kesalahan: ' + xhr
                                         .responseText);

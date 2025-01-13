@@ -44,7 +44,8 @@
                         <label for="formPaymentMethodMethod" class="form-label">Total yang di bayarkan</label>
                         <div class="input-group input-group-merge">
                             <span class="input-group-text" id="formCreateStokUnit">Rp</span>
-                            <input type="number" class="form-control" id="paid" name="paid">
+                            <input type="number" class="form-control" id="paid" name="paid" value="0"
+                                min="0">
                         </div>
                     </div>
                 </form>

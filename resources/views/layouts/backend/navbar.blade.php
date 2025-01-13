@@ -11,14 +11,21 @@
         <div class="navbar-nav align-items-center">
             <div class="nav-item d-flex align-items-center">
                 <i class="bx bx-home fs-4 lh-0"></i>
-                <span class="fw-bold" style="margin-left:10px;">AVIANTARA GROUP</span>
+                <span class="fw-bold text-uppercase" style="margin-left:10px;">{{ Auth::user()->role }} AVIANTARA
+                    GROUP</span>
 
             </div>
         </div>
         <!-- /Search -->
 
         <ul class="navbar-nav flex-row align-items-center ms-auto">
-
+            <li class="nav-item mx-2">
+                <a class="nav-link" id="fullscreen-btn" href="javascript:void(0);" title="Full Screen">
+                    <span class="position-relative">
+                        <i class="bx bx-fullscreen bx-sm"></i>
+                    </span>
+                </a>
+            </li>
             <!-- User -->
             <li class="nav-item navbar-dropdown dropdown-user dropdown">
                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
@@ -59,6 +66,15 @@
                         <div class="dropdown-divider"></div>
                     </li>
                     <li>
+                        <a class="dropdown-item" href="{{ url('home') }}">
+                            <i class="bx bx-home me-2"></i>
+                            <span class="align-middle">Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <div class="dropdown-divider"></div>
+                    </li>
+                    <li>
                         <a class="dropdown-item" href="{{ route('profile') }}">
                             <i class="bx bx-user me-2"></i>
                             <span class="align-middle">My Profile</span>
@@ -85,3 +101,32 @@
         </ul>
     </div>
 </nav>
+@push('js')
+    <script>
+        const content = document.getElementById("content-fullscreen");
+        const fullscreenBtn = document.getElementById("fullscreen-btn");
+
+        fullscreenBtn.addEventListener("click", () => {
+            if (!document.fullscreenElement) {
+                // Masuk mode fullscreen
+                content.requestFullscreen().catch((err) => {
+                    alert(`Error: ${err.message}`);
+                });
+                fullscreenBtn.innerHTML = '<i class="bx bx-exit-fullscreen bx-sm"></i>';
+            } else {
+                // Keluar dari mode fullscreen
+                document.exitFullscreen().catch((err) => {
+                    alert(`Error: ${err.message}`);
+                });
+                fullscreenBtn.innerHTML = '<i class="bx bx-fullscreen bx-sm"></i>';
+            }
+        });
+
+        // Update tombol jika pengguna keluar fullscreen melalui cara lain
+        document.addEventListener("fullscreenchange", () => {
+            if (!document.fullscreenElement) {
+                fullscreenBtn.innerHTML = '<i class="bx bx-fullscreen bx-sm"></i>';
+            }
+        });
+    </script>
+@endpush
