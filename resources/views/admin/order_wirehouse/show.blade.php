@@ -203,6 +203,7 @@
                     <form id="discountForm">
                         <input type="hidden" id="discountProductId" name="id">
                         <input type="hidden" id="hargaSemula" name="harga_semula">
+                        <input type="hidden" id="purchaseType" name="purchase_type">
                         <input type="hidden" id="hargaSemulaItem" name="harga_semula_item">
                         <h3 class="mb-3 fw-bold text-white">Discount : <span id="discountNameProduct"></span>
                         </h3>
@@ -305,7 +306,7 @@
                         searchable: false,
                         render: function(data, type, row) {
                             return `
-                                            <button type="button" class="btn text-primary btn-sm " onclick="diskonItem(${row.id}, '${row.product.name}', '${row.subtotal}')">
+                                            <button type="button" class="btn text-primary btn-sm " onclick="diskonItem(${row.id}, '${row.product.name}','${row.order.purchase_type}', '${row.subtotal}')">
                                                 <i class="bx bx-dollar-circle"></i> Diskon
                                             </button>
                                         `;
@@ -326,7 +327,7 @@
                 getPaymentMethodOptions();
 
             });
-            window.diskonItem = function(id, productName, subtotal) {
+            window.diskonItem = function(id, productName, purchaseType, subtotal) {
                 $('#discountProduct').modal('show');
                 $('#selectMethodDiscount').on('change', function() {
                     const selectedMethod = $(this).val();
@@ -346,6 +347,7 @@
                 $('#discountProductId').val(id);
                 $('#hargaSemulaItem').val(subtotal);
                 $('#discountNameProduct').text(productName);
+                $('#purchaseType').val(purchaseType);
 
                 $('.discountBatal').click(function() {
                     $('#discountProduct').modal('hide');
@@ -378,11 +380,6 @@
                             $('#discountProduct')
                                 .modal(
                                     'hide');
-                            total_tagihan = response
-                                .new_total;
-                            $('#payment-tagihan')
-                                .text(
-                                    total_tagihan);
 
                         },
                         error: function(xhr, status, error) {

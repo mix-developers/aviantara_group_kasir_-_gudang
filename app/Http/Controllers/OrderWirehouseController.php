@@ -165,9 +165,9 @@ class OrderWirehouseController extends Controller
     }
     public function getOrderWirehouseItemDataTable($id)
     {
-        $data = OrderWirehouseItem::where('id_order_wirehouse', $id)->with(['product']);
+        $data = OrderWirehouseItem::where('id_order_wirehouse', $id)->with(['product', 'order']);
         if ($data->count() <= 0) {
-            $data = OrderWirehouseRetailItem::where('id_order_wirehouse', $id)->with(['product']);
+            $data = OrderWirehouseRetailItem::where('id_order_wirehouse', $id)->with(['product', 'order']);
         }
         return DataTables::of($data)
             ->addColumn('subtotal_text', function ($data) {
@@ -177,7 +177,7 @@ class OrderWirehouseController extends Controller
                     return ' <del class="text-danger">' . number_format($data->price * $data->quantity) . '</del><br>' . number_format($data->subtotal);
                 }
             })
-            ->rawColumns(['subtotal_text','discount'])
+            ->rawColumns(['subtotal_text', 'discount'])
             ->make(true);
     }
 
@@ -535,8 +535,9 @@ class OrderWirehouseController extends Controller
         $items = OrderWirehouseItem::find($id);
         $is_retail_item = false;
 
+        $purchase_type = $request->input('purchase_type');
         // Jika tidak ditemukan, cari di tabel OrderWirehouseRetailItem
-        if (!$items) {
+        if (!$items || $purchase_type == 'Retail') {
             $items = OrderWirehouseRetailItem::find($id);
             $is_retail_item = true;
         }

@@ -14,4 +14,8 @@ class OrderWirehouseRetailItem extends Model
     {
         return $this->belongsTo(Product::class, 'id_product');
     }
+    public function order(): BelongsTo
+    {
+        return $this->belongsTo(OrderWirehouse::class, 'id_order_wirehouse');
+    }
 }
