@@ -414,7 +414,7 @@ class OrderWirehouseController extends Controller
                 $ProductStokOut->id_user = Auth::user()->id;
                 $ProductStokOut->type = 'Masuk';
                 $ProductStokOut->sub_type = 'kembali';
-                $ProductStokOut->price_origin = $ProductStokPrice->price_origin;
+                $ProductStokOut->price_origin = $ProductStokPrice->price_origin ?? 0;
                 $ProductStokOut->description = 'Pengembalian stok gudang';
                 $ProductStokOut->expired_date = $item->expired_date;
                 $ProductStokOut->quantity = $item->quantity;
