@@ -17,6 +17,7 @@ use App\Models\Wirehouse;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\Facades\DataTables;
 
 class HomeController extends Controller
 {
@@ -66,6 +67,28 @@ class HomeController extends Controller
         ];
         return view('admin.dashboard2', $data);
     }
+    // untuk kios
+    public function viewStokWirehouse()
+    {
+        $data = [
+            'title' => 'Lihat Stok Pada Gudaang Utama',
+        ];
+        return view('admin.stok_wirehouse', $data);
+    }
+    public function getStokDatatableWirehouse()
+    {
+        $data = Product::with(['wirehouse'])->orderByDesc('id');
+        return DataTables::of($data)
+            ->addColumn('stock', function ($data) {
+                return '<span class="text-primary">' . Product::getStok($data->id) . ' ' . $data->unit . '</span><br><small>' . $data->quantity_unit . ' ' . $data->sub_unit . '/' . $data->unit . '</small>';
+            })
+            ->addColumn('price', function ($data) {
+                return 'Rp ' . number_format(ProductPrice::where('id_product', $data->id)->latest()->first()->price_grosir ?? 0);
+            })
+            ->rawColumns(['stock', 'price'])
+            ->make(true);
+    }
+    //untuk admin
     public function getStokExpired()
     {
         $stok_masuk = ProductStok::where('expired_date', '<=', date('Y-m-d'))->where('type', 'Masuk')->where('sub_type', 'masuk');

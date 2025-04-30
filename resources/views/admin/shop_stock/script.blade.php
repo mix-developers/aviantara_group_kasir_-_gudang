@@ -3,10 +3,10 @@
         $(function() {
             $('#datatable-stok-kios').DataTable({
                 processing: true,
-                // serverSide: false,
+                serverSide: true,
                 responsive: true,
                 ajax: {
-                    url: '{{ url('/kios_stok/getall') }}',
+                    url: '{{ url('/shop-stok/getall') }}',
                     type: 'GET',
                     // dataType: 'json',
                     dataSrc: 'data' // Nama properti yang berisi data dalam respons JSON
@@ -26,18 +26,16 @@
                         name: 'product.barcode',
 
                     },
-
-                    {
-                        data: 'shop.name',
-                        name: 'shop.name'
-                    },
                     {
                         data: 'product.name',
                         name: 'product.name'
                     },
                     {
                         data: 'qty',
-                        name: 'qty'
+                        name: 'qty',
+                        render: function(data, type, row) {
+                            return data + ' ' + row.product.unit;
+                        }
                     },
                     {
                         data: 'price',
@@ -57,34 +55,19 @@
                                     'DD MMMM YYYY') + '</strong>';
                             } else {
                                 return '<strong class="h6 text-danger">' + moment(data).format(
-                                    'DD MMMM YYYY') + ' (telah kadaluarsa)</strong>';
+                                        'DD MMMM YYYY') +
+                                    '</strong><br><small> (telah kadaluarsa)</small>';
                             }
                             // return moment(data).locale('id').format('DD MMMM YYYY');
                         }
                     },
+                    @if (Auth::user()->role == 'Owner' || Auth::user()->role == 'Admin')
+                        {
+                            data: 'user.name',
+                            name: 'user.name'
+                        },
+                    @endif
 
-                    {
-                        data: 'user.name',
-                        name: 'user.name'
-                    },
-                    // {
-                    //     data: 'address_home',
-                    //     name: 'address_home',
-                    //     render: function(data) {
-                    //         return data.length > 10 ?
-                    //             data.substr(0, 10) + '...' :
-                    //             data;
-                    //     }
-                    // },
-                    // {
-                    //     data: 'address_company',
-                    //     name: 'address_company',
-                    //     render: function(data) {
-                    //         return data.length > 10 ?
-                    //             data.substr(0, 10) + '...' :
-                    //             data;
-                    //     }
-                    // },
 
                     {
                         data: null,
@@ -94,7 +77,7 @@
                         searchable: false,
                         render: function(data, type, row) {
                             console.log('ini id edit' + data.id);
-                            return '<div class="btn-group"><button class="btn btn-sm btn-warning" onclick="editItem(' +
+                            return '<div class="btn-group d-flex"><button class="btn btn-sm btn-warning" onclick="editItem(' +
                                 data.id +
                                 ')">Edit</button> <button class="btn btn-sm btn-danger" onclick="hapusItem(' +
                                 data.id +
@@ -123,11 +106,11 @@
             window.editItem = function(id) {
                 $.ajax({
                     type: 'GET',
-                    url: '/kios_stok/edit/' + id,
+                    url: '/shop-stok/edit/' + id,
                     success: function(response) {
                         console.log('ini response');
                         console.log(response.id);
-                        $('#stokModalLabel').text('Edit Stok Kios');
+                        $('#stokModalLabel').text('Edit Stok');
                         $('#editKodeProduk').val(response.product.barcode);
                         $('#editIdProduk').val(response.product.id);
                         $('#editStokId').val(response.id);
@@ -159,7 +142,7 @@
 
                 $.ajax({
                     type: 'POST',
-                    url: '/kios_stok/store',
+                    url: '/shop-stok/store',
                     data: formData,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -185,7 +168,7 @@
 
                 $.ajax({
                     type: 'POST',
-                    url: '/kios_stok/update',
+                    url: '/shop-stok/update',
                     data: formData,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -251,7 +234,7 @@
                 var barcode = $(this).val();
                 console.log(barcode);
                 $.ajax({
-                    url: '/kios_stok/search',
+                    url: '/shop-stok/search',
                     type: "GET",
                     data: {
                         'barcode': barcode
@@ -270,7 +253,6 @@
                             $('#formNamaProduk').val('data tidak ditemukan!').addClass(
                                 'text-danger');
                             console.log('else besar dijalankan');
-
                         }
                     }
                 });

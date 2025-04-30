@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Kios;
 use App\Models\Product;
-use App\Models\StokKios;
+use App\Models\ShopProductStok;
 use App\Models\ProductStok;
+use App\Models\ShopProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class StokKiosController extends Controller
+class StokShopController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,17 +20,17 @@ class StokKiosController extends Controller
     public function index()
     {
         $kios = Kios::find(Auth::user()->id_shop);
-        return view('admin.kios_stok.index', ['title' => 'Stok Kios', 'kios' => $kios]);
+        return view('admin.shop_stock.index', ['title' => 'Input Stok Toko', 'kios' => $kios]);
     }
 
     public function getShop($id_shop)
     {
-        $stok_kios = StokKios::with('shop', 'product', 'user')->where('id_kios', $id_shop)->orderBy('created_at', 'desc')->get();
+        $stok_kios = ShopProductStok::with('shop', 'product', 'user')->where('id_kios', $id_shop)->orderBy('created_at', 'desc')->get();
         return response()->json(['data' => $stok_kios]);
     }
     public function getAll()
     {
-        $stok_kios = StokKios::with('shop', 'product', 'user')->orderBy('created_at', 'desc')->get();
+        $stok_kios = ShopProductStok::with('shop', 'product', 'user')->orderBy('created_at', 'desc')->get();
         return response()->json(['data' => $stok_kios]);
     }
 
@@ -53,7 +54,7 @@ class StokKiosController extends Controller
     public function search(Request $request)
     {
         $query = $request->input('barcode');
-        $produk = Product::where('barcode', $query)->first();
+        $produk = ShopProduct::where('barcode', $query)->first();
 
 
         // Debugging
@@ -69,8 +70,8 @@ class StokKiosController extends Controller
 
 
         $request->validate([
-            'id_product_add' => 'required|unique:stok_kios,id_product',
-            'type' => 'required|string|max:255',
+            'id_product_add' => 'required|unique:product_shop_stoks,id_product',
+            // 'type' => 'required|string|max:255',
             'qty' => 'required|numeric|max:20',
             'price' => 'required|numeric',
             'expired_date' => 'required'
@@ -78,10 +79,10 @@ class StokKiosController extends Controller
 
 
         $stokData = [
-            'id_kios' => 2, //ID KIOS NANTI ATUR SECARA OTOMATIS
+            'id_kios' => Auth::user()->id_shop, //ID KIOS NANTI ATUR SECARA OTOMATIS
             'id_user' => Auth::id(),
             'id_product' => $request->input('id_product_add'),
-            'type' => $request->input('type'),
+            'type' => $request->input('type') ?? 'Masuk',
             'qty' => $request->input('qty'),
             'price' => $request->input('price'),
             'expired_date' => $request->input('expired_date'),
@@ -89,7 +90,7 @@ class StokKiosController extends Controller
         ];
 
         if ($request->filled('id')) {
-            $stok_kios = StokKios::find($request->input('id'));
+            $stok_kios = ShopProductStok::find($request->input('id'));
             if (!$stok_kios) {
                 return response()->json(['message' => 'Data tidak ditemukan'], 404);
             }
@@ -97,7 +98,7 @@ class StokKiosController extends Controller
             $stok_kios->update($stokData);
             $message = 'Berhasil mengedit data test';
         } else {
-            StokKios::create($stokData);
+            ShopProductStok::create($stokData);
             $message = 'Berhasil menambah data';
         }
 
@@ -107,10 +108,10 @@ class StokKiosController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\StokKios  $stokKios
+     * @param  \App\Models\ShopProductStok  $ShopProductStok
      * @return \Illuminate\Http\Response
      */
-    public function show(StokKios $stokKios)
+    public function show(ShopProductStok $ShopProductStok)
     {
         //
     }
@@ -118,13 +119,13 @@ class StokKiosController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\StokKios  $stokKios
+     * @param  \App\Models\ShopProductStok  $ShopProductStok
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
         //
-        $stok_kios = StokKios::with('shop', 'product', 'user')->find($id);
+        $stok_kios = ShopProductStok::with('shop', 'product', 'user')->find($id);
         if (!$stok_kios) {
             # code...
             return response()->json(['message' => 'data tidak ditemukan'], 200);
@@ -137,7 +138,7 @@ class StokKiosController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\StokKios  $stokKios
+     * @param  \App\Models\ShopProductStok  $ShopProductStok
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request)
@@ -164,7 +165,7 @@ class StokKiosController extends Controller
         ];
 
 
-        $stok_kios = StokKios::find($request->input('id'));
+        $stok_kios = ShopProductStok::find($request->input('id'));
         // dd($stok_kios);
         if (!$stok_kios) {
             return response()->json(['message' => 'Data tidak ditemukan'], 404);
@@ -179,10 +180,10 @@ class StokKiosController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\StokKios  $stokKios
+     * @param  \App\Models\ShopProductStok  $ShopProductStok
      * @return \Illuminate\Http\Response
      */
-    public function destroy(StokKios $stokKios)
+    public function destroy(ShopProductStok $ShopProductStok)
     {
         //
     }

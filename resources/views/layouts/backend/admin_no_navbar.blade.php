@@ -12,7 +12,32 @@
     <title>{{ $title ?? 'Laravel' }} | {{ env('APP_NAME') ?? 'Laravel' }}</title>
 
     <meta name="description" content="" />
+    <style>
+        .custom-alert {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
 
+        .custom-alert-box {
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            max-width: 300px;
+        }
+
+        .d-none {
+            display: none !important;
+        }
+    </style>
     <!-- Favicon -->
     {{-- <link rel="icon" type="image/x-icon" href="{{ asset('backend_theme/') }}/assets/img/favicon/favicon.ico" /> --}}
     <link rel="icon" type="image/x-icon" href="{{ asset('img/') }}/logo.png" />

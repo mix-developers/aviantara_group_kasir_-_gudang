@@ -11,18 +11,25 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PriceController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\ExpiredController;
 use App\Http\Controllers\OpnameController;
-use App\Http\Controllers\StokKiosController;
+use App\Http\Controllers\StokShopController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\WirehouseController;
 use App\Http\Controllers\OrderPaymentController;
+use App\Http\Controllers\OrderShopController;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\OrderWirehouseController;
 use App\Http\Controllers\ProductDamagedController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ShopProductController;
+use App\Http\Controllers\ShopProductPriceController;
+use App\Models\OrderShop;
 use App\Models\OrderWirehouse;
 use App\Models\OrderWirehouseItem;
 use App\Models\Product;
+use App\Models\ShopProduct;
+use App\Models\ShopProductPrice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade as PDF;
@@ -111,20 +118,29 @@ Route::get('/get-invoice/{invoice}', [OrderWirehouseController::class, 'getInvoi
 
 Auth::routes(['register' => false, 'reset' => false]);
 Route::middleware(['auth:web', 'checkDisabled'])->group(function () {
+    Route::get('/search-by-barcode-shop', [ShopProductController::class, 'searchByBarcodeShop']);
+    Route::get('/search-product', [ShopProductController::class, 'searchByBarcode']);
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index']);
     Route::get('/dashboard2', [App\Http\Controllers\HomeController::class, 'dashboard2']);
     Route::get('/chart-paid', [App\Http\Controllers\HomeController::class, 'getChartPaid']);
     Route::get('/chart-expired', [App\Http\Controllers\HomeController::class, 'getChartExpired']);
     Route::get('/chart-order-all-wirehouse', [App\Http\Controllers\HomeController::class, 'getChartOrderAllWirehouses']);
     Route::get('/chart-payment-all-wirehouse', [App\Http\Controllers\HomeController::class, 'getChartPaymentAllWirehouses']);
-
-
+    //stok utama
+    Route::get('/view-stock-main-wirehouse', [HomeController::class, 'viewStokWirehouse']);
+    Route::get('/datatable-stock-main-wirehouse', [HomeController::class, 'getStokDatatableWirehouse']);
     //dashboard
+    Route::get('/expired-alert', [HomeController::class, 'expiredAlert']);
     Route::get('/expired-alert', [HomeController::class, 'expiredAlert']);
     Route::get('/get-stok-card', [HomeController::class, 'getStokCard']);
     //akun managemen
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    // wirehouse
+    Route::get('/wirehouses/getall', [WirehouseController::class, 'getAll'])->name('wirehouses.getall');
+    Route::get('/wirehouse-total-product/{id}', [WirehouseController::class, 'getWirehouseTotalProduct']);
+    // barcode 
+    Route::get('/generate-barcode', [ShopProductController::class, 'generateUniqueBarcode']);
 });
 Route::middleware(['auth:web', 'role:Gudang,Admin,Owner', 'checkDisabled'])->group(function () {
     //opname
@@ -153,6 +169,10 @@ Route::middleware(['auth:web', 'role:Gudang,Admin,Owner', 'checkDisabled'])->gro
     Route::delete('/customers/delete/{id}',  [CustomerController::class, 'destroy'])->name('customers.delete');
     Route::get('/customers-datatable', [CustomerController::class, 'getCustomersDataTable']);
     Route::get('/customers-datatable-detail/{id}', [CustomerController::class, 'getCustomersDataTableDetail']);
+    //product expired managemen
+    Route::get('/expired', [ExpiredController::class, 'index'])->name('expired');
+    Route::get('/expired-datatable', [ExpiredController::class, 'getExpiredDatatable']);
+    Route::get('/expired-chart', [ExpiredController::class, 'getExpiredChartData'])->name('expired.chart');
     //product damaged managemen
     Route::get('/damageds', [ProductDamagedController::class, 'index'])->name('damageds');
     Route::get('/damageds/getall', [ProductDamagedController::class, 'getAll'])->name('damageds.getall');
@@ -207,8 +227,8 @@ Route::middleware(['auth:web', 'role:Gudang,Admin,Owner', 'checkDisabled'])->gro
     Route::get('/wirehouses', [WirehouseController::class, 'index'])->name('wirehouses');
     Route::get('/wirehouses/show/{id}', [WirehouseController::class, 'show'])->name('wirehouses.show');
     Route::get('/wirehouse-detail-datatable/{id}', [WirehouseController::class, 'getWirehouseDetailDataTable']);
-    Route::get('/wirehouse-total-product/{id}', [WirehouseController::class, 'getWirehouseTotalProduct']);
-    Route::get('/wirehouses/getall', [WirehouseController::class, 'getAll'])->name('wirehouses.getall');
+    // Route::get('/wirehouse-total-product/{id}', [WirehouseController::class, 'getWirehouseTotalProduct']);
+    // Route::get('/wirehouses/getall', [WirehouseController::class, 'getAll'])->name('wirehouses.getall');
     Route::post('/wirehouses/store',  [WirehouseController::class, 'store'])->name('wirehouses.store');
     Route::get('/wirehouses/edit/{id}',  [WirehouseController::class, 'edit'])->name('wirehouses.edit');
     Route::delete('/wirehouses/delete/{id}',  [WirehouseController::class, 'destroy'])->name('wirehouses.delete');
@@ -278,19 +298,54 @@ Route::middleware(['auth:web', 'role:Admin,Owner', 'checkDisabled'])->group(func
     Route::get('/kios', [KiosController::class, 'index'])->name('kios');
 });
 Route::middleware(['auth:web', 'role:Kasir', 'checkDisabled'])->group(function () {
+    //product price shop managemen
+    Route::get('/shop-prices', [ShopProductPriceController::class, 'index'])->name('shop-prices');
+    Route::get('/shop-prices-datatable', [ShopProductPriceController::class, 'getPricesDataTable']);
+    Route::get('/shop-prices/edit/{id}',  [ShopProductPriceController::class, 'edit'])->name('shop-prices.edit');
+    Route::post('/shop-prices/store',  [ShopProductPriceController::class, 'store'])->name('shop-prices.store');
+    Route::get('/shop-prices/get-not-price', [ShopProductPriceController::class, 'getNotPrice'])->name('shop-prices.get-not-price');
+    Route::get('/shop-prices/show/{id}',  [ShopProductPriceController::class, 'show'])->name('shop-prices.show');
+    Route::get('/shop-price-detail-datatable/{id}', [ShopProductPriceController::class, 'getPriceDetailDataTable']);
+    Route::get('shop-price-history/{productId}', [ShopProductPriceController::class, 'getPriceHistory']);
+    //product shop managemen
+    Route::get('/shop-products', [ShopProductController::class, 'index'])->name('shop-products');
+    Route::get('/search-product', [ShopProductController::class, 'searchByBarcode']);
+    Route::get('/shop-products-datatable', [ShopProductController::class, 'getProductsDataTable']);
+    Route::post('/shop-products/store',  [ShopProductController::class, 'store_product'])->name('shop-products.store');
+    Route::get('/shop-products/list', [ShopProductController::class, 'getProducts'])->name('shop-products.list');
+    Route::get('/shop-products/edit/{id}',  [ShopProductController::class, 'edit'])->name('shop-products.edit');
+    Route::delete('/shop-products/delete/{id}',  [ShopProductController::class, 'destroy'])->name('shop-products.delete');
+    // Route::get('/products/scan', [StokController::class, 'scanProduct'])->name('products.scan');
+    // Route::get('/products/getall', [StokController::class, 'getAllProduct'])->name('products.getall');
+    // Route::get('/products/show/{id}', [StokController::class, 'show_product'])->name('products.show');
+    // Route::get('/product-detail-datatable/{id}', [StokController::class, 'getProductDetailDataTable']);
     //Kios Stok
-    Route::get('/kios_stok', [StokKiosController::class, 'index'])->name('kios_stok');
-    Route::get('/kios-stok-datatable', [StokKiosController::class, 'getStokKiosDataTable'])->name('kios-stok-datatable');
-    Route::get('/kios_stok/getShop/{id_shop}', [StokKiosController::class, 'getShop'])->name('kios_stok.getShop');
-    Route::get('/kios_stok/getall', [StokKiosController::class, 'getAll'])->name('kios_stok.getall');
-    Route::get('/kios_stok/edit/{id}', [StokKiosController::class, 'edit'])->name('kios_stok.edit');
-    Route::post('/kios_stok/store',  [StokKiosController::class, 'store'])->name('kios_stok.store');
-    Route::post('/kios_stok/update',  [StokKiosController::class, 'update'])->name('kios_stok.update');
-    Route::get('/kios_stok/search',  [StokKiosController::class, 'search'])->name('kios_stok.search');
+    Route::get('/shop-stoks', [StokShopController::class, 'index'])->name('shop-stoks');
+    Route::get('/kios-stok-datatable', [StokShopController::class, 'getStokKiosDataTable'])->name('kios-stok-datatable');
+    Route::get('/kios_stok/getShop/{id_shop}', [StokShopController::class, 'getShop'])->name('kios_stok.getShop');
+    Route::get('/shop-stok/getall', [StokShopController::class, 'getAll'])->name('shop-stok.getall');
+    Route::get('/shop-stok/edit/{id}', [StokShopController::class, 'edit'])->name('shop-stok.edit');
+    Route::post('/shop-stok/store',  [StokShopController::class, 'store'])->name('shop-stok.store');
+    Route::post('/shop-stok/update',  [StokShopController::class, 'update'])->name('shop-stok.update');
+    Route::get('/shop-stok/search',  [StokShopController::class, 'search'])->name('shop-stok.search');
     //transaction managemenet
     Route::get('/transaksi-kios', [TransaksiController::class, 'index'])->name('transkasi-kios');
     Route::get('/transaksi-kios/cashier', [TransaksiController::class, 'cashier'])->name('transkasi-kios.cashier');
     Route::get('/transaksi/getall', [TransaksiController::class, 'getAll'])->name('transkasi.getall');
     Route::get('/transaksi/scan', [TransaksiController::class, 'scanBarcode'])->name('transkasi.scan');
     Route::post('/transaksi/store', [TransaksiController::class, 'store'])->name('transkasi.store');
+    //shop order
+    Route::post('/shop-order/store', [OrderShopController::class, 'store'])->name('shop-order.store');
+    Route::get('/shop-order-datatable', [OrderShopController::class, 'getOrderShopDataTable']);
+    Route::get('/shop-order/{id}/items', function ($id) {
+        $order = OrderShop::with(['order_shop_item.product'])->findOrFail($id);
+
+        return $order->order_shop_item->map(function ($item) {
+            return [
+                'product_name' => $item->product->name,
+                'quantity' => $item->quantity,
+                'price' => $item->price,
+            ];
+        });
+    });
 });

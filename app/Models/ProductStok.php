@@ -37,4 +37,8 @@ class ProductStok extends Model
 
         return $stok;
     }
+    public function product_stoks()
+    {
+        return $this->hasMany(ProductStok::class, 'product_id');
+    }
 }

@@ -44,13 +44,6 @@
                             </select>
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="formProductIdWirehouse" class="form-label">Pilih Gudang <span
-                                class="text-danger">*</span></label>
-                        <select class="form-select" id="formProductIdWirehouse" name="id_wirehouse" required>
-
-                        </select>
-                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -127,6 +120,7 @@
                             <option value="Pak">Pak</option>
                             <option value="Rak">Rak</option>
                             <option value="Koli">Koli</option>
+                            <option value="Kg">Kg</option>
                         </select>
                     </div>
                     <div class="mb-3">
@@ -136,34 +130,32 @@
                             <input type="number" class="form-control" id="formCreateProductQUantityUnit"
                                 name="quantity_unit" required>
                             <select class="form-select" id="formCreateProductSubUnit" name="sub_unit" required>
+                                <option value="Kg">Kg</option>
+                                <option value="Gram">Gram</option>
+                                <option value="Ons">Ons</option>
+                                <option value="Liter">Liter</option>
                                 <option value="Pcs">Pcs</option>
-                                <option value="Karton">Karton</option>
+                                <option value="Kodi">Kodi</option>
+                                <option value="Lembar">Lembar</option>
+                                <option value="Butir">Butir</option>
+                                <option value="Bungkus">Bungkus</option>
+                                <option value="Lusin">Lusin</option>
+                                <option value="Gros">Gros</option>
+                                <option value="Ekor">Ekor</option>
                                 <option value="Buah">Buah</option>
                                 <option value="Sacet">Sacet</option>
                                 <option value="Botol">Botol</option>
+                                <option value="Kaleng">Kaleng</option>
                                 <option value="Gelas">Gelas</option>
-                                <option value="Bungkus">Bungkus</option>
-                                <option value="Butir">Butir</option>
-                                <option value="Rim">Rim</option>
-                                <option value="Lembar">Lembar</option>
-                                <option value="Gross">Gross</option>
-                                <option value="Lusin">Lusin</option>
-                                <option value="Kodi">Kodi</option>
-                                <option value="Kg">Kg</option>
                             </select>
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="formProductIdWirehouse" class="form-label">Pilih Gudang <span
-                                class="text-danger">*</span></label>
-                        <select class="form-select" id="formProductIdWirehouseCreate" name="id_wirehouse" required>
 
-                        </select>
-                    </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-warning" id="resetFormBtn">Reset Form</button>
                 <button type="button" class="btn btn-primary" id="createProductBtn" @disabled(false)>
                     <div class="spinner-border spinner-border-sm text-white" role="status"
                         id="createProductBtnSpinner" style="display: none;">
@@ -175,34 +167,3 @@
         </div>
     </div>
 </div>
-@push('js')
-    <script>
-        $(document).ready(function() {
-            //generate barcode
-            $('#generateBarcodeBtn').on('click', function() {
-                $.ajax({
-                    url: '/generate-barcode',
-                    type: 'GET',
-                    beforeSend: function() {
-                        $('#generateBarcodeBtn').prop('disabled', true).html(
-                            'Generate');
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            $('#formCreateProductBarcode').val(response.barcode);
-                        } else {
-                            alert('Gagal menghasilkan barcode.');
-                        }
-                    },
-                    error: function() {
-                        alert('Terjadi kesalahan saat menghasilkan barcode.');
-                    },
-                    complete: function() {
-                        $('#generateBarcodeBtn').prop('disabled', false).html(
-                            'Generate');
-                    }
-                });
-            });
-        })
-    </script>
-@endpush

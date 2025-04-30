@@ -19,6 +19,7 @@ class ProductDamagedController extends Controller
         ];
         return view('admin.damaged.index', $data);
     }
+
     public function getDamagedsDataTable(Request $request)
     {
         $damaged = ProductDamaged::orderByDesc('id')->with(['product', 'user', 'wirehouse']);

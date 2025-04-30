@@ -2,19 +2,18 @@
 
 namespace App\Models;
 
-use App\Models\Shop;
-use App\Models\Product;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class StokKios extends Model
+class ShopProductStok extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
-    protected $table = 'stok_kios';
+    protected $table = 'product_shop_stoks';
 
-    public function shop(){
+    public function shop()
+    {
         return $this->belongsTo(Shop::class, 'id_kios');
     }
 
@@ -25,7 +24,7 @@ class StokKios extends Model
      */
     public function product()
     {
-        return $this->belongsTo(Product::class, 'id_product');
+        return $this->belongsTo(ShopProduct::class, 'id_product');
     }
 
     /**
@@ -37,5 +36,4 @@ class StokKios extends Model
     {
         return $this->belongsTo(User::class, 'id_user');
     }
-
 }

@@ -33,21 +33,22 @@
                         <thead>
                             <tr>
                                 <th>No.</th>
-                                <th>Kode Barcode</th>
-                                <th>Nama Kios</th>
-                                <th>Nama Produk</th>
+                                <th>Barcode</th>
+                                <th>Produk</th>
                                 <th>Stok</th>
-                                <th>Harga</th>
+                                <th>Harga Modal</th>
                                 <th>Tgl Kadaluarsa</th>
-                                <th>Pengguna</th>
+                                @if (Auth::user()->role == 'Owner' || Auth::user()->role == 'Admin')
+                                    <th>Oleh</th>
+                                @endif
                                 <th>Action</th>
                             </tr>
-                        </thead>                        
+                        </thead>
                     </table>
                 </div>
             </div>
         </div>
     </div>
-    @include('admin.kios_stok.modal')
+    @include('admin.shop_stock.modal')
 @endsection
-@include('admin.kios_stok.script')
+@include('admin.shop_stock.script')

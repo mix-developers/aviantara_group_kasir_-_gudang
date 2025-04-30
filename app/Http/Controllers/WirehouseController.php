@@ -39,7 +39,7 @@ class WirehouseController extends Controller
     }
     public function getAll()
     {
-        if (Auth::user()->role == 'Admin' || Auth::user()->role == 'Owner') {
+        if (Auth::user()->role != 'Gudang') {
             $wirehouse = Wirehouse::all();
         } elseif (Auth::user()->role == 'Gudang') {
             $wirehouse = Wirehouse::where('id', Auth::user()->id_wirehouse)->get();

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Shop;
 use App\Models\StokKios;
 use App\Models\Transaksi;
 use Illuminate\Support\Str;
@@ -23,8 +24,8 @@ class TransaksiController extends Controller
     }
     public function cashier()
     {
-        //
-        return view('admin.shop_orders.cashier', ['title' => 'Transaksi Kios']);
+        $toko = Shop::find(Auth::user()->id_shop);
+        return view('admin.shop_orders.cashier', ['title' => 'Kasir Kios', 'shop' => $toko]);
     }
 
     public function getAll()

@@ -4,7 +4,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="customersModalLabel">User Form</h5>
+                <h5 class="modal-title" id="customersModalLabel">Tambah Stok</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -82,15 +82,7 @@
                         <label for="editNamaProduk" class="form-label">Nama Produk</label>
                         <input type="text" class="form-control" id="editNamaProduk" name="id_product" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="editStokTipe" class="form-label">Tipe</label>
-                        {{-- <input type="text" class="form-control" id="formStokTipe" name="type" required> --}}
-                        <select class="form-control" id="editStokTipe" name="type">
-                            <!-- Opsi combobox akan ditambahkan secara dinamis menggunakan JavaScript -->
-                            <option value="Masuk">Masuk</option>
-                            <option value="Keluar">Keluar</option>
-                        </select>
-                    </div>
+
                     <div class="mb-3">
                         <label for="editStokQty" class="form-label">Qty</label>
                         <input type="number" class="form-control" id="editStokQty" name="qty" required>
@@ -116,24 +108,11 @@
 </div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 <div class="modal fade" id="#" tabindex="-1" aria-labelledby="customersModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="userModalLabel">User Form</h5>
+                <h5 class="modal-title" id="userModalLabel">Tambah Stok</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

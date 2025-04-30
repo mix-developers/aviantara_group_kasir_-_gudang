@@ -232,6 +232,7 @@
                             </div>
                         </div>
                     </form>
+                    -
                     <hr>
                     <button type="button" class="btn btn-danger discountBatal">Batalkan</button>
                     <button type="button" class="btn btn-light" id="applyDiscountButton">

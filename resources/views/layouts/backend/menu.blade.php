@@ -29,7 +29,7 @@
             <li class="menu-item {{ request()->is('dashboard2') ? 'active' : '' }}">
                 <a href="{{ url('/dashboard2') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                    <div data-i18n="Analytics">Dashboard Kios</div>
+                    <div data-i18n="Analytics">Dashboard Toko</div>
                 </a>
             </li>
         @endif
@@ -74,7 +74,6 @@
                 <a href="{{ url('/shops') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-store"></i>
                     <div data-i18n="Analytics">Toko <span class="badge bg-danger">Soon</span></div>
-
                 </a>
             </li>
             <li class="menu-header small text-uppercase">
@@ -93,6 +92,15 @@
                 <a href="{{ url('/opname-wirehouse') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-folder"></i>
                     <div data-i18n="Analytics">Gudang <span class="badge bg-danger">New</span></div>
+                </a>
+            </li>
+            <li class="menu-header small text-uppercase">
+                <span class="menu-header-text">Stok</span>
+            </li>
+            <li class="menu-item {{ request()->is('expired') ? 'active' : '' }}">
+                <a href="{{ url('/expired') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-trash"></i>
+                    <div data-i18n="Analytics">Stok Kadaluarsa <span class="badge bg-danger">New</span></div>
                 </a>
             </li>
             <li class="menu-header small text-uppercase">
@@ -157,6 +165,12 @@
                     <div data-i18n="Analytics">Input Stok Gudang</div>
                 </a>
             </li>
+            <li class="menu-item {{ request()->is('expired') ? 'active' : '' }}">
+                <a href="{{ url('/expired') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-trash"></i>
+                    <div data-i18n="Analytics">Stok Kadaluarsa <span class="badge bg-danger">New</span></div>
+                </a>
+            </li>
             <li class="menu-item {{ request()->is('damageds') ? 'active' : '' }}">
                 <a href="{{ url('/damageds') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-trash"></i>
@@ -169,7 +183,7 @@
             <li class="menu-item {{ request()->is('opname-wirehouse*') ? 'active' : '' }}">
                 <a href="{{ url('/opname-wirehouse', Auth::user()->id_wirehouse) }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-folder"></i>
-                    <div data-i18n="Analytics">Opname <span class="badge bg-danger">New</span></div>
+                    <div data-i18n="Analytics">Opname </div>
                 </a>
             </li>
             <li class="menu-header small text-uppercase">
@@ -194,28 +208,49 @@
                 </a>
             </li>
         @elseif (Auth::user()->role == 'Kasir' && Auth::user()->id_shop != null)
-            <li class="menu-header small text-uppercase">
-                <span class="menu-header-text">Transaksi Kios</span>
-            </li>
-            <li class="menu-item {{ request()->is('kios_stok') ? 'active' : '' }}">
-                <a href="{{ url('/kios_stok') }}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-money"></i>
-                    <div data-i18n="Analytics">Stok Kios</div>
+            <li class="menu-item cashier">
+                <a href="{{ url('/transaksi-kios/cashier') }}" class="menu-link fw-bold">
+                    <i class="menu-icon tf-icons bx bxs-log-in-circle"></i>
+                    <div data-i18n="Analytics">Open Kasir</div>
                 </a>
+            </li>
+            <li class="menu-header small text-uppercase">
+                <span class="menu-header-text">Master Data</span>
+            </li>
+            <li class="menu-item {{ request()->is('shop-products') ? 'active' : '' }}">
+                <a href="{{ url('/shop-products') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-layer"></i>
+                    <div data-i18n="Analytics">Produk Toko</div>
+                </a>
+            </li>
+            <li class="menu-item {{ request()->is('shop-prices') ? 'active' : '' }}">
+                <a href="{{ url('/shop-prices') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-layer"></i>
+                    <div data-i18n="Analytics">Harga Produk</div>
+                </a>
+            </li>
+            <li class="menu-header small text-uppercase">
+                <span class="menu-header-text">Stok</span>
+            </li>
+            <li class="menu-item {{ request()->is('view-stock-main-wirehouse') ? 'active' : '' }}">
+                <a href="{{ url('/view-stock-main-wirehouse') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-layer"></i>
+                    <div data-i18n="Analytics">Gudang Besar</div>
+                </a>
+            </li>
+            <li class="menu-item {{ request()->is('shop-stoks') ? 'active' : '' }}">
+                <a href="{{ url('/shop-stoks') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-layer"></i>
+                    <div data-i18n="Analytics">Input Stok Toko</div>
+                </a>
+            </li>
+            <li class="menu-header small text-uppercase">
+                <span class="menu-header-text">Transaksi Toko</span>
             </li>
             <li class="menu-item {{ request()->is('transaksi-kios') ? 'active' : '' }}">
                 <a href="{{ url('/transaksi-kios') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-money"></i>
                     <div data-i18n="Analytics">Riwayat Transaksi</div>
-                </a>
-            </li>
-            <li class="menu-header small text-uppercase">
-                <span class="menu-header-text">Kasir</span>
-            </li>
-            <li class="menu-item cashier">
-                <a href="{{ url('/transaksi-kios/cashier') }}" class="menu-link fw-bold">
-                    <i class="menu-icon tf-icons bx bxs-log-in-circle"></i>
-                    <div data-i18n="Analytics">Open Kasir</div>
                 </a>
             </li>
         @endif
