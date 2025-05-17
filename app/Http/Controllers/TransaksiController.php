@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Shop;
+use App\Models\ShopProductStok;
 use App\Models\StokKios;
 use App\Models\Transaksi;
 use Illuminate\Support\Str;
@@ -40,7 +41,7 @@ class TransaksiController extends Controller
         $product = Product::where('barcode', $barcode)->first();
         // dd($product);
 
-        $stok_kios = StokKios::with('shop', 'product', 'user')->where('id_product', $product->id)->first();
+        $stok_kios = ShopProductStok::with('shop', 'product', 'user')->where('id_product', $product->id)->first();
 
         if ($stok_kios) {
             return response()->json($stok_kios);
@@ -80,7 +81,7 @@ class TransaksiController extends Controller
         // ]);
 
         foreach ($request->products as $product) {
-            $stok_kios = StokKios::where('id', $product['product_id'])->first();
+            $stok_kios = ShopProductStok::where('id', $product['product_id'])->first();
             if ($stok_kios->qty < $product['quantity']) {
                 return response()->json(['success' => false, 'message' => 'Stok Tidak Cukup', 'nama_produk' => $stok_kios->product->name]);
             } else {

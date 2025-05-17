@@ -8,8 +8,10 @@
                 ajax: {
                     url: '{{ url('/shop-stok/getall') }}',
                     type: 'GET',
-                    // dataType: 'json',
-                    dataSrc: 'data' // Nama properti yang berisi data dalam respons JSON
+                    data: function (d) {
+                        d.type = $('#filterType').val(); // ambil nilai dari dropdown
+                    },
+                    dataSrc: 'data'
                 },
                 columns: [
 
@@ -29,6 +31,10 @@
                     {
                         data: 'product.name',
                         name: 'product.name'
+                    },
+                    {
+                        data: 'type',
+                        name: 'type'
                     },
                     {
                         data: 'qty',
@@ -93,7 +99,9 @@
 
 
             });
-
+            $('.btn-filter').on('click', function () {
+                $('#datatable-stok-kios').DataTable().ajax.reload();
+            });
             $('.create-new').click(function() {
                 $('#create').modal('show');
             });

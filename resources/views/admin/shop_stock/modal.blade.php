@@ -8,6 +8,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <div class="alert alert-warning p-2 mb-3">
+                    Input stok berdasarkan kartonan / karungan / dus, jika ada 1 dus berisi 12 pcs, maka input qty tetap 1 
+                </div>
                 <!-- Form for Create and Edit -->
                 <form id="stokForm">
                     <input type="hidden" id="formStokId" name="id">

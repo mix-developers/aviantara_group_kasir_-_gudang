@@ -28,10 +28,17 @@ class StokShopController extends Controller
         $stok_kios = ShopProductStok::with('shop', 'product', 'user')->where('id_kios', $id_shop)->orderBy('created_at', 'desc')->get();
         return response()->json(['data' => $stok_kios]);
     }
-    public function getAll()
+    public function getAll(Request $request)
     {
-        $stok_kios = ShopProductStok::with('shop', 'product', 'user')->orderBy('created_at', 'desc')->get();
-        return response()->json(['data' => $stok_kios]);
+        // $stok_kios = ShopProductStok::with('shop', 'product', 'user')->orderBy('created_at', 'desc')->get();
+        $type = $request->get('type');
+
+        $stok_kios = ShopProductStok::with(['shop', 'product', 'user']);
+
+        if ($type === 'Masuk') {
+            $stok_kios->where('type', 'Masuk');
+        }
+        return datatables()->of($stok_kios)->make(true);
     }
 
 

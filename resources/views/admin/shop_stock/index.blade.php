@@ -28,6 +28,22 @@
                         </div>
                     </div>
                 </div>
+                <hr>
+                <div class="px-4">
+                    <label for="filterType" class="form-label fw-semibold">
+                      Filter:
+                    </label>
+                    <div class="d-flex flex-column flex-sm-row gap-3">
+                        <select name="type" id="filterType" class="form-select">
+                            <option value="Masuk" selected>Masuk</option>
+                            <option value="Keluar">Keluar</option>
+                          </select>
+                      <button type="button" class="btn-filter btn btn-primary d-flex align-items-center gap-2">
+                        <i class="bx bx-filter"></i> Filter
+                      </button>
+                    </div>
+                  </div>
+                <hr>
                 <div class="card-datatable table-responsive">
                     <table id="datatable-stok-kios" class="table table-hover table-bordered display table-sm">
                         <thead>
@@ -35,6 +51,7 @@
                                 <th>No.</th>
                                 <th>Barcode</th>
                                 <th>Produk</th>
+                                <th>Type</th>
                                 <th>Stok</th>
                                 <th>Harga Modal</th>
                                 <th>Tgl Kadaluarsa</th>
