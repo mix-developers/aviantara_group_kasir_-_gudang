@@ -6,6 +6,7 @@ use App\Models\OrderShop;
 use App\Models\OrderShopItem;
 use App\Models\OrderShopPayment;
 use App\Models\ShopProductStok;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -100,14 +101,25 @@ class OrderShopController extends Controller
             ], 500);
         }
     }
-    public function getOrderShopDataTable()
+    public function getOrderShopDataTable(Request $request)
     {
-        $price = OrderShop::with(['user', 'shop', 'order_shop_payment.payment_method'])
-            ->where('id_shop', Auth::user()->id_shop)
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $fromDate = $request->input('from-date');
+        $toDate = $request->input('to-date');
+        // Parse tanggal jika tersedia
+        $fromDateParsed = $fromDate ? Carbon::parse($fromDate)->startOfDay() : null;
+        $toDateParsed = $toDate ? Carbon::parse($toDate)->endOfDay() : null;
 
-        return DataTables::of($price)
+        $data = OrderShop::with(['user', 'shop', 'order_shop_payment.payment_method'])
+            ->where('id_shop', Auth::user()->id_shop)
+            ->orderBy('created_at', 'desc');
+
+        if ($fromDateParsed && $toDateParsed) {
+            $data->whereBetween('created_at', [$fromDateParsed, $toDateParsed]);
+        }
+        
+        $data2 = $data->get();
+
+        return DataTables::of($data2)
             ->addColumn('date', function ($row) {
                 return $row->created_at->format('d-m-Y');
             })

@@ -33,13 +33,13 @@ class ShopProduct extends Model
             // $rusakQuery->whereDate('created_at', '<=', $tanggal);
         }
         //product
-        $product = Product::find($id);
+        $product = ShopProduct::find($id);
 
         $stokMasuk = $stokMasukQuery->sum('qty');
         $stokKeluar = $stokKeluarQuery->sum('qty');
         // $rusak = $rusakQuery->sum('quantity_unit');
 
-        $totalStok = ($stokMasuk - $stokKeluar) * ($product->quantity_unit ?? 0);
+        $totalStok = ($stokMasuk - $stokKeluar);
 
         return $totalStok;
     }

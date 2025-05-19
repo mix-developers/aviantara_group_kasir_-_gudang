@@ -20,8 +20,11 @@ class TransaksiController extends Controller
      */
     public function index()
     {
-        //
-        return view('admin.shop_orders.index', ['title' => 'Transaksi Kios']);
+        $data =[
+            'title' => 'Riwayat Transaksi',
+            'shop'=> Shop::find(Auth::user()->id_shop),
+        ];
+        return view('admin.shop_orders.index', $data);
     }
     public function cashier()
     {

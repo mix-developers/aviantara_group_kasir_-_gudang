@@ -79,7 +79,7 @@ class StokShopController extends Controller
         $request->validate([
             'id_product_add' => 'required|unique:product_shop_stoks,id_product',
             // 'type' => 'required|string|max:255',
-            'qty' => 'required|numeric|max:20',
+            'qty' => 'required|numeric|max:500',
             'price' => 'required|numeric',
             'expired_date' => 'required'
         ]);

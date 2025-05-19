@@ -4,7 +4,7 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\KiosController;
+// use App\Http\Controllers\KiosController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\StokController;
 use App\Http\Controllers\UserController;
@@ -295,7 +295,7 @@ Route::middleware(['auth:web', 'role:Admin,Owner', 'checkDisabled'])->group(func
     Route::get('/shops-datatable', [ShopController::class, 'getShopsDataTable']);
 
     //Kios
-    Route::get('/kios', [KiosController::class, 'index'])->name('kios');
+    // Route::get('/kios', [KiosController::class, 'index'])->name('kios');
 });
 Route::middleware(['auth:web', 'role:Kasir', 'checkDisabled'])->group(function () {
     //product price shop managemen
@@ -319,7 +319,7 @@ Route::middleware(['auth:web', 'role:Kasir', 'checkDisabled'])->group(function (
     // Route::get('/products/getall', [StokController::class, 'getAllProduct'])->name('products.getall');
     // Route::get('/products/show/{id}', [StokController::class, 'show_product'])->name('products.show');
     // Route::get('/product-detail-datatable/{id}', [StokController::class, 'getProductDetailDataTable']);
-    //Kios Stok
+    //shop Stok
     Route::get('/shop-stoks', [StokShopController::class, 'index'])->name('shop-stoks');
     Route::get('/kios-stok-datatable', [StokShopController::class, 'getStokKiosDataTable'])->name('kios-stok-datatable');
     Route::get('/kios_stok/getShop/{id_shop}', [StokShopController::class, 'getShop'])->name('kios_stok.getShop');
@@ -329,8 +329,8 @@ Route::middleware(['auth:web', 'role:Kasir', 'checkDisabled'])->group(function (
     Route::post('/shop-stok/update',  [StokShopController::class, 'update'])->name('shop-stok.update');
     Route::get('/shop-stok/search',  [StokShopController::class, 'search'])->name('shop-stok.search');
     //transaction managemenet
-    Route::get('/transaksi-kios', [TransaksiController::class, 'index'])->name('transkasi-kios');
-    Route::get('/transaksi-kios/cashier', [TransaksiController::class, 'cashier'])->name('transkasi-kios.cashier');
+    Route::get('/transaksi-shop', [TransaksiController::class, 'index'])->name('transkasi-shop');
+    Route::get('/transaksi-shop/cashier', [TransaksiController::class, 'cashier'])->name('transkasi-shop.cashier');
     Route::get('/transaksi/getall', [TransaksiController::class, 'getAll'])->name('transkasi.getall');
     Route::get('/transaksi/scan', [TransaksiController::class, 'scanBarcode'])->name('transkasi.scan');
     Route::post('/transaksi/store', [TransaksiController::class, 'store'])->name('transkasi.store');

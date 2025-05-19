@@ -209,7 +209,7 @@
             </li>
         @elseif (Auth::user()->role == 'Kasir' && Auth::user()->id_shop != null)
             <li class="menu-item cashier">
-                <a href="{{ url('/transaksi-kios/cashier') }}" class="menu-link fw-bold">
+                <a href="{{ url('/transaksi-shop/cashier') }}" class="menu-link fw-bold">
                     <i class="menu-icon tf-icons bx bxs-log-in-circle"></i>
                     <div data-i18n="Analytics">Open Kasir</div>
                 </a>
@@ -247,8 +247,8 @@
             <li class="menu-header small text-uppercase">
                 <span class="menu-header-text">Transaksi Toko</span>
             </li>
-            <li class="menu-item {{ request()->is('transaksi-kios') ? 'active' : '' }}">
-                <a href="{{ url('/transaksi-kios') }}" class="menu-link">
+            <li class="menu-item {{ request()->is('transaksi-shop') ? 'active' : '' }}">
+                <a href="{{ url('/transaksi-shop') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-money"></i>
                     <div data-i18n="Analytics">Riwayat Transaksi</div>
                 </a>
