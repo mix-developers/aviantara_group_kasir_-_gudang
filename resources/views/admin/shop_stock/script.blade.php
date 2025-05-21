@@ -1,6 +1,46 @@
 @push('js')
     <script>
+        // Saat klik tombol "Pilih Produk"
+        document.getElementById('selectProduct').addEventListener('click', function() {
+            $('#selectProductModal').modal('show');
+            $('#productSelectTable').DataTable().ajax.reload(); // reload data setiap buka
+        });
         $(function() {
+            // select produk
+            $('#productSelectTable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: '/shop-products-datatable', // Ganti dengan route API kamu
+                columns: [{
+                        data: 'barcode'
+                    },
+                    {
+                        data: 'name'
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            return `<button class="btn btn-sm btn-success select-product-btn" 
+                                    data-id="${row.id}" 
+                                    data-name="${row.name}" 
+                                    data-barcode="${row.barcode}">
+                                Pilih
+                            </button>`;
+                        }
+                    }
+                ]
+            });
+            $(document).on('click', '.select-product-btn', function() {
+                const id = $(this).data('id');
+                // const name = $(this).data('name');
+                const barcode = $(this).data('barcode');
+
+                // $('#formProductBarcode').val(barcode);
+                $('#formProductBarcode').val(barcode).trigger('input');
+
+                $('#selectProductModal').modal('hide');
+            });
+            // stok
             $('#datatable-stok-kios').DataTable({
                 processing: true,
                 serverSide: true,
@@ -8,7 +48,7 @@
                 ajax: {
                     url: '{{ url('/shop-stok/getall') }}',
                     type: 'GET',
-                    data: function (d) {
+                    data: function(d) {
                         d.type = $('#filterType').val(); // ambil nilai dari dropdown
                     },
                     dataSrc: 'data'
@@ -99,7 +139,7 @@
 
 
             });
-            $('.btn-filter').on('click', function () {
+            $('.btn-filter').on('click', function() {
                 $('#datatable-stok-kios').DataTable().ajax.reload();
             });
             $('.create-new').click(function() {
@@ -236,35 +276,56 @@
 
     <script>
         $(document).ready(function() {
-            // $('#formNamaProduk').prop('disabled', true);
+            let debounceTimeout;
 
-            $('#formBarcode').on('keyup', function() {
-                var barcode = $(this).val();
-                console.log(barcode);
-                $.ajax({
-                    url: '/shop-stok/search',
-                    type: "GET",
-                    data: {
-                        'barcode': barcode
-                    },
-                    success: function(data) {
-                        if (data && Object.keys(data).length > 0) {
-                            console.log(data.id);
-                            if (data.quantity_unit > 0) {
-                                $('#formIdProduk').val(data.id);
-                                $('#formNamaProduk').val(data.name).removeClass('text-danger');
-                            } else {
-                                $('#formNamaProduk').val('stok kosong').addClass('text-danger');
-                                console.log('else dijalankan');
+            $('#formProductBarcode').on('input', function() {
+                clearTimeout(debounceTimeout);
+
+                const barcode = $(this).val().trim();
+
+                // Reset field produk agar tidak tampilkan data lama
+                $('#formNamaProduk').val('Memuat...').removeClass('text-danger');
+                $('#formIdProduk').val('');
+
+                debounceTimeout = setTimeout(function() {
+                    if (barcode !== '') {
+                        $.ajax({
+                            url: '/shop-stok/search',
+                            type: 'GET',
+                            data: {
+                                'barcode': barcode
+                            },
+                            success: function(data) {
+                                if (data && Object.keys(data).length > 0) {
+                                    if (data.quantity_unit > 0) {
+                                        $('#formIdProduk').val(data.id);
+                                        $('#formNamaProduk').val(data.name).removeClass(
+                                            'text-danger');
+                                        $('#txtUnit').text(data.unit).show();
+                                        $('#txtUnitPrice').text("/"+data.unit).show();
+                                    } else {
+                                        $('#formNamaProduk').val('Stok kosong')
+                                            .addClass('text-danger');
+                                    }
+                                } else {
+                                    $('#formNamaProduk').val('Data tidak ditemukan!')
+                                        .addClass('text-danger');
+                                }
+                            },
+                            error: function() {
+                                $('#formNamaProduk').val('Terjadi kesalahan!').addClass(
+                                    'text-danger');
                             }
-                        } else {
-                            $('#formNamaProduk').val('data tidak ditemukan!').addClass(
-                                'text-danger');
-                            console.log('else besar dijalankan');
-                        }
+                        });
+                    } else {
+                        $('#formNamaProduk').val('').removeClass('text-danger');
+                        $('#formIdProduk').val('');
+                        $('#txtUnit').text('').hide(); 
+                        $('#txtUnitPrice').text('').hide(); 
                     }
-                });
+                }, 400); // delay pencarian
             });
         });
     </script>
+    @include('admin.script.barcode_scanner')
 @endpush

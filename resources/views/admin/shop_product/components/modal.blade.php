@@ -88,6 +88,27 @@
                         <small class="text-muted">*Aktifkan jika ingin menggunakan fitur barcode scanner</small>
                     </div>
                     {{-- end barcode scanner --}}
+                    <div class="my-3">
+                        <div class="input-group">
+                            <button type="button" class="btn btn-sm btn-primary" id="in-wirehouse">Dari
+                                Gudang</button>
+                            <button type="button" class="btn btn-sm btn-outline-primary" id="out-wirehouse">Luar
+                                Gudang</button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formProductBarcode" class="form-label">Barcode <span
+                                class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" autofocus id="formCreateProductBarcode"
+                                name="barcode" required>
+                            <button type="button" class="btn btn-secondary" id="generateBarcodeBtn">
+                                Generate
+                            </button>
+                        </div>
+                        <small class="text-muted">*jika produk tidak memiliki barcode, klik generate barcode<br> *jika
+                            produk berasal dari gudang utama, isi barcode sesuai dari gudang utama</small>
+                    </div>
                     <div class="mb-3">
                         <label for="formProductName" class="form-label">Foto Produk (dapat dikosongkan)</label>
                         <input type="file" class="form-control" id="formCreateProductPhoto" name="photo">
@@ -99,17 +120,7 @@
                             required>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="formProductBarcode" class="form-label">Barcode <span
-                                class="text-danger">*</span></label>
-                        <div class="input-group">
-                            <input type="number" class="form-control" id="formCreateProductBarcode" name="barcode"
-                                required>
-                            <button type="button" class="btn btn-secondary" id="generateBarcodeBtn">
-                                Generate
-                            </button>
-                        </div>
-                    </div>
+                   
                     <div class="mb-3">
                         <label for="formProductUnit" class="form-label">Satuan Produk <span
                                 class="text-danger">*</span></label>
@@ -167,3 +178,51 @@
         </div>
     </div>
 </div>
+@push('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fromWarehouseBtn = document.getElementById('in-wirehouse');
+            const outWarehouseBtn = document.getElementById('out-wirehouse');
+            const formInputs = document.querySelectorAll('#createProductForm input, #createProductForm select');
+            const barcodeInput = document.getElementById('formCreateProductBarcode');
+            const scannerCheckbox = document.getElementById('enabledScanner');
+            const scannerSection = document.getElementById('scanner');
+
+
+            function setFromWarehouseMode() {
+                formInputs.forEach(input => {
+                    if (
+                        input !== barcodeInput &&
+                        input !== scannerCheckbox
+                    ) {
+                        input.setAttribute('readonly', true);
+                        input.setAttribute('disabled', true);
+                    }
+                });
+                barcodeInput.removeAttribute('readonly');
+                barcodeInput.removeAttribute('disabled');
+                scannerCheckbox.removeAttribute('readonly');
+                scannerCheckbox.removeAttribute('disabled');
+
+                fromWarehouseBtn.classList.replace('btn-outline-primary', 'btn-primary');
+                outWarehouseBtn.classList.replace('btn-primary', 'btn-outline-primary');
+            }
+
+            function setOutWarehouseMode() {
+                formInputs.forEach(input => {
+                    input.removeAttribute('readonly');
+                    input.removeAttribute('disabled');
+                });
+
+                fromWarehouseBtn.classList.replace('btn-primary', 'btn-outline-primary');
+                outWarehouseBtn.classList.replace('btn-outline-primary', 'btn-primary');
+            }
+
+            fromWarehouseBtn.addEventListener('click', setFromWarehouseMode);
+            outWarehouseBtn.addEventListener('click', setOutWarehouseMode);
+
+            // Set default mode to 'Dari Gudang'
+            setFromWarehouseMode();
+        });
+    </script>
+@endpush

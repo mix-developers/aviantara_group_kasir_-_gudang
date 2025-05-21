@@ -231,7 +231,9 @@
                     .then(data => {
                         if (data.success) {
                             addToPurchaseList(data.data.name, barcode, quantity, data.data
-                                .price_retail, data.stok, data.id);
+                                .price_retail, data.stok, data.data.id);
+                                // console.log(data);
+                                // console.log("id product"+data.data.id);
                         } else {
                             showCustomAlert('Produk tidak ditemukan');
                         }
@@ -243,7 +245,8 @@
         });
 
         function addToPurchaseList(productName, barcode, quantity, priceRetail, stock, idProduct) {
-
+            // console.log("Product Name:", productName);
+            // console.log("id Product:", idProduct);
             let purchaseList = document.getElementById('purchaseList');
             let items = purchaseList.querySelectorAll('.purchase-item');
             let found = false;
@@ -365,7 +368,7 @@
         function discountItem(button) {
             let item = button.closest('.purchase-item');
             let barcode = item.getAttribute('data-barcode');
-            console.log("Barcode Produk:", barcode); // Debugging
+            // console.log("Barcode Produk:", barcode); // Debugging
 
             let modalElement = document.getElementById(`modalDiscount-${barcode}`);
             if (!modalElement) {

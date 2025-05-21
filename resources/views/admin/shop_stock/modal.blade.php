@@ -8,20 +8,40 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="alert alert-warning p-2 mb-3">
-                    Input stok berdasarkan kartonan / karungan / dus, jika ada 1 dus berisi 12 pcs, maka input qty tetap 1 
-                </div>
+
                 <!-- Form for Create and Edit -->
                 <form id="stokForm">
+                     {{-- barcode scanner --}}
+                     <div class="mb-3" id="scanner" style="display:none;">
+                        <center>
+                            <video id="barcode-scanner" playsinline style="width: 100%; max-width: 400px; "></video>
+                        </center>
+                        <hr>
+                    </div>
+                    <div class="d-flex mb-3 justify-content-between">
+                        <div class="mb-3">
+                            <div class="form-check form-switch  ">
+                                <input class="form-check-input" type="checkbox" id="enabledScanner">
+                                <label class="form-check-label" for="enabledScanner">Barcode Scanner
+                                </label>
+                            </div>
+                            <small class="text-muted">*Aktifkan jika ingin menggunakan fitur barcode scanner</small>
+                        </div>
+                        <div class="float-right">
+                            <button type="button" class="btn btn-primary" id="selectProduct"><i class="bx bx-search"></i> Pilih Produk</button>
+                        </div>
+                    </div>
+                  
+                    {{-- end barcode scanner --}}
                     <input type="hidden" id="formStokId" name="id">
                     <input type="hidden" id="formUserId" name="id_user">
                     <input type="hidden" id="formKiosId" name="id_kios" value="{{ Auth::user()->id_shop }}">
                     <input type="hidden" id="formIdProduk" name="id_product_add">
 
-
+                  
                     <div class="mb-3">
                         <label for="formBarcode" class="form-label">Barcode</label>
-                        <input type="text" class="form-control" id="formBarcode" name="barcode" required>
+                        <input type="text" class="form-control" id="formProductBarcode" name="barcode" required>
                     </div>
 
 
@@ -31,13 +51,19 @@
                             readonly>
                     </div>
 
-                    <div class="mb-3">
+                    <div class="mb-3 input group">
                         <label for="formStokQty" class="form-label">Qty</label>
-                        <input type="number" class="form-control" id="formStokQty" name="qty" required>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="formStokQty" name="qty" required>
+                            <span class="input-group-text" id="txtUnit">Unit</span>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="formStokPrice" class="form-label">Harga</label>
-                        <input type="number" class="form-control" id="formStokPrice" name="price" required>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="formStokPrice" name="price" required>
+                            <span class="input-group-text" id="txtUnitPrice">/Unit</span>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="formStokExpired" class="form-label">Tanggal Kadaluarsa</label>
@@ -53,9 +79,6 @@
         </div>
     </div>
 </div>
-
-
-
 
 
 {{-- MODAL EDIT --}}
@@ -148,3 +171,25 @@
         </div>
     </div>
 </div>
+<!-- Modal Pilih Produk -->
+<div class="modal fade" id="selectProductModal" tabindex="-1" aria-labelledby="selectProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Pilih Produk</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <table id="productSelectTable" class="table table-bordered table-striped" width="100%">
+            <thead>
+              <tr>
+                <th>Barcode</th>
+                <th>Nama</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
