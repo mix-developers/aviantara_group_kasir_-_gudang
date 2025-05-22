@@ -196,7 +196,7 @@
                         input !== scannerCheckbox
                     ) {
                         input.setAttribute('readonly', true);
-                        input.setAttribute('disabled', true);
+                        input.removeAttribute('disabled');
                     }
                 });
                 barcodeInput.removeAttribute('readonly');
