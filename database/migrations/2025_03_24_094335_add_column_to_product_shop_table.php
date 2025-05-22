@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->enum('unit', ['Karung', 'Karton', 'Bal', 'Pak', 'Koli', 'Kg']);
             $table->enum('sub_unit', ['Kg', 'Gram', 'Ons', 'Liter', 'Pcs', 'Kodi', 'Lembar', 'Butir', 'Bungkus', 'Lusin', 'Gros', 'Ekor', 'Buah', 'Sacet', 'Botol', 'Kaleng', 'Gelas']);
-            $table->string('barcode')->unique();
+            $table->string('barcode');
             $table->integer('quantity_unit');
             $table->string('photo')->nullable();
         });

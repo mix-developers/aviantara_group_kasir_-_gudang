@@ -136,7 +136,7 @@
                 var stokFilter = $('#selectStok').val();
                 var wirehouseFilter = $('#selectWirehouse').val();
 
-                var newUrl = '{{ url('products-datatable') }}?stok=' + stokFilter + '&wirehouse=' + wirehouseFilter;
+                var newUrl = '{{ url('shop-products-datatable') }}?stok=' + stokFilter;
                 dataTable.ajax.url(newUrl).load();
             }
 
@@ -322,7 +322,19 @@
                     error: function(xhr) {
                         $('#createProductBtnSpinner').hide();
                         $('#createProductBtn').prop('disabled', false);
-                        alert('Terjadi kesalahan: ' + xhr.responseText);
+                        // alert('Terjadi kesalahan: ' + xhr.responseText);
+                        let errorMessage = 'Terjadi kesalahan.';
+
+                        try {
+                            const response = JSON.parse(xhr.responseText);
+                            if (response.message) {
+                                errorMessage = response.message;
+                            }
+                        } catch (e) {
+                            errorMessage = xhr.responseText;
+                        }
+
+                        alert(errorMessage);
                     }
                 });
             });

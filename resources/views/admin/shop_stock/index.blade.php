@@ -33,14 +33,19 @@
                     <label for="filterType" class="form-label fw-semibold">
                       Filter:
                     </label>
-                    <div class="d-flex flex-column flex-sm-row gap-3">
-                        <select name="type" id="filterType" class="form-select">
-                            <option value="Masuk" selected>Masuk</option>
-                            <option value="Keluar">Keluar</option>
-                          </select>
-                      <button type="button" class="btn-filter btn btn-primary d-flex align-items-center gap-2">
-                        <i class="bx bx-filter"></i> Filter
-                      </button>
+                    <div class="row justify-content-center align-items-center gap-3 gap-md-0">
+                        <div class="col-4">
+                            <select name="type" id="filterType" class="form-select">
+                                <option value="" selected>Semua</option>
+                                <option value="Masuk" selected>Masuk</option>
+                                <option value="Keluar">Keluar</option>
+                              </select>
+                        </div>
+                        <div class="col-3">
+                            <button type="button" class="btn-filter btn btn-primary d-flex align-items-center gap-2">
+                              <i class="bx bx-filter"></i> Filter
+                            </button>
+                        </div>
                     </div>
                   </div>
                 <hr>
@@ -69,3 +74,4 @@
     @include('admin.shop_stock.modal')
 @endsection
 @include('admin.shop_stock.script')
+

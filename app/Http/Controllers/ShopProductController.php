@@ -25,13 +25,47 @@ class ShopProductController extends Controller
     public function getProductsDataTable(Request $request)
     {
         $query = ShopProduct::orderByDesc('id');
+
+        // Filter berdasarkan role user
         if (Auth::user()->role == 'Kasir') {
             $query->where('id_shop', Auth::user()->id_shop);
         }
-        $products = $query;
 
-        return Datatables::of($products)
+        // ✅ Filter stok
+        if ($request->filled('stok') && $request->stok !== '-') {
+            $query = $query->get()->filter(function ($product) use ($request) {
+                $stok = ShopProduct::getStok($product->id);
 
+                if ($request->stok == 'Tersedia') {
+                    return $stok > 0;
+                } elseif ($request->stok == 'Kosong') {
+                    return $stok <= 0;
+                }
+
+                return true;
+            });
+            // Karena hasil dari filter() bukan query builder, ubah ke Collection dan return response manual
+            return Datatables::of(collect($query))
+                ->addColumn('action', function ($product) {
+                    $edit = '<button class="btn btn-sm btn-warning" onclick="editProduct(' . $product->id . ')">Edit</button>';
+                    $delete = '<button class="btn btn-sm btn-danger" onclick="deleteProduct(' . $product->id . ')">Delete</button>';
+                    return '<div class="btn-group d-flex">' . $edit . ' ' . $delete . '</div>';
+                })
+                ->addColumn('isi', function ($product) {
+                    return $product->quantity_unit . ' ' . $product->sub_unit . ' /' . $product->unit;
+                })
+                ->addColumn('stock', function ($product) {
+                    return ShopProduct::getStok($product->id);
+                })
+                ->addColumn('stock_retail', function ($product) {
+                    return ShopProduct::getStok($product->id) * $product->quantity_unit . ' ' . $product->sub_unit;
+                })
+                ->rawColumns(['action', 'isi', 'stock', 'stock_retail'])
+                ->make(true);
+        }
+
+        // Jika tidak difilter, tetap pakai query builder
+        return Datatables::of($query)
             ->addColumn('action', function ($product) {
                 $edit = '<button class="btn btn-sm btn-warning" onclick="editProduct(' . $product->id . ')">Edit</button>';
                 $delete = '<button class="btn btn-sm btn-danger" onclick="deleteProduct(' . $product->id . ')">Delete</button>';
@@ -126,9 +160,19 @@ class ShopProductController extends Controller
             'name' => 'required|string|max:255',
             'unit' => 'required|string|max:20',
             'quantity_unit' => 'required|string|max:20',
-            'barcode' => 'string|max:20',
+            'barcode' => 'string|max:30',
         ]);
+        if ($request->barcode) {
+            $exists = ShopProduct::where('barcode', $request->barcode)
+                ->where('id_shop', Auth::user()->id_shop)
+                ->exists();
 
+            if ($exists) {
+                return response()->json([
+                    'message' => 'Produk dengan barcode ini sudah terdaftar di toko Anda.'
+                ], 422);
+            }
+        }
         $ProductData = [
             'name' => $request->input('name'),
             'unit' => $request->input('unit'),
