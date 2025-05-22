@@ -125,7 +125,9 @@ Route::middleware(['auth:web', 'checkDisabled'])->group(function () {
     Route::get('/chart-paid', [App\Http\Controllers\HomeController::class, 'getChartPaid']);
     Route::get('/chart-expired', [App\Http\Controllers\HomeController::class, 'getChartExpired']);
     Route::get('/chart-order-all-wirehouse', [App\Http\Controllers\HomeController::class, 'getChartOrderAllWirehouses']);
+    Route::get('/chart-order-all-shop', [App\Http\Controllers\HomeController::class, 'getChartOrderAllShop']);
     Route::get('/chart-payment-all-wirehouse', [App\Http\Controllers\HomeController::class, 'getChartPaymentAllWirehouses']);
+    Route::get('/chart-payment-all-shop', [App\Http\Controllers\HomeController::class, 'getChartPaymentAllShops']);
     //stok utama
     Route::get('/view-stock-main-wirehouse', [HomeController::class, 'viewStokWirehouse']);
     Route::get('/datatable-stock-main-wirehouse', [HomeController::class, 'getStokDatatableWirehouse']);

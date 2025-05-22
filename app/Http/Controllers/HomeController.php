@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\OrderShop;
+use App\Models\OrderShopPayment;
 use App\Models\OrderWirehouse;
 use App\Models\OrderWirehousePayment;
 use App\Models\PaymentMethod;
@@ -419,6 +421,50 @@ class HomeController extends Controller
         // Return the JSON response with all datasets
         return response()->json($warehousesData);
     }
+    public function getChartOrderAllShop()
+    {
+
+        $startDate = OrderShop::min('created_at');
+        $endDate = OrderShop::max('created_at');
+
+        $startDate = \Carbon\Carbon::parse($startDate)->startOfDay();
+        $endDate = \Carbon\Carbon::parse($endDate)->endOfDay();
+
+        $warehousesData = [];
+
+        $warehouseIdsQuery = OrderShop::query();
+
+        if (Auth::user()->role == 'Kasir') {
+            $warehouseIdsQuery->where('id_shop', Auth::user()->id_shop);
+        }
+
+        $warehouseIds = $warehouseIdsQuery->distinct()->pluck('id_shop');
+
+        foreach ($warehouseIds as $warehouseId) {
+            $warehouseName = Shop::where('id', $warehouseId)->first()->name;
+            $dataPoints = [];
+
+            for ($date = $startDate->copy(); $date <= $endDate; $date->addDay()) {
+                $totalOrders = OrderShop::where('id_shop', $warehouseId)
+                    ->whereDate('created_at', $date->format('Y-m-d'))
+                    ->count();
+
+                $dataPoints[] = [
+                    'x' => strtotime($date->format('Y-m-d')) * 1000,
+                    'y' => $totalOrders
+                ];
+            }
+
+            // Add the dataset for this warehouse
+            $warehousesData[] = [
+                'label' =>  $warehouseName,
+                'dataPoints' => $dataPoints
+            ];
+        }
+
+        // Return the JSON response with all datasets
+        return response()->json($warehousesData);
+    }
     public function getChartPaymentAllWirehouses()
     {
 
@@ -444,6 +490,50 @@ class HomeController extends Controller
 
             for ($date = $startDate->copy(); $date <= $endDate; $date->addDay()) {
                 $totalOrders = paymentMethodItem::where('id_payment_method', $warehouseId)
+                    ->whereDate('created_at', $date->format('Y-m-d'))
+                    ->sum('paid');
+
+                $dataPoints[] = [
+                    'x' => strtotime($date->format('Y-m-d')) * 1000,
+                    'y' => (int)$totalOrders
+                ];
+            }
+
+            // Add the dataset for this warehouse
+            $warehousesData[] = [
+                'label' =>  $warehouseName,
+                'dataPoints' => $dataPoints
+            ];
+        }
+
+        // Return the JSON response with all datasets
+        return response()->json($warehousesData);
+    }
+    public function getChartPaymentAllShops()
+    {
+
+        $startDate = OrderShopPayment::min('created_at');
+        $endDate = OrderShopPayment::max('created_at');
+
+        $startDate = \Carbon\Carbon::parse($startDate)->startOfDay();
+        $endDate = \Carbon\Carbon::parse($endDate)->endOfDay();
+
+        $warehousesData = [];
+
+        $warehouseIdsQuery = OrderShopPayment::query();
+
+        if (Auth::user()->role == 'Kasir') {
+            $warehouseIdsQuery->where('id_user', Auth::id());
+        }
+
+        $warehouseIds = $warehouseIdsQuery->distinct()->pluck('id_payment_method');
+
+        foreach ($warehouseIds as $warehouseId) {
+            $warehouseName = PaymentMethod::where('id', $warehouseId)->first()->method;
+            $dataPoints = [];
+
+            for ($date = $startDate->copy(); $date <= $endDate; $date->addDay()) {
+                $totalOrders = OrderShopPayment::where('id_payment_method', $warehouseId)
                     ->whereDate('created_at', $date->format('Y-m-d'))
                     ->sum('paid');
 
