@@ -11,8 +11,8 @@
 
                 <!-- Form for Create and Edit -->
                 <form id="stokForm">
-                     {{-- barcode scanner --}}
-                     <div class="mb-3" id="scanner" style="display:none;">
+                    {{-- barcode scanner --}}
+                    <div class="mb-3" id="scanner" style="display:none;">
                         <center>
                             <video id="barcode-scanner" playsinline style="width: 100%; max-width: 400px; "></video>
                         </center>
@@ -28,17 +28,19 @@
                             <small class="text-muted">*Aktifkan jika ingin menggunakan fitur barcode scanner</small>
                         </div>
                         <div class="float-right">
-                            <button type="button" class="btn btn-primary" id="selectProduct"><i class="bx bx-search"></i> Pilih Produk</button>
+                            <button type="button" class="btn btn-primary" id="selectProduct"><i
+                                    class="bx bx-search"></i> <span class="d-none d-sm-inline-block"> Pilih
+                                    Produk</span></button>
                         </div>
                     </div>
-                  
+
                     {{-- end barcode scanner --}}
                     <input type="hidden" id="formStokId" name="id">
                     <input type="hidden" id="formUserId" name="id_user">
                     <input type="hidden" id="formKiosId" name="id_kios" value="{{ Auth::user()->id_shop }}">
                     <input type="hidden" id="formIdProduk" name="id_product_add">
 
-                  
+
                     <div class="mb-3">
                         <label for="formBarcode" class="form-label">Barcode</label>
                         <input type="text" class="form-control" id="formProductBarcode" name="barcode" required>
@@ -172,24 +174,25 @@
     </div>
 </div>
 <!-- Modal Pilih Produk -->
-<div class="modal fade" id="selectProductModal" tabindex="-1" aria-labelledby="selectProductModalLabel" aria-hidden="true">
+<div class="modal fade" id="selectProductModal" tabindex="-1" aria-labelledby="selectProductModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Pilih Produk</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Pilih Produk</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body table-responsive">
+                <table id="productSelectTable" class="table table-bordered table-striped" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Barcode</th>
+                            <th>Nama</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
         </div>
-        <div class="modal-body">
-          <table id="productSelectTable" class="table table-bordered table-striped" width="100%">
-            <thead>
-              <tr>
-                <th>Barcode</th>
-                <th>Nama</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
-          </table>
-        </div>
-      </div>
     </div>
-  </div>
+</div>

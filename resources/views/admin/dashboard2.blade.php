@@ -11,8 +11,8 @@
                 Kios</span>
         </h4>
         @if (Auth::user()->role == 'Kasir')
-            <p class="badge bg-label-danger"><i class="bx bx-error"></i> Harap selalu cek fisik barang kadaluarsa pada gudang
-                dan toko</p>
+            <p class="badge bg-label-danger w-auto w-md-100"><i class="bx bx-error"></i> Harap selalu cek fisik barang
+                kadaluarsa<br> pada toko</p>
         @endif
     </div>
     <div class="mt-2" id="alert"></div>

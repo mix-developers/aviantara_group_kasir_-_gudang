@@ -96,6 +96,10 @@
                                 Gudang</button>
                         </div>
                     </div>
+                    <button type="button" class="btn w-100 btn-primary" id="selectProduct"><i
+                            class="bx bx-search"></i>
+                        Pilih
+                        Produk</button>
                     <div class="mb-3">
                         <label for="formProductBarcode" class="form-label">Barcode <span
                                 class="text-danger">*</span></label>
@@ -120,7 +124,7 @@
                             required>
                     </div>
 
-                   
+
                     <div class="mb-3">
                         <label for="formProductUnit" class="form-label">Satuan Produk <span
                                 class="text-danger">*</span></label>
@@ -178,8 +182,77 @@
         </div>
     </div>
 </div>
+<!-- Modal Pilih Produk -->
+<div class="modal fade" id="selectProductModal" tabindex="-1" aria-labelledby="selectProductModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Pilih Produk Dari Gudang Besar</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body table-responsive">
+                <table id="productSelectTable" class="table table-bordered table-striped table-sm" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Barcode</th>
+                            <th>Nama</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
 @push('js')
     <script>
+        document.getElementById('selectProduct').addEventListener('click', function() {
+            $('#selectProductModal').modal('show');
+            $('#productSelectTable').DataTable().ajax.reload(); // reload data setiap buka
+        });
+        $(function() {
+            // select produk
+            $('#productSelectTable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: '{{ url('datatable-stock-main-wirehouse') }}', // Ganti dengan route API kamu
+                columns: [{
+                        data: 'barcode'
+                    },
+                    {
+                        data: 'name'
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            return `<button class="btn btn-sm btn-success select-product-btn" 
+                                    data-barcode="${row.barcode}">
+                                Pilih
+                            </button>`;
+                        }
+                    }
+                ]
+            });
+            $(document).on('click', '.select-product-btn', function() {
+                const barcode = $(this).data('barcode');
+
+                $('#formCreateProductBarcode').val(barcode).trigger('input').trigger('change');
+
+                $('#selectProductModal').modal('hide');
+            });
+
+            function getAlert(alertValue) {
+                $('#alert').append(
+                    '<div class="alert alert-success alert-dismissible" role="alert">' +
+                    alertValue +
+                    '<button type = "button" class = "btn-close"  data-bs-dismiss="alert" aria - label = "Close" ></button> </div>'
+                )
+            }
+
+
+        });
         document.addEventListener('DOMContentLoaded', function() {
             const fromWarehouseBtn = document.getElementById('in-wirehouse');
             const outWarehouseBtn = document.getElementById('out-wirehouse');
@@ -187,7 +260,7 @@
             const barcodeInput = document.getElementById('formCreateProductBarcode');
             const scannerCheckbox = document.getElementById('enabledScanner');
             const scannerSection = document.getElementById('scanner');
-
+            const selectProductBtn = document.getElementById('selectProduct');
 
             function setFromWarehouseMode() {
                 formInputs.forEach(input => {
@@ -206,6 +279,10 @@
 
                 fromWarehouseBtn.classList.replace('btn-outline-primary', 'btn-primary');
                 outWarehouseBtn.classList.replace('btn-primary', 'btn-outline-primary');
+                // Tampilkan tombol selectProduct
+                selectProductBtn.classList.remove('d-none');
+
+
             }
 
             function setOutWarehouseMode() {
@@ -216,10 +293,14 @@
 
                 fromWarehouseBtn.classList.replace('btn-primary', 'btn-outline-primary');
                 outWarehouseBtn.classList.replace('btn-outline-primary', 'btn-primary');
+                // Sembunyikan tombol selectProduct
+                selectProductBtn.classList.add('d-none');
+
             }
 
             fromWarehouseBtn.addEventListener('click', setFromWarehouseMode);
-            outWarehouseBtn.addEventListener('click', setOutWarehouseMode);
+            outWarehouseBtn.addEventListener('click',
+                setOutWarehouseMode);
 
             // Set default mode to 'Dari Gudang'
             setFromWarehouseMode();

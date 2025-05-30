@@ -36,6 +36,7 @@
                     <div class="d-flex justify-content-center align-items-center row gap-3 gap-md-0">
                         <div class="col-md-3 col-12">
                             <select id="selectStok" class="form-select text-capitalize">
+                                
                             </select>
                         </div>
                     </div>

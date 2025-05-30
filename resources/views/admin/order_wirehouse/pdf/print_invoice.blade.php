@@ -14,7 +14,7 @@
 
         body {
             font-family: Arial, sans-serif;
-            font-size: 13px;
+            font-size: 18px;
         }
 
         hr {
@@ -26,7 +26,7 @@
         .table-custom {
             border-collapse: collapse;
             width: 100%;
-            font-size: 13px;
+            font-size: 18px;
         }
 
         .table-custom tr,
@@ -77,12 +77,12 @@
             <table style="width:100%; margin-bottom:10px;">
                 <tr>
                     <td style="width: 30%" class=" fw-bold">
-                        <h1 style="font-size: 40px;"><b>INVOICE</b></h1>
+                        <h1 style="font-size: 18px;"><b>INVOICE</b></h1>
                     </td>
                     <td class="text-right" style="width: 50%">
                         <b>
-                            <p class="m-0" style="font-size: 14px;"><b>AVIANTARA GROUP</b></p>
-                            <i style="font-size: 12px;">Jalan Husen Palela</i>
+                            <p class="m-0" style="font-size: 18px;"><b>AVIANTARA GROUP</b></p>
+                            <i style="font-size: 18px;">Jalan Husen Palela</i>
                         </b>
                     </td>
                     <td style="width: 20%">
@@ -206,7 +206,7 @@
                 </tr>
             </table>
             <br>
-            <table style="width:100%; border:0; font-size:13px;">
+            <table style="width:100%; border:0; font-size:118x;">
                 <tr style="padding-bottom:100px;" class="text-center">
                     <td>PETUGAS : </td>
                     <td>

@@ -162,7 +162,7 @@ class ShopProductController extends Controller
             'quantity_unit' => 'required|string|max:20',
             'barcode' => 'string|max:30',
         ]);
-        if ($request->barcode) {
+        if ($request->barcode && !$request->id) {
             $exists = ShopProduct::where('barcode', $request->barcode)
                 ->where('id_shop', Auth::user()->id_shop)
                 ->exists();
