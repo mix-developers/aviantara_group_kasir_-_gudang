@@ -149,8 +149,6 @@
             $('.refresh').click(function() {
                 $('#datatable-stok-kios').DataTable().ajax.reload();
             });
-
-
             window.editItem = function(id) {
                 $.ajax({
                     type: 'GET',
@@ -199,7 +197,17 @@
                         getAlert(response.message);
                         // Refresh DataTable setelah menyimpan perubahan
                         $('#datatable-stok-kios').DataTable().ajax.reload();
+                        $('#stok_form').modal('hide');
                         $('#kios_stok_modal').modal('hide');
+                        // Reset form setelah modal ditutup
+                        $('#stokForm')[0].reset();
+
+                        // Optional: reset readonly atau nilai default yang diset manual
+                        $('#formNamaProduk').val('').prop('readonly', true);
+                        $('#formProductBarcode').prop('readonly', false);
+                        $('#formIdProduk').val('');
+                        $('#txtUnit').text('Unit');
+                        $('#txtUnitPrice').text('/Unit');
                     },
                     error: function(xhr) {
                         alert('Terjadi kesalahan: ' + xhr.responseText);
@@ -237,16 +245,18 @@
                 });
             });
             window.hapusItem = function(id) {
-                if (confirm('Apakah Anda yakin ingin menghapus pelanggan ini?')) {
+                if (confirm(
+                        'Apakah Anda yakin ingin menghapus stok ini? akan berpengaruh jika stok ini sudah digunakan di transaksi lain'
+                        )) {
                     $.ajax({
                         type: 'DELETE',
-                        url: '/customers/delete/' + id,
+                        url: '/shop-stok/delete/' + id,
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         success: function(response) {
                             getAlert(response.message);
-                            $('#datatable-customers').DataTable().ajax.reload();
+                            $('#datatable-stok-kios').DataTable().ajax.reload();
                         },
                         error: function(xhr) {
                             alert('Terjadi kesalahan: ' + xhr.responseText);
@@ -302,7 +312,7 @@
                                         $('#formNamaProduk').val(data.name).removeClass(
                                             'text-danger');
                                         $('#txtUnit').text(data.unit).show();
-                                        $('#txtUnitPrice').text("/"+data.unit).show();
+                                        $('#txtUnitPrice').text("/" + data.unit).show();
                                     } else {
                                         $('#formNamaProduk').val('Stok kosong')
                                             .addClass('text-danger');
@@ -320,8 +330,8 @@
                     } else {
                         $('#formNamaProduk').val('').removeClass('text-danger');
                         $('#formIdProduk').val('');
-                        $('#txtUnit').text('').hide(); 
-                        $('#txtUnitPrice').text('').hide(); 
+                        $('#txtUnit').text('').hide();
+                        $('#txtUnitPrice').text('').hide();
                     }
                 }, 400); // delay pencarian
             });

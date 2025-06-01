@@ -97,11 +97,6 @@
                     <input type="hidden" id="editStokId" name="id">
                     <input type="hidden" id="formUserId" name="id_user">
                     <input type="hidden" id="editIdProduk" name="id_product">
-
-                    <div class="mb-3">
-                        <label for="editNamaKios" class="form-label">Nama Kios</label>
-                        <input type="text" class="form-control" id="editNamaKios" name="id_kios" required>
-                    </div>
                     <div class="mb-3">
                         <label for="editKodeProduk" class="form-label">Kode Produk</label>
                         <input type="text" class="form-control" id="editKodeProduk" name="kode_product" required>

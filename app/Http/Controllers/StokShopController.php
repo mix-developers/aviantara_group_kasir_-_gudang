@@ -77,7 +77,7 @@ class StokShopController extends Controller
 
 
         $request->validate([
-            'id_product_add' => 'required|unique:product_shop_stoks,id_product',
+            'id_product_add' => 'required',
             // 'type' => 'required|string|max:255',
             'qty' => 'required|numeric|max:500',
             'price' => 'required|numeric',
@@ -190,8 +190,10 @@ class StokShopController extends Controller
      * @param  \App\Models\ShopProductStok  $ShopProductStok
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ShopProductStok $ShopProductStok)
+    public function destroy($id)
     {
-        //
+        $ShopProductStok = ShopProductStok::find($id);
+        $ShopProductStok->delete();
+        return response()->json(['message' => 'Data berhasil dihapus']);
     }
 }

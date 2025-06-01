@@ -327,6 +327,7 @@ Route::middleware(['auth:web', 'role:Kasir', 'checkDisabled'])->group(function (
     Route::get('/kios_stok/getShop/{id_shop}', [StokShopController::class, 'getShop'])->name('kios_stok.getShop');
     Route::get('/shop-stok/getall', [StokShopController::class, 'getAll'])->name('shop-stok.getall');
     Route::get('/shop-stok/edit/{id}', [StokShopController::class, 'edit'])->name('shop-stok.edit');
+    Route::delete('/shop-stok/delete/{id}', [StokShopController::class, 'destroy'])->name('shop-stok.delete');
     Route::post('/shop-stok/store',  [StokShopController::class, 'store'])->name('shop-stok.store');
     Route::post('/shop-stok/update',  [StokShopController::class, 'update'])->name('shop-stok.update');
     Route::get('/shop-stok/search',  [StokShopController::class, 'search'])->name('shop-stok.search');
