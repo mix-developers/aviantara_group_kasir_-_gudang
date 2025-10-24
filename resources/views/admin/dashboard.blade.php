@@ -27,11 +27,13 @@
 
         </div>
     </div>
-    <div class="my-4 card">
-        <div class="card-body">
-            <div id="chartContainer2" style="height: 500px;"></div>
+    @if (Auth::User()->role == 'Owner')
+        <div class="my-4 card">
+            <div class="card-body">
+                <div id="chartContainer2" style="height: 500px;"></div>
+            </div>
         </div>
-    </div>
+    @endif
     <div class="my-4">
         <div class="row">
             <div class="col-md-6">
@@ -119,6 +121,8 @@
                     'icon' => 'home',
                 ])
             @endforeach
+        @endif
+        @if (Auth::user()->role == 'Owner')
             <hr>
             @foreach (App\Models\PaymentMethod::all() as $item)
                 @include('admin.dashboard_component.card1', [
