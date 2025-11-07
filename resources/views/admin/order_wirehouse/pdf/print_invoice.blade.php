@@ -81,17 +81,19 @@
                     </td>
                     <td class="text-right" style="width: 50%">
                         <b>
-                            <p class="m-0" style="font-size: 18px;"><b>AVIANTARA GROUP</b></p>
+                            <p class="m-0" style="font-size: 18px;">
+                                <b>{{ $data->wirehouse->ud_cv ?? 'AVIANTARA GROUP' }}</b>
+                            </p>
                             <i style="font-size: 18px;">Jalan Husen Palela</i>
                         </b>
                     </td>
                     <td style="width: 20%">
-                        <img style="width: 100px; padding:5px;" src="{{ asset('img/') }}/logo.png">
+                        <img style="width: 100px; padding:5px;"
+                            src="{{ $data->wirehouse->logo ? asset('storage/' . $data->wirehouse->logo) : asset('img/logo.png') }}">
                     </td>
                 </tr>
             </table>
             <hr>
-
             <!-- Info -->
             <table style="width:100%; border:0;">
                 <tr>

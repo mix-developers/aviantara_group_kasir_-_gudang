@@ -482,7 +482,7 @@ class OrderWirehouseController extends Controller
     }
     public function printInvoice($id)
     {
-        $data = OrderWirehouse::where('id', $id)->with(['customer', 'product'])->first();
+        $data = OrderWirehouse::where('id', $id)->with(['customer', 'product', 'wirehouse'])->first();
         $items = OrderWirehouseItem::where('id_order_wirehouse', $id)->get();
         $retail = false;
         if ($items->count() <= 0) {

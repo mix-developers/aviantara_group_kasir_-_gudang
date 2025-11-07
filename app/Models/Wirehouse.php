@@ -12,6 +12,8 @@ class Wirehouse extends Model
     protected $fillable = [
         'name',
         'address',
+        'logo',
+        'ud_cv',
     ];
 
     static function getProduct($id)

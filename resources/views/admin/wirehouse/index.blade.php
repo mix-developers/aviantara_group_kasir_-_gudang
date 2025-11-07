@@ -39,7 +39,9 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
+                                <th>Logo</th>
                                 <th>Nama</th>
+                                <th>UD/CV</th>
                                 <th>Alamat Gudang</th>
                                 <th>Action</th>
                             </tr>
@@ -48,7 +50,9 @@
                         <tfoot>
                             <tr>
                                 <th>ID</th>
+                                <th>Logo</th>
                                 <th>Nama</th>
+                                <th>UD/CV</th>
                                 <th>Alamat Gudang</th>
                                 <th>Action</th>
                             </tr>

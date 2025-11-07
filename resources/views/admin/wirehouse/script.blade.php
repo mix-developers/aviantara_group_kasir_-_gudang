@@ -12,8 +12,17 @@
                     },
 
                     {
+                        data: 'logo',
+                        name: 'logo'
+                    },
+
+                    {
                         data: 'wirehouse',
                         name: 'wirehouse'
+                    },
+                    {
+                        data: 'ud_cv',
+                        name: 'ud_cv'
                     },
                     {
                         data: 'address',
@@ -42,6 +51,15 @@
                         $('#formWirehouseId').val(response.id);
                         $('#formWirehouseName').val(response.name);
                         $('#formWirehouseAddress').val(response.address);
+                        $('#formWirehouseUdCv').val(response.ud_cv ?? '');
+
+                        // tampilkan logo jika ada
+                        if (response.logo) {
+                            $('#formWirehouseLogoPreview').attr('src', '/storage/' + response.logo)
+                                .show();
+                        } else {
+                            $('#formWirehouseLogoPreview').hide();
+                        }
                         $('#wirehousesModal').modal('show');
                     },
                     error: function(xhr) {
@@ -50,12 +68,15 @@
                 });
             };
             $('#saveWirehouseBtn').click(function() {
-                var formData = $('#wirehouseForm').serialize();
-
+                var form = $('#wirehouseForm')[0];
+                // var formData = $('#wirehouseForm').serialize();
+                var formData = new FormData(form);
                 $.ajax({
                     type: 'POST',
                     url: '/wirehouses/store',
                     data: formData,
+                    contentType: false,
+                    processData: false,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
@@ -73,12 +94,15 @@
                 });
             });
             $('#createWirehouseBtn').click(function() {
+                var form = $('#createWirehouseForm')[0];
                 var formData = $('#createWirehouseForm').serialize();
 
                 $.ajax({
                     type: 'POST',
                     url: '/wirehouses/store',
                     data: formData,
+                    contentType: false,
+                    processData: false,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
